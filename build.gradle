@@ -22,12 +22,17 @@ tasks.withType(JavaCompile) {
 }
 
 dependencies {
+    implementation 'com.mikemybytes:junit5-formatted-source:0.2.0'
+    implementation 'com.mikemybytes:junit5-formatted-source-parent:0.2.0'
+    implementation 'com.mikemybytes:junit5-formatted-source-tests:0.2.0'
     compileOnly('jakarta.servlet:jakarta.servlet-api:5.0.0')
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
     implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.28'
-
+    compileOnly 'org.projectlombok:lombok:1.18.20'
+    annotationProcessor 'org.projectlombok:lombok:1.18.20'
+    testImplementation("org.assertj:assertj-core:3.22.0")
 }
 
 test {
