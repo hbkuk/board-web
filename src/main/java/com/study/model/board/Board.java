@@ -7,7 +7,7 @@ import java.util.stream.Stream;
 
 @Getter
 public class Board {
-    private final BoardId boardId;
+    private final BoardIdx boardIdx;
     private final Category category;
     private final Title title;
     private final Writer writer;
@@ -17,7 +17,7 @@ public class Board {
     private final RegDate regDate;
 
     public Board(Builder builder) {
-        this.boardId = builder.boardId;
+        this.boardIdx = builder.boardIdx;
         this.category = builder.category;
         this.title = builder.title;
         this.writer = builder.writer;
@@ -29,7 +29,7 @@ public class Board {
 
     public static class Builder {
 
-        private BoardId boardId;
+        private BoardIdx boardIdx;
         private Category category;
         private Title title;
         private Writer writer;
@@ -66,8 +66,8 @@ public class Board {
             return this;
         }
 
-        public Builder boardId(BoardId boardId) {
-            this.boardId = boardId;
+        public Builder boardIdx(BoardIdx boardIdx) {
+            this.boardIdx = boardIdx;
             return this;
         }
 

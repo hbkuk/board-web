@@ -2,11 +2,11 @@ package com.study.model.board;
 
 import java.util.Objects;
 
-public class BoardId {
+public class BoardIdx {
     private static final int MIN_BOARDID_VALUE = 0;
     private long boardId = 0;
 
-    public BoardId(long value) {
+    public BoardIdx(long value) {
         if(value < MIN_BOARDID_VALUE) {
             throw new IllegalArgumentException("글 번호는 음수일 수 없습니다.");
         }
@@ -19,7 +19,7 @@ public class BoardId {
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-        BoardId boardId1 = (BoardId) o;
+        BoardIdx boardId1 = (BoardIdx) o;
         return boardId == boardId1.boardId;
     }
 

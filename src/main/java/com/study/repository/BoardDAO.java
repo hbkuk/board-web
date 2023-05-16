@@ -1,7 +1,7 @@
 package com.study.repository;
 
 import com.study.dto.BoardDTO;
-import com.study.model.board.BoardId;
+import com.study.model.board.BoardIdx;
 import com.study.model.board.Category;
 import com.study.model.board.Hit;
 import com.study.model.board.Password;
@@ -33,7 +33,7 @@ public class BoardDAO {
 
     public Optional<BoardDTO> findById(Long id) throws SQLException {
         try {
-            statement = connection.prepareStatement("SELECT * FROM board WHERE board_id = ?");
+            statement = connection.prepareStatement("SELECT * FROM board WHERE board_idx = ?");
             statement.setLong(1, id);
             resultSet = statement.executeQuery();
 
@@ -66,7 +66,7 @@ public class BoardDAO {
             List<BoardDTO> boards = new ArrayList<>();
             while (resultSet.next()) {
                 BoardDTO boardDTO = new BoardDTO();
-                boardDTO.setBoardId(new BoardId(resultSet.getLong("board_id")));
+                boardDTO.setBoardIdx(new BoardIdx(resultSet.getLong("board_idx")));
                 boardDTO.setCategory(Category.valueOf(resultSet.getString("category")));
                 boardDTO.setTitle(new Title(resultSet.getString("title")));
                 boardDTO.setWriter(new Writer(resultSet.getString("writer")));
@@ -98,7 +98,7 @@ public class BoardDAO {
             statement.executeUpdate();
             ResultSet generatedKeys = statement.getGeneratedKeys();
             if (generatedKeys.next()) {
-                boardDTO.setBoardId(new BoardId(generatedKeys.getLong(1)));
+                boardDTO.setBoardIdx(new BoardIdx(generatedKeys.getLong(1)));
             }
             return boardDTO;
         } finally {
@@ -110,7 +110,7 @@ public class BoardDAO {
 
     public void deleteById(Long id) throws SQLException {
         try {
-            statement = connection.prepareStatement("DELETE FROM board WHERE board_id = ?");
+            statement = connection.prepareStatement("DELETE FROM board WHERE board_idx = ?");
             statement.setLong(1, id);
             statement.executeUpdate();
         } finally {

@@ -1,6 +1,7 @@
 package com.study.dto;
 
-import com.study.model.board.BoardId;
+import com.study.model.board.Board;
+import com.study.model.board.BoardIdx;
 import com.study.model.board.Category;
 import com.study.model.board.Content;
 import com.study.model.board.Hit;
@@ -14,7 +15,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class BoardDTO {
-    private BoardId boardId;
+    private BoardIdx boardIdx;
     private Category category;
     private Title title;
     private Writer writer;
@@ -22,4 +23,18 @@ public class BoardDTO {
     private Password password;
     private Hit hit;
     private RegDate regDate;
+
+    public BoardDTO() {
+    }
+
+    public BoardDTO(Board board) {
+        this.boardIdx = board.getBoardIdx();
+        this.category = board.getCategory();
+        this.title = board.getTitle();
+        this.writer = board.getWriter();
+        this.content = board.getContent();
+        this.password = board.getPassword();
+        this.hit = board.getHit();
+        this.regDate = board.getRegDate();
+    }
 }
