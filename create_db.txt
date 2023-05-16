@@ -1,10 +1,43 @@
-CREATE TABLE `board` (
-  `board_id` BIGINT NOT NULL AUTO_INCREMENT,
-  `category` VARCHAR(100) NOT NULL,
-  `title` VARCHAR(255) NOT NULL,
-  `writer` VARCHAR(10) NOT NULL,
-  `password` VARCHAR(16) NOT NULL,
-  `hit` INT NULL,
-  `regdate` DATETIME NOT NULL,
-  PRIMARY KEY (`board_id`)
+CREATE TABLE board (
+  board_idx BIGINT NOT NULL,
+  category VARCHAR(100) NULL,
+  title VARCHAR(200) NULL,
+  writer VARCHAR(10) NULL,
+  content VARCHAR(2000) NULL,
+  password VARCHAR(16) NULL,
+  hit INT NULL,
+  regdate DATETIME NULL,
+
+  PRIMARY KEY (board_idx)
+);
+
+CREATE TABLE comment (
+  comment_idx BIGINT NOT NULL,
+  writer VARCHAR(10) NULL,
+  password VARCHAR(16) NULL,
+  content VARCHAR(2000) NULL,
+  regdate DATETIME NULL,
+  board_idx BIGINT NOT NULL,
+
+  PRIMARY KEY (comment_idx),
+  FOREIGN KEY (board_idx) REFERENCES board (board_idx)
+);
+
+CREATE TABLE board_modify_log (
+  modify_log_idx BIGINT NOT NULL,
+  moddate DATETIME NULL,
+  board_idx BIGINT NOT NULL,
+
+  PRIMARY KEY (modify_log_idx),
+  FOREIGN KEY (board_idx) REFERENCES board (board_idx)
+);
+
+CREATE TABLE image (
+  image_idx BIGINT NOT NULL,
+  name VARCHAR(255) NULL,
+  size BIGINT NULL,
+  board_idx BIGINT NOT NULL,
+
+  PRIMARY KEY (image_idx),
+  FOREIGN KEY (board_idx) REFERENCES board (board_idx)
 );
