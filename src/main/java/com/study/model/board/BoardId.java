@@ -6,7 +6,7 @@ public class BoardId {
     private static final int MIN_BOARDID_VALUE = 0;
     private long boardId = 0;
 
-    public BoardId(int value) {
+    public BoardId(long value) {
         if(value < MIN_BOARDID_VALUE) {
             throw new IllegalArgumentException("글 번호는 음수일 수 없습니다.");
         }

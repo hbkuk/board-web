@@ -16,7 +16,7 @@ public class Board {
     private final Hit hit;
     private final RegDate regDate;
 
-    private Board(Builder builder) {
+    public Board(Builder builder) {
         this.boardId = builder.boardId;
         this.category = builder.category;
         this.title = builder.title;
