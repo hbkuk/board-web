@@ -4,10 +4,12 @@ import java.util.Objects;
 
 public class Content {
 
+    private static final int MIN_CONTENT_LENGTH_VALUE = 4;
+    private static final int MAX_CONTENT_LENGTH_VALUE = 1999;
     private String content;
 
     public Content(String content) {
-        if (content.length() < 4 || content.length() > 1999) {
+        if (content.length() < MIN_CONTENT_LENGTH_VALUE || content.length() > MAX_CONTENT_LENGTH_VALUE) {
             throw new IllegalArgumentException("내용은 4글자 미만 2000글자를 초과할 수 없습니다.");
         }
         this.content = content;
