@@ -7,6 +7,7 @@ CREATE TABLE board (
   password VARCHAR(16) NULL,
   hit INT NULL,
   regdate DATETIME NULL,
+  moddate DATETIME NULL,
 
   PRIMARY KEY (board_idx)
 );
@@ -23,19 +24,10 @@ CREATE TABLE comment (
   FOREIGN KEY (board_idx) REFERENCES board (board_idx)
 );
 
-CREATE TABLE board_modify_log (
-  modify_log_idx BIGINT NOT NULL,
-  moddate DATETIME NULL,
-  board_idx BIGINT NOT NULL,
-
-  PRIMARY KEY (modify_log_idx),
-  FOREIGN KEY (board_idx) REFERENCES board (board_idx)
-);
-
 CREATE TABLE image (
   image_idx BIGINT NOT NULL,
   name VARCHAR(255) NULL,
-  size BIGINT NULL,
+  size int NULL,
   board_idx BIGINT NOT NULL,
 
   PRIMARY KEY (image_idx),
