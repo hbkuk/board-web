@@ -16,7 +16,7 @@ public class CommentTest {
     @Test
     void create() {
         Comment comment = new Comment.Builder()
-                .writer("테스터")
+                .writer(new CommentWriter("테스터"))
                 .password(new Password("rkskekfka1!"))
                 .content("내용 1")
                 .boardIdx(new BoardIdx(1))
@@ -33,7 +33,7 @@ public class CommentTest {
         void writer_length_valid(String writer) {
             // given
             new Comment.Builder()
-                    .writer(writer)
+                    .writer(new CommentWriter(writer))
                     .password(new Password("rkskekfka1!"))
                     .content("내용 1")
                     .boardIdx(new BoardIdx(1))
@@ -48,7 +48,7 @@ public class CommentTest {
             assertThatExceptionOfType(IllegalArgumentException.class)
                     .isThrownBy(() -> {
                         new Comment.Builder()
-                                .writer(writer)
+                                .writer(new CommentWriter(writer))
                                 .password(new Password("rkskekfka1!"))
                                 .content("내용 1")
                                 .boardIdx(new BoardIdx(1))
@@ -72,7 +72,7 @@ public class CommentTest {
             void writer_length_valid(String password) {
                 // given
                 new Comment.Builder()
-                        .writer("테스터")
+                        .writer(new CommentWriter("테스터"))
                         .password(new Password(password))
                         .content("내용 1")
                         .boardIdx(new BoardIdx(1))
@@ -88,7 +88,7 @@ public class CommentTest {
             assertThatExceptionOfType(IllegalArgumentException.class)
                     .isThrownBy(() -> {
                         new Comment.Builder()
-                                .writer("테스터")
+                                .writer(new CommentWriter("테스터"))
                                 .password(new Password(password))
                                 .content("내용 1")
                                 .boardIdx(new BoardIdx(1))
@@ -107,7 +107,7 @@ public class CommentTest {
             void password_regex_pass(String password) {
                 // given
                 new Comment.Builder()
-                        .writer("테스터")
+                        .writer(new CommentWriter("테스터"))
                         .password(new Password(password))
                         .content("내용 1")
                         .boardIdx(new BoardIdx(1))
@@ -121,7 +121,7 @@ public class CommentTest {
                 assertThatExceptionOfType(IllegalArgumentException.class)
                         .isThrownBy(() -> {
                             new Comment.Builder()
-                                    .writer("테스터")
+                                    .writer(new CommentWriter("테스터"))
                                     .password(new Password(password))
                                     .content("내용 1")
                                     .boardIdx(new BoardIdx(1))
@@ -147,14 +147,14 @@ public class CommentTest {
 
             // when
             new Comment.Builder()
-                    .writer("테스터")
+                    .writer(new CommentWriter("테스터"))
                     .password(new Password("rkskekfka1!"))
                     .content(shortContent)
                     .boardIdx(new BoardIdx(1))
                     .build();
 
             new Comment.Builder()
-                    .writer("테스터")
+                    .writer(new CommentWriter("테스터"))
                     .password(new Password("rkskekfka1!"))
                     .content(longContent.toString())
                     .boardIdx(new BoardIdx(1))
@@ -174,7 +174,7 @@ public class CommentTest {
             assertThatExceptionOfType(IllegalArgumentException.class)
                     .isThrownBy(() -> {
                         new Comment.Builder()
-                                .writer("테스터")
+                                .writer(new CommentWriter("테스터"))
                                 .password(new Password("rkskekfka1!"))
                                 .content(shortContent)
                                 .boardIdx(new BoardIdx(1))
@@ -184,7 +184,7 @@ public class CommentTest {
             assertThatExceptionOfType(IllegalArgumentException.class)
                     .isThrownBy(() -> {
                         new Comment.Builder()
-                                .writer("테스터")
+                                .writer(new CommentWriter("테스터"))
                                 .password(new Password("rkskekfka1!"))
                                 .content(longContent.toString())
                                 .boardIdx(new BoardIdx(1))
