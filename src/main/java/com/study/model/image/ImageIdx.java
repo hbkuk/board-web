@@ -1,12 +1,15 @@
 package com.study.model.image;
 
+import lombok.Getter;
+
 import java.util.Objects;
 
+@Getter
 public class ImageIdx {
     private static final int MIN_IMAGEIDX_VALUE = 0;
-    private int imageIdx;
+    private long imageIdx;
 
-    public ImageIdx(int value) {
+    public ImageIdx(long value) {
         if(value < MIN_IMAGEIDX_VALUE) {
             throw new IllegalArgumentException("이미지 번호는 음수일 수 없습니다.");
         }

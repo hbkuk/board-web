@@ -13,6 +13,8 @@ import com.study.model.board.Title;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 public class BoardDTO {
@@ -25,19 +27,21 @@ public class BoardDTO {
     private Hit hit;
     private RegDate regDate;
     private ModDate modDate;
+    private boolean hasImage;
+    private List<CommentDTO> comments;
+    private List<ImageDTO> images;
 
-    public BoardDTO() {
-    }
-
-    public BoardDTO(Board board) {
-        this.boardIdx = board.getBoardIdx();
-        this.category = board.getCategory();
-        this.title = board.getTitle();
-        this.writer = board.getWriter();
-        this.content = board.getContent();
-        this.password = board.getPassword();
-        this.hit = board.getHit();
-        this.regDate = board.getRegDate();
-        this.modDate = board.getModDate();
+    public static BoardDTO fromEntity(Board board) {
+        BoardDTO boardDTO = new BoardDTO();
+        boardDTO.setBoardIdx(board.getBoardIdx());
+        boardDTO.setCategory(board.getCategory());
+        boardDTO.setTitle(board.getTitle());
+        boardDTO.setWriter(board.getWriter());
+        boardDTO.setContent(board.getContent());
+        boardDTO.setPassword(board.getPassword());
+        boardDTO.setHit(board.getHit());
+        boardDTO.setRegDate(board.getRegDate());
+        boardDTO.setModDate(board.getModDate());
+        return boardDTO;
     }
 }

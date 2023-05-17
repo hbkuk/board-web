@@ -1,7 +1,10 @@
 package com.study.model.board;
 
+import lombok.Getter;
+
 import java.util.Objects;
 
+@Getter
 public class BoardIdx {
     private static final int MIN_BOARDID_VALUE = 0;
     private long boardId = 0;
@@ -11,6 +14,10 @@ public class BoardIdx {
             throw new IllegalArgumentException("글 번호는 음수일 수 없습니다.");
         }
         this.boardId = value;
+    }
+
+    public long getBoardIdx() {
+        return boardId;
     }
 
     @Override

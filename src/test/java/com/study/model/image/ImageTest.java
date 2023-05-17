@@ -1,5 +1,6 @@
 package com.study.model.image;
 
+import com.study.model.board.BoardIdx;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,7 @@ public class ImageTest {
         Image image = new Image.Builder()
                 .imageName(new ImageName("test.jpg"))
                 .imageSize(new ImageSize(127904))
+                .boardIdx(new BoardIdx(1))
                 .build();
     }
 
@@ -30,6 +32,7 @@ public class ImageTest {
             Image image = new Image.Builder()
                     .imageName(new ImageName(name))
                     .imageSize(new ImageSize(127904))
+                    .boardIdx(new BoardIdx(1))
                     .build();
         }
 
@@ -42,6 +45,7 @@ public class ImageTest {
                         new Image.Builder()
                                 .imageName(new ImageName(name))
                                 .imageSize(new ImageSize(127904))
+                                .boardIdx(new BoardIdx(1))
                                 .build();
                     })
                     .withMessageMatching("유효하지 않은 확장자입니다.");
@@ -59,6 +63,7 @@ public class ImageTest {
             Image image = new Image.Builder()
                     .imageName(new ImageName("test.png"))
                     .imageSize(new ImageSize(imageSize))
+                    .boardIdx(new BoardIdx(1))
                     .build();
         }
 
@@ -72,6 +77,7 @@ public class ImageTest {
                         Image image = new Image.Builder()
                                 .imageName(new ImageName("test.png"))
                                 .imageSize(new ImageSize(imageSize))
+                                .boardIdx(new BoardIdx(1))
                                 .build();
                     })
                     .withMessageMatching("이미지의 크기가 10_485_760 byte 이상일 수 없습니다.");

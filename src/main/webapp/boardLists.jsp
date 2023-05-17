@@ -1,4 +1,4 @@
-<%@ page import="com.study.repository.BoardDAO" %>
+<%@ page import="com.study.repository.board.BoardDAO" %>
 <%@ page import="com.study.model.board.Board" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"

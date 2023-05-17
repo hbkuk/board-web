@@ -5,13 +5,17 @@ import java.util.Objects;
 public class ImageSize {
 
     private static final int MAX_IMAGE_SIZE_VALUE = 10_485_760;
-    private long imageSize;
+    private int imageSize;
 
     public ImageSize(int imageSize) {
         if (imageSize >= MAX_IMAGE_SIZE_VALUE) {
             throw new IllegalArgumentException("이미지의 크기가 10_485_760 byte 이상일 수 없습니다.");
         }
         this.imageSize = imageSize;
+    }
+
+    public int getImageSize() {
+        return imageSize;
     }
 
     @Override

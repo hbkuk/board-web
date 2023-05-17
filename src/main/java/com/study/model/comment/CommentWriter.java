@@ -15,6 +15,10 @@ public class CommentWriter {
         this.writer = writer;
     }
 
+    public String getWriter() {
+        return writer;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o)

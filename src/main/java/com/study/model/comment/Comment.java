@@ -13,7 +13,7 @@ public class Comment {
     private final CommentIdx commentIdx;
     private final CommentWriter writer;
     private final Password password;
-    private final String content;
+    private final CommentContent content;
     private final RegDate regDate;
     private final BoardIdx boardIdx;
 
@@ -31,7 +31,7 @@ public class Comment {
         private CommentIdx commentIdx;
         private CommentWriter writer;
         private Password password;
-        private String content;
+        private CommentContent content;
         private RegDate regDate;
         private BoardIdx boardIdx;
 
@@ -50,7 +50,7 @@ public class Comment {
             this.password = Password;
             return this;
         }
-        public Builder content(String Content) {
+        public Builder content(CommentContent Content) {
             this.content = Content;
             return this;
         }

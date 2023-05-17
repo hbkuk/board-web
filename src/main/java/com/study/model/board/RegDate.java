@@ -1,12 +1,15 @@
 package com.study.model.board;
 
+import lombok.Getter;
+
 import java.time.LocalDateTime;
 
+@Getter
 public class RegDate {
 
-    private LocalDateTime dateTime = LocalDateTime.now();
+    private LocalDateTime localDatetime = LocalDateTime.now();
 
     public RegDate(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
+        this.localDatetime = dateTime;
     }
 }

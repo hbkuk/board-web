@@ -6,7 +6,7 @@ public class CommentIdx {
     private static final int MIN_COMMENTIDX_VALUE = 0;
     private long commentIdx = 0;
 
-    public CommentIdx(int value) {
+    public CommentIdx(long value) {
         if(value < MIN_COMMENTIDX_VALUE) {
             throw new IllegalArgumentException("글 번호는 음수일 수 없습니다.");
         }

@@ -4,6 +4,7 @@ import com.study.model.board.BoardIdx;
 import com.study.model.board.Password;
 import com.study.model.board.RegDate;
 import com.study.model.comment.Comment;
+import com.study.model.comment.CommentContent;
 import com.study.model.comment.CommentIdx;
 import com.study.model.comment.CommentWriter;
 import lombok.Getter;
@@ -15,7 +16,7 @@ public class CommentDTO {
     private CommentIdx commentIdx;
     private CommentWriter writer;
     private Password password;
-    private String content;
+    private CommentContent content;
     private RegDate regDate;
     private BoardIdx boardIdx;
 

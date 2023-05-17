@@ -19,6 +19,10 @@ public class Title {
         return this.title.length() >= MIN_STANDARD_LONG_TITLE_LENGTH;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o)

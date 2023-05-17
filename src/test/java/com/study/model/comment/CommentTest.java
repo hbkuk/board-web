@@ -18,7 +18,7 @@ public class CommentTest {
         Comment comment = new Comment.Builder()
                 .writer(new CommentWriter("테스터"))
                 .password(new Password("rkskekfka1!"))
-                .content("내용 1")
+                .content(new CommentContent("내용 1"))
                 .boardIdx(new BoardIdx(1))
                 .build();
     }
@@ -35,7 +35,7 @@ public class CommentTest {
             new Comment.Builder()
                     .writer(new CommentWriter(writer))
                     .password(new Password("rkskekfka1!"))
-                    .content("내용 1")
+                    .content(new CommentContent("내용 1"))
                     .boardIdx(new BoardIdx(1))
                     .build();
         }
@@ -50,7 +50,7 @@ public class CommentTest {
                         new Comment.Builder()
                                 .writer(new CommentWriter(writer))
                                 .password(new Password("rkskekfka1!"))
-                                .content("내용 1")
+                                .content(new CommentContent("내용 1"))
                                 .boardIdx(new BoardIdx(1))
                                 .build();})
                     .withMessageMatching("작성자를 3글자 미만 5글자 이상을 입력할 수 없습니다.");
@@ -74,7 +74,7 @@ public class CommentTest {
                 new Comment.Builder()
                         .writer(new CommentWriter("테스터"))
                         .password(new Password(password))
-                        .content("내용 1")
+                        .content(new CommentContent("내용 1"))
                         .boardIdx(new BoardIdx(1))
                         .build();
             }
@@ -90,7 +90,7 @@ public class CommentTest {
                         new Comment.Builder()
                                 .writer(new CommentWriter("테스터"))
                                 .password(new Password(password))
-                                .content("내용 1")
+                                .content(new CommentContent("내용 1"))
                                 .boardIdx(new BoardIdx(1))
                                 .build();
                     })
@@ -109,7 +109,7 @@ public class CommentTest {
                 new Comment.Builder()
                         .writer(new CommentWriter("테스터"))
                         .password(new Password(password))
-                        .content("내용 1")
+                        .content(new CommentContent("내용 1"))
                         .boardIdx(new BoardIdx(1))
                         .build();
             }
@@ -123,7 +123,7 @@ public class CommentTest {
                             new Comment.Builder()
                                     .writer(new CommentWriter("테스터"))
                                     .password(new Password(password))
-                                    .content("내용 1")
+                                    .content(new CommentContent("내용 1"))
                                     .boardIdx(new BoardIdx(1))
                                     .build();})
                         .withMessageMatching("패스워드는 영문, 숫자, 특수문자가 포함되어 있어야 합니다.");
@@ -149,14 +149,14 @@ public class CommentTest {
             new Comment.Builder()
                     .writer(new CommentWriter("테스터"))
                     .password(new Password("rkskekfka1!"))
-                    .content(shortContent)
+                    .content(new CommentContent(shortContent))
                     .boardIdx(new BoardIdx(1))
                     .build();
 
             new Comment.Builder()
                     .writer(new CommentWriter("테스터"))
                     .password(new Password("rkskekfka1!"))
-                    .content(longContent.toString())
+                    .content(new CommentContent(longContent.toString()))
                     .boardIdx(new BoardIdx(1))
                     .build();
         }
@@ -176,7 +176,7 @@ public class CommentTest {
                         new Comment.Builder()
                                 .writer(new CommentWriter("테스터"))
                                 .password(new Password("rkskekfka1!"))
-                                .content(shortContent)
+                                .content(new CommentContent(shortContent))
                                 .boardIdx(new BoardIdx(1))
                                 .build();})
                     .withMessageMatching("내용은 4글자 미만 1000글자를 초과할 수 없습니다.");
@@ -186,7 +186,7 @@ public class CommentTest {
                         new Comment.Builder()
                                 .writer(new CommentWriter("테스터"))
                                 .password(new Password("rkskekfka1!"))
-                                .content(longContent.toString())
+                                .content(new CommentContent(longContent.toString()))
                                 .boardIdx(new BoardIdx(1))
                                 .build();})
                     .withMessageMatching("내용은 4글자 미만 1000글자를 초과할 수 없습니다.");
