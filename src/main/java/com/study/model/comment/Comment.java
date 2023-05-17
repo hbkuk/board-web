@@ -10,8 +10,8 @@ import java.util.stream.Stream;
 
 @Getter
 public class Comment {
-    private final long commentIdx;
-    private final String writer;
+    private final CommentIdx commentIdx;
+    private final CommentWriter writer;
     private final Password password;
     private final String content;
     private final RegDate regDate;
@@ -28,8 +28,8 @@ public class Comment {
 
     public static class Builder {
 
-        private long commentIdx = 0;
-        private String writer;
+        private CommentIdx commentIdx;
+        private CommentWriter writer;
         private Password password;
         private String content;
         private RegDate regDate;
@@ -38,11 +38,11 @@ public class Comment {
         public Builder() {
         }
 
-        public Builder commentIdx(long commentIdx) {
+        public Builder commentIdx(CommentIdx commentIdx) {
             this.commentIdx = commentIdx;
             return this;
         }
-        public Builder writer(String Writer) {
+        public Builder writer(CommentWriter Writer) {
             this.writer = Writer;
             return this;
         }
@@ -64,11 +64,8 @@ public class Comment {
         }
 
         public Comment build() {
-            if (!Stream.of(commentIdx, writer, password, content, boardIdx).allMatch(Objects::nonNull)) {
+            if (!Stream.of(writer, password, content, boardIdx).allMatch(Objects::nonNull)) {
                 throw new IllegalArgumentException("필수값이 입력되지 않았습니다.");
-            }
-            if (writer.length() < 3 || writer.length() > 4) {
-                throw new IllegalArgumentException("작성자를 3글자 미만 5글자 이상을 입력할 수 없습니다.");
             }
             if (content.length() < 4 || content.length() > 999) {
                 throw new IllegalArgumentException("내용은 4글자 미만 1000글자를 초과할 수 없습니다.");
