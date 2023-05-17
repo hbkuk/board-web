@@ -15,6 +15,7 @@ public class Board {
     private final Password password;
     private final Hit hit;
     private final RegDate regDate;
+    private final ModDate modDate;
 
     public Board(Builder builder) {
         this.boardIdx = builder.boardIdx;
@@ -25,6 +26,7 @@ public class Board {
         this.password = builder.password;
         this.hit = builder.hit;
         this.regDate = builder.regDate;
+        this.modDate = builder.modDate;
     }
 
     public static class Builder {
@@ -37,6 +39,7 @@ public class Board {
         private Password password;
         private Hit hit;
         private RegDate regDate;
+        private ModDate modDate;
 
         public Builder() {
         }
@@ -78,6 +81,11 @@ public class Board {
 
         public Builder regDate(RegDate regDate) {
             this.regDate = regDate;
+            return this;
+        }
+
+        public Builder modDate(ModDate modDate) {
+            this.modDate = modDate;
             return this;
         }
 
