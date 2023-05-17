@@ -67,9 +67,6 @@ public class Comment {
             if (!Stream.of(writer, password, content, boardIdx).allMatch(Objects::nonNull)) {
                 throw new IllegalArgumentException("필수값이 입력되지 않았습니다.");
             }
-            if (content.length() < 4 || content.length() > 999) {
-                throw new IllegalArgumentException("내용은 4글자 미만 1000글자를 초과할 수 없습니다.");
-            }
             return new Comment(this);
         }
     }

@@ -13,7 +13,7 @@ public class CommentIdxTest {
     @DisplayName("생성자의 매개변수는 정수만 허용된다.")
     @ParameterizedTest
     @ValueSource(ints = {1, 100, 2000, 3000, 40000, 50000})
-    void create_boardId(int number) {
+    void create_commentIdx(int number) {
         CommentIdx commentIdx = new CommentIdx(number);
 
         assertThat(commentIdx).isEqualTo(new CommentIdx(number));
@@ -22,7 +22,7 @@ public class CommentIdxTest {
     @ParameterizedTest
     @ValueSource(ints = {-1, -2, -3, -1000, -20000})
     @DisplayName("음수가 전달될 경우 예외가 발생한다.")
-    void invalid_boardId(int number) {
+    void invalid_commentIdx(int number) {
         assertThatExceptionOfType(IllegalArgumentException.class)
                 .isThrownBy(() -> {
                     new CommentIdx(number);
