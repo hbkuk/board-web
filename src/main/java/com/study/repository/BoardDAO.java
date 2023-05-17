@@ -7,7 +7,7 @@ import com.study.model.board.Hit;
 import com.study.model.board.Password;
 import com.study.model.board.RegDate;
 import com.study.model.board.Title;
-import com.study.model.board.Writer;
+import com.study.model.board.BoardWriter;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -41,7 +41,7 @@ public class BoardDAO {
                 BoardDTO boardDTO = new BoardDTO();
                 boardDTO.setCategory(Category.valueOf(resultSet.getString("category")));
                 boardDTO.setTitle(new Title(resultSet.getString("title")));
-                boardDTO.setWriter(new Writer(resultSet.getString("writer")));
+                boardDTO.setWriter(new BoardWriter(resultSet.getString("writer")));
                 boardDTO.setPassword(new Password((resultSet.getString("password"))));
                 boardDTO.setHit(new Hit(resultSet.getInt("hit")));
                 boardDTO.setRegDate(new RegDate(resultSet.getTimestamp("regdate").toLocalDateTime()));
@@ -69,7 +69,7 @@ public class BoardDAO {
                 boardDTO.setBoardIdx(new BoardIdx(resultSet.getLong("board_idx")));
                 boardDTO.setCategory(Category.valueOf(resultSet.getString("category")));
                 boardDTO.setTitle(new Title(resultSet.getString("title")));
-                boardDTO.setWriter(new Writer(resultSet.getString("writer")));
+                boardDTO.setWriter(new BoardWriter(resultSet.getString("writer")));
                 boardDTO.setPassword(new Password((resultSet.getString("password"))));
                 boardDTO.setHit(new Hit(resultSet.getInt("hit")));
                 boardDTO.setRegDate(new RegDate(resultSet.getTimestamp("regdate").toLocalDateTime()));

@@ -10,8 +10,8 @@ public class Board {
     private final BoardIdx boardIdx;
     private final Category category;
     private final Title title;
-    private final Writer writer;
-    private final Content content;
+    private final BoardWriter writer;
+    private final BoardContent content;
     private final Password password;
     private final Hit hit;
     private final RegDate regDate;
@@ -32,8 +32,8 @@ public class Board {
         private BoardIdx boardIdx;
         private Category category;
         private Title title;
-        private Writer writer;
-        private Content content;
+        private BoardWriter writer;
+        private BoardContent content;
         private Password password;
         private Hit hit;
         private RegDate regDate;
@@ -51,12 +51,12 @@ public class Board {
             return this;
         }
 
-        public Builder writer(Writer writer) {
+        public Builder writer(BoardWriter writer) {
             this.writer = writer;
             return this;
         }
 
-        public Builder content(Content content) {
+        public Builder content(BoardContent content) {
             this.content = content;
             return this;
         }

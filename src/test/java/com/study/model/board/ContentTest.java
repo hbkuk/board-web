@@ -13,9 +13,9 @@ public class ContentTest {
 
     @Test
     void create_content() {
-        Content content = new Content("내용입니다.");
+        BoardContent content = new BoardContent("내용입니다.");
 
-        assertThat(content).isEqualTo(new Content("내용입니다."));
+        assertThat(content).isEqualTo(new BoardContent("내용입니다."));
     }
 
     @DisplayName("4글자 미만일 경우 예외가 발생한다.")
@@ -24,7 +24,7 @@ public class ContentTest {
     void invalid_content_shorter_than(String text) {
         assertThatExceptionOfType(IllegalArgumentException.class)
                 .isThrownBy(() -> {
-                    new Content(text);
+                    new BoardContent(text);
                 })
                 .withMessageMatching("내용은 4글자 미만 2000글자를 초과할 수 없습니다.");
     }
@@ -39,7 +39,7 @@ public class ContentTest {
 
         assertThatExceptionOfType(IllegalArgumentException.class)
                 .isThrownBy(() -> {
-                    new Content(longContentSource.toString());
+                    new BoardContent(longContentSource.toString());
                 })
                 .withMessageMatching("내용은 4글자 미만 2000글자를 초과할 수 없습니다.");
     }

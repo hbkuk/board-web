@@ -15,10 +15,10 @@ public class WriterTest {
     void create() {
         // given
         String name = "테스터";
-        Writer writer = new Writer(name);
+        BoardWriter writer = new BoardWriter(name);
 
         // when
-        boolean acture = writer.equals(new Writer(name));
+        boolean acture = writer.equals(new BoardWriter(name));
 
         // then
         assertThat(acture).isTrue();
@@ -30,7 +30,7 @@ public class WriterTest {
     void invalid_writer_shorter_than(String name) {
         assertThatExceptionOfType(IllegalArgumentException.class)
                 .isThrownBy(() -> {
-                    Writer writer = new Writer(name);
+                    BoardWriter writer = new BoardWriter(name);
                 })
                 .withMessageMatching("작성자를 3글자 미만 5글자 이상을 입력할 수 없습니다.");
     }
@@ -41,7 +41,7 @@ public class WriterTest {
     void invalid_writer_longer_than(String name) {
         assertThatExceptionOfType(IllegalArgumentException.class)
                 .isThrownBy(() -> {
-                    Writer writer = new Writer(name);
+                    BoardWriter writer = new BoardWriter(name);
                 })
                 .withMessageMatching("작성자를 3글자 미만 5글자 이상을 입력할 수 없습니다.");
     }

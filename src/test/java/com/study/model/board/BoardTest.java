@@ -23,8 +23,8 @@ public class BoardTest {
             Board board = new Board.Builder()
                     .category(Category.JAVA)
                     .title(new Title("제목 1"))
-                    .writer(new Writer("테스터"))
-                    .content(new Content("내용 1"))
+                    .writer(new BoardWriter("테스터"))
+                    .content(new BoardContent("내용 1"))
                     .password(new Password("rkskekfkakqkt!1"))
                     .build();
 
@@ -43,8 +43,8 @@ public class BoardTest {
                     .isThrownBy(() -> {
                         new Board.Builder()
                                 .title(new Title("제목 1"))
-                                .writer(new Writer("테스터"))
-                                .content(new Content("내용 1"))
+                                .writer(new BoardWriter("테스터"))
+                                .content(new BoardContent("내용 1"))
                                 .password(new Password("rkskekfkakqkt!1"))
                                 .build();
                     }).withMessageMatching("필수값이 입력되지 않았습니다.");
@@ -69,16 +69,16 @@ public class BoardTest {
             new Board.Builder()
                     .category(Category.JAVA)
                     .title(new Title(shortTitle))
-                    .writer(new Writer("테스터"))
-                    .content(new Content("내용 1"))
+                    .writer(new BoardWriter("테스터"))
+                    .content(new BoardContent("내용 1"))
                     .password(new Password("rkskekfkakqkt!1"))
                     .build();
 
             new Board.Builder()
                     .category(Category.JAVA)
                     .title(new Title(longTitle.toString()))
-                    .writer(new Writer("테스터"))
-                    .content(new Content("내용 1"))
+                    .writer(new BoardWriter("테스터"))
+                    .content(new BoardContent("내용 1"))
                     .password(new Password("rkskekfkakqkt!1"))
                     .build();
         }
@@ -100,8 +100,8 @@ public class BoardTest {
                             new Board.Builder()
                                 .category(Category.JAVA)
                                 .title(new Title(shortTitle))
-                                .writer(new Writer("테스터"))
-                                    .content(new Content("내용 1"))
+                                .writer(new BoardWriter("테스터"))
+                                    .content(new BoardContent("내용 1"))
                                     .password(new Password("rkskekfkakqkt!1"))
                                 .build();})
                     .withMessageMatching("제목은 4글자 미만, 99글자 이상을 입력할 수 없습니다.");
@@ -111,8 +111,8 @@ public class BoardTest {
                             new Board.Builder()
                                 .category(Category.JAVA)
                                 .title(new Title(longTitle))
-                                .writer(new Writer("테스터"))
-                                    .content(new Content("내용 1"))
+                                .writer(new BoardWriter("테스터"))
+                                    .content(new BoardContent("내용 1"))
                                     .password(new Password("rkskekfkakqkt!1"))
                                 .build();})
                     .withMessageMatching("제목은 4글자 미만, 99글자 이상을 입력할 수 없습니다.");
@@ -132,8 +132,8 @@ public class BoardTest {
                 new Board.Builder()
                     .category(Category.JAVA)
                     .title(new Title("제목 1"))
-                    .writer(new Writer(writer))
-                    .content(new Content("내용 1"))
+                    .writer(new BoardWriter(writer))
+                    .content(new BoardContent("내용 1"))
                         .password(new Password("rkskekfkakqkt!1"))
                     .build();
         }
@@ -148,8 +148,8 @@ public class BoardTest {
                         new Board.Builder()
                             .category(Category.JAVA)
                             .title(new Title("제목 1"))
-                            .writer(new Writer(writer))
-                                .content(new Content("내용 1"))
+                            .writer(new BoardWriter(writer))
+                                .content(new BoardContent("내용 1"))
                                 .password(new Password("rkskekfkakqkt!1"))
                             .build();})
                     .withMessageMatching("작성자를 3글자 미만 5글자 이상을 입력할 수 없습니다.");
@@ -173,8 +173,8 @@ public class BoardTest {
                     new Board.Builder()
                         .category(Category.JAVA)
                         .title(new Title("제목 1"))
-                        .writer(new Writer("테스터"))
-                        .content(new Content("내용 1"))
+                        .writer(new BoardWriter("테스터"))
+                        .content(new BoardContent("내용 1"))
                         .password(new Password(password))
                         .build();
             }
@@ -190,8 +190,8 @@ public class BoardTest {
                                 new Board.Builder()
                                     .category(Category.JAVA)
                                     .title(new Title("제목 1"))
-                                    .writer(new Writer("테스터"))
-                                    .content(new Content("내용 1"))
+                                    .writer(new BoardWriter("테스터"))
+                                    .content(new BoardContent("내용 1"))
                                     .password(new Password(password))
                                     .build();
                         })
@@ -210,8 +210,8 @@ public class BoardTest {
                     new Board.Builder()
                         .category(Category.JAVA)
                         .title(new Title("제목 1"))
-                        .writer(new Writer("테스터"))
-                        .content(new Content("내용 1"))
+                        .writer(new BoardWriter("테스터"))
+                        .content(new BoardContent("내용 1"))
                         .password(new Password(password))
                         .build();
             }
@@ -225,8 +225,8 @@ public class BoardTest {
                                 new Board.Builder()
                                     .category(Category.JAVA)
                                     .title(new Title("제목 1"))
-                                    .writer(new Writer("테스터"))
-                                    .content(new Content("내용 1"))
+                                    .writer(new BoardWriter("테스터"))
+                                    .content(new BoardContent("내용 1"))
                                     .password(new Password(password))
                                     .build();})
                         .withMessageMatching("패스워드는 영문, 숫자, 특수문자가 포함되어 있어야 합니다.");
@@ -252,16 +252,16 @@ public class BoardTest {
                 new Board.Builder()
                         .category(Category.JAVA)
                         .title(new Title("제목 1"))
-                        .writer(new Writer("테스터"))
-                        .content(new Content(shortContent))
+                        .writer(new BoardWriter("테스터"))
+                        .content(new BoardContent(shortContent))
                         .password(new Password("rkskekfkakqkt!1"))
                         .build();
 
                 new Board.Builder()
                         .category(Category.JAVA)
                         .title(new Title("제목 1"))
-                        .writer(new Writer("테스터"))
-                        .content(new Content(longContent.toString()))
+                        .writer(new BoardWriter("테스터"))
+                        .content(new BoardContent(longContent.toString()))
                         .password(new Password("rkskekfkakqkt!1"))
                         .build();
             }
@@ -281,8 +281,8 @@ public class BoardTest {
                             new Board.Builder()
                                     .category(Category.JAVA)
                                     .title(new Title("제목 1"))
-                                    .writer(new Writer("테스터"))
-                                    .content(new Content(shortContent))
+                                    .writer(new BoardWriter("테스터"))
+                                    .content(new BoardContent(shortContent))
                                     .password(new Password("rkskekfkakqkt!1"))
                                     .build();})
                         .withMessageMatching("내용은 4글자 미만 2000글자를 초과할 수 없습니다.");
@@ -292,8 +292,8 @@ public class BoardTest {
                             new Board.Builder()
                                     .category(Category.JAVA)
                                     .title(new Title("제목 1"))
-                                    .writer(new Writer("테스터"))
-                                    .content(new Content(longContent.toString()))
+                                    .writer(new BoardWriter("테스터"))
+                                    .content(new BoardContent(longContent.toString()))
                                     .password(new Password("rkskekfkakqkt!1"))
                                     .build();})
                         .withMessageMatching("내용은 4글자 미만 2000글자를 초과할 수 없습니다.");
