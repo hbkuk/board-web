@@ -35,8 +35,8 @@ public class ImageDAO {
 
             if (resultSet.next()) {
                 imageDTO.setImageIdx(resultSet.getLong("image_idx"));
-                imageDTO.setImageName(resultSet.getString("image_name"));
-                imageDTO.setImageSize(resultSet.getInt("image_size"));
+                imageDTO.setImageName(resultSet.getString("name"));
+                imageDTO.setImageSize(resultSet.getInt("size"));
                 imageDTO.setBoardIdx(resultSet.getLong("board_idx"));
             }
         } catch (SQLException e) {
@@ -91,8 +91,8 @@ public class ImageDAO {
             while (resultSet.next()) {
                 ImageDTO imageDTO = new ImageDTO();
                 imageDTO.setImageIdx(resultSet.getLong("image_idx"));
-                imageDTO.setImageName(resultSet.getString("image_name"));
-                imageDTO.setImageSize(resultSet.getInt("image_size"));
+                imageDTO.setImageName(resultSet.getString("name"));
+                imageDTO.setImageSize(resultSet.getInt("size"));
                 imageDTO.setBoardIdx(resultSet.getLong("board_idx"));
                 images.add(imageDTO);
             }

@@ -34,14 +34,14 @@ public class BoardService {
         return boardDAO.findAllWithImageCheck();
     }
 
-    public BoardDTO getBoardWithDetails(long boardId) {
-        BoardDTO boardDTO = boardDAO.findById(boardId);
+    public BoardDTO getBoardWithDetails(long boardIdx) {
+        BoardDTO boardDTO = boardDAO.findById(boardIdx);
         if( boardDTO == null ) {
             throw new NoSuchElementException("해당 글을 찾을 수 없습니다.");
         }
 
-        boardDTO.setComments(commentDAO.findAllByBoardId(boardId));
-        boardDTO.setImages(imageDAO.findImagesByBoardId(boardId));
+        boardDTO.setComments(commentDAO.findAllByBoardId(boardIdx));
+        boardDTO.setImages(imageDAO.findImagesByBoardId(boardIdx));
 
         return boardDTO;
     }

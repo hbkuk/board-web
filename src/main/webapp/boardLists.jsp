@@ -1,10 +1,16 @@
-<%@ page import="com.study.repository.board.BoardDAO" %>
-<%@ page import="com.study.model.board.Board" %>
+<%@ page import="com.study.service.BoardService" %>
+<%@ page import="com.study.dto.BoardDTO" %>
+<%@ page import="java.util.List" %>
+<%@ page import="com.study.model.board.Category" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
 <%
-    BoardDAO boardDAO = new BoardDAO();
+    // Get the instance of BoardService
+    BoardService boardService = BoardService.getInstance();
+
+    // Call the getBoardListDetails method
+    List<BoardDTO> boardList = boardService.getBoardListDetails();
 %>
 
 <!DOCTYPE html>
@@ -30,9 +36,9 @@
                 <td><input type="date" id="end_date" placeholder="끝 날짜"></td>
                 <td><select id="category">
                     <option value="전체">전체 카테고리</option>
-                    <option value="카테고리1">카테고리1</option>
-                    <option value="카테고리2">카테고리2</option>
-                    <option value="카테고리3">카테고리3</option>
+                    <c:forEach items="${Category.values()}" var="category">
+                        <option value="${category.name()}">${category.name()}</option>
+                    </c:forEach>
                 </select></td>
                 <td><input type="text" id="search_query" placeholder="검색어를 입력해 주세요. (제목+작성자+내용)" style="width: 200px;"></td>
                 <td><button>검색</button></td>
@@ -51,7 +57,9 @@
             <table>
                 <tr>
                     <th width="3%">&nbsp;</th>
-                    <th width="5%">카테고리</th>
+                    <th width="10%">카테고리</th>
+                    <th width="3%">&nbsp;</th>
+                    <th width="3%">&nbsp;</th>
                     <th>제목</th>
                     <th width="10%">작성자</th>
                     <th width="5%">조회수</th>
@@ -59,12 +67,33 @@
                     <th width="12%">수정 일시</th>
                     <th width="3%">&nbsp;</th>
                 </tr>
+            <c:forEach items="<%=boardList%>" var="board">
+                <tr>
+                    <td width="3%">&nbsp;</td>
+                    <td width="10%">${board.category}</td>
+                    <td width="3%"> &nbsp; </td>
+                <c:choose>
+                    <c:when test="${board.hasImage eq true}">
+                        <td width="3%"> OK </td>
+                    </c:when>
+                    <c:otherwise>
+                        <td width="3%"> nothing </td>
+                    </c:otherwise>
+                </c:choose>
+                    <td><a href=boardView.jsp?seq=${board.boardIdx}>${board.title}</a></td>
+                    <td width="10%">${board.writer}</td>
+                    <td width="5%">${board.hit}</td>
+                    <td width="12%">${board.regDate}</td>
+                    <td width="12%">${board.modDate}</td>
+                    <td width="3%">&nbsp;</td>
+                </tr>
+            </c:forEach>
             </table>
         </div>
 
         <div class="btn_area">
             <div class="align_right">
-                <input type="button" value="쓰기" class="btn_write btn_txt01" style="cursor: pointer;" onclick="location.href='board_write1.jsp'" />
+                <input type="button" value="쓰기" class="btn_write btn_txt01" style="cursor: pointer;" onclick="location.href='writeView.jsp'" />
             </div>
         </div>
     </div>

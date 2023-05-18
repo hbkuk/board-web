@@ -30,12 +30,14 @@ public class BoardDAO {
     }
 
     public BoardDTO findById(Long id) {
-        BoardDTO boardDTO = new BoardDTO();
+        BoardDTO boardDTO = null;
         try {
             statement = connection.prepareStatement("SELECT * FROM board WHERE board_idx = ?");
             statement.setLong(1, id);
             resultSet = statement.executeQuery();
             if (resultSet.next()) {
+                boardDTO = new BoardDTO();
+                boardDTO.setBoardIdx(id);
                 boardDTO.setCategory(Category.valueOf(resultSet.getString("category")));
                 boardDTO.setTitle(resultSet.getString("title"));
                 boardDTO.setWriter(resultSet.getString("writer"));
@@ -100,11 +102,12 @@ public class BoardDAO {
 
     public List<BoardDTO> findAllWithImageCheck() {
         try {
-            statement = connection.prepareStatement("SELECT b.*, (CASE WHEN EXISTS (SELECT 1 FROM image i WHERE i.board_idx = b.board_idx) THEN 1 ELSE 0 END) AS has_image FROM board b LEFT JOIN image i ON b.board_idx = i.board_idx");
+            statement = connection.prepareStatement("SELECT b.*, (CASE WHEN EXISTS (SELECT 1 FROM image i WHERE i.board_idx = b.board_idx) THEN 1 ELSE 0 END) AS has_image FROM board b LEFT JOIN image i ON b.board_idx = i.board_idx group by b.board_idx");
             resultSet = statement.executeQuery();
             List<BoardDTO> boards = new ArrayList<>();
             while (resultSet.next()) {
                 BoardDTO boardDTO = new BoardDTO();
+                boardDTO.setBoardIdx(resultSet.getLong("board_idx"));
                 boardDTO.setCategory(Category.valueOf(resultSet.getString("category")));
                 boardDTO.setTitle(resultSet.getString("title"));
                 boardDTO.setWriter(resultSet.getString("writer"));
