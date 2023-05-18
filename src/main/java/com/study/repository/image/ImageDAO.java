@@ -1,10 +1,7 @@
 package com.study.repository.image;
 
 import com.study.dto.ImageDTO;
-import com.study.model.board.BoardIdx;
-import com.study.model.image.ImageIdx;
-import com.study.model.image.ImageName;
-import com.study.model.image.ImageSize;
+import com.study.model.image.Image;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -14,7 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImageDAO implements ImageRepository {
+public class ImageDAO {
 
     private Connection connection;
     private PreparedStatement statement;
@@ -22,15 +19,13 @@ public class ImageDAO implements ImageRepository {
 
     public ImageDAO() {
         try {
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/ebrainsoft_study", "ebsoft", "ebsoft");
         } catch (ClassNotFoundException | SQLException e) {
-            // Handle exception
             e.printStackTrace();
         }
     }
 
-    @Override
     public ImageDTO findById(Long id) {
         ImageDTO imageDTO = new ImageDTO();
         try {
@@ -39,10 +34,10 @@ public class ImageDAO implements ImageRepository {
             resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
-                imageDTO.setImageIdx(new ImageIdx(resultSet.getLong("image_idx")));
-                imageDTO.setImageName(new ImageName(resultSet.getString("image_name")));
-                imageDTO.setImageSize(new ImageSize(resultSet.getInt("image_size")));
-                imageDTO.setBoardIdx(new BoardIdx(resultSet.getLong("board_idx")));
+                imageDTO.setImageIdx(resultSet.getLong("image_idx"));
+                imageDTO.setImageName(resultSet.getString("image_name"));
+                imageDTO.setImageSize(resultSet.getInt("image_size"));
+                imageDTO.setBoardIdx(resultSet.getLong("board_idx"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -87,7 +82,6 @@ public class ImageDAO implements ImageRepository {
     }
 
 
-    @Override
     public List<ImageDTO> findImagesByBoardId(Long boardIdx) {
         try {
             statement = connection.prepareStatement("SELECT * FROM image WHERE board_idx = ?");
@@ -96,10 +90,10 @@ public class ImageDAO implements ImageRepository {
             List<ImageDTO> images = new ArrayList<>();
             while (resultSet.next()) {
                 ImageDTO imageDTO = new ImageDTO();
-                imageDTO.setImageIdx(new ImageIdx(resultSet.getLong("image_idx")));
-                imageDTO.setImageName(new ImageName(resultSet.getString("image_name")));
-                imageDTO.setImageSize(new ImageSize(resultSet.getInt("image_size")));
-                imageDTO.setBoardIdx(new BoardIdx(resultSet.getLong("board_idx")));
+                imageDTO.setImageIdx(resultSet.getLong("image_idx"));
+                imageDTO.setImageName(resultSet.getString("image_name"));
+                imageDTO.setImageSize(resultSet.getInt("image_size"));
+                imageDTO.setBoardIdx(resultSet.getLong("board_idx"));
                 images.add(imageDTO);
             }
             return images;
@@ -120,17 +114,17 @@ public class ImageDAO implements ImageRepository {
         }
     }
 
-        @Override
-        public ImageDTO save(ImageDTO imageDTO){
+        public ImageDTO save(Image image, long boardIdx){
+            ImageDTO imageDTO = new ImageDTO();
             try {
                 statement = connection.prepareStatement("INSERT INTO image (image_name, image_size, board_idx) VALUES (?, ?, ?)");
-                statement.setString(1, imageDTO.getImageName().toString());
-                statement.setInt(2, imageDTO.getImageSize().getImageSize());
-                statement.setLong(3, imageDTO.getBoardIdx().getBoardIdx());
+                statement.setString(1, image.getImageName().getImageName());
+                statement.setInt(2, image.getImageSize().getImageSize());
+                statement.setLong(3, boardIdx);
                 statement.executeUpdate();
                 ResultSet generatedKeys = statement.getGeneratedKeys();
                 if (generatedKeys.next()) {
-                    imageDTO.setImageIdx(new ImageIdx(generatedKeys.getLong(1)));
+                    imageDTO.setImageIdx(generatedKeys.getLong(1));
                 }
                 return imageDTO;
             } catch (SQLException e) {
@@ -147,14 +141,16 @@ public class ImageDAO implements ImageRepository {
             }
         }
 
-    public ImageDTO update(ImageDTO imageDTO) {
+// 사용안함
+/*    public ImageDTO update(Image image) {
+        ImageDTO imageDTO = new ImageDTO();
         try {
             statement = connection.prepareStatement("UPDATE image SET image_name = ?, image_size = ?, board_idx = ? WHERE image_idx = ?");
 
-            statement.setString(1, imageDTO.getImageName().toString());
-            statement.setInt(2, imageDTO.getImageSize().getImageSize());
-            statement.setLong(3, imageDTO.getBoardIdx().getBoardIdx());
-            statement.setLong(4, imageDTO.getImageIdx().getImageIdx());
+            statement.setString(1, image.getImageName().toString());
+            statement.setInt(2, image.getImageSize().getImageSize());
+            statement.setLong(3, image.getBoardIdx().getBoardIdx());
+            statement.setLong(4, image.getImageIdx().getImageIdx());
 
             int rowsAffected = statement.executeUpdate();
             if (rowsAffected == 0) {
@@ -174,26 +170,25 @@ public class ImageDAO implements ImageRepository {
                 e.printStackTrace();
             }
         }
-    }
+    }*/
 
-        @Override
-        public void deleteByImageIdx(Long image_idx) {
+    public void deleteByImageIdx(Long image_idx) {
+        try {
+            statement = connection.prepareStatement("DELETE FROM image WHERE image_idx = ?");
+            statement.setLong(1, image_idx);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
             try {
-                statement = connection.prepareStatement("DELETE FROM image WHERE image_idx = ?");
-                statement.setLong(1, image_idx);
-                statement.executeUpdate();
+                if (statement != null) {
+                    statement.close();
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
-            } finally {
-                try {
-                    if (statement != null) {
-                        statement.close();
-                    }
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
             }
         }
+    }
 
     public void deleteAllByBoardIdx(Long board_idx) {
         try {

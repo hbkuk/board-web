@@ -2,6 +2,7 @@ package com.study.model.board;
 
 import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -16,6 +17,25 @@ public class Board {
     private final Hit hit;
     private final RegDate regDate;
     private final ModDate modDate;
+
+    public Board(BoardIdx boardIdx, Category category, Title title, BoardWriter writer,
+                 BoardContent content, Password password, Hit hit, RegDate regDate, ModDate modDate) {
+        this.boardIdx = boardIdx;
+        this.category = category;
+        this.title = title;
+        this.writer = writer;
+        this.content = content;
+        this.password = password;
+        this.hit = hit;
+        this.regDate = regDate;
+        this.modDate = modDate;
+    }
+
+    public Board(Category category, Title title, BoardWriter writer,
+                 BoardContent content, Password password) {
+        this(new BoardIdx(0), category, title, writer, content, password, new Hit(0), new RegDate(LocalDateTime.now()), null);
+    }
+
 
     public Board(Builder builder) {
         this.boardIdx = builder.boardIdx;

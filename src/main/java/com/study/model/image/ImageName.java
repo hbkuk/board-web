@@ -4,6 +4,7 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
 public class ImageName {
     private static final String IMAGE_NAME_EXTENSION__REGEX = "\\.(\\w+)$";
     private static final Pattern EXTENSION_PATTERN_COMPILE = Pattern.compile(IMAGE_NAME_EXTENSION__REGEX);
@@ -27,6 +28,10 @@ public class ImageName {
             return true;
         }
         return false;
+    }
+
+    public String getImageName() {
+        return imageName;
     }
 
     private Matcher getMatcher(String imageName) {

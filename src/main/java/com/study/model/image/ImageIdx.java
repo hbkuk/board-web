@@ -7,7 +7,7 @@ import java.util.Objects;
 @Getter
 public class ImageIdx {
     private static final int MIN_IMAGEIDX_VALUE = 0;
-    private long imageIdx;
+    private long imageIdx = 0;
 
     public ImageIdx(long value) {
         if(value < MIN_IMAGEIDX_VALUE) {

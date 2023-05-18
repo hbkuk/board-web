@@ -2,6 +2,8 @@ package com.study.service;
 
 import com.study.dto.BoardDTO;
 import com.study.dto.ImageDTO;
+import com.study.model.board.Board;
+import com.study.model.image.Image;
 import com.study.repository.board.BoardDAO;
 import com.study.repository.comment.CommentDAO;
 import com.study.repository.image.ImageDAO;
@@ -44,11 +46,11 @@ public class BoardService {
         return boardDTO;
     }
 
-    public BoardDTO saveBoardWithImages(BoardDTO boardDTO) {
-        boardDTO = boardDAO.save(boardDTO);
+    public BoardDTO saveBoardWithImages(Board board, List<Image> images) {
+        BoardDTO boardDTO = boardDAO.save(board);
 
-        if (boardDTO.getImages() != null) {
-            boardDTO.getImages().forEach(imageDTO -> imageDAO.save(imageDTO));
+        if (images.size() != 0) {
+            images.forEach(image -> imageDAO.save(image, boardDTO.getBoardIdx()));
         }
 
         return boardDTO;
@@ -67,35 +69,35 @@ public class BoardService {
         return boardDTO;
     }
 
-    public void updateBoardWithImages(BoardDTO boardDTO) {
-        boardDTO = boardDAO.update(boardDTO);
+    public void updateBoardWithImages(Board board, List<Image> images) {
+        BoardDTO boardDTO = boardDAO.update(board);
 
         if( boardDTO == null ) {
             throw new NoSuchElementException("해당 글을 찾을 수 없습니다.");
         }
-            // 새 이미지 찾기
-            List<ImageDTO> newImages = boardDTO.getImages().stream()
-                    .filter(imageDTO -> imageDTO.getImageIdx() == null)
-                    .collect(Collectors.toList());
 
-            // 기존 이미지 찾기
-            List<ImageDTO> oldImages =
-                    imageDAO.findImagesByBoardId(
-                            boardDTO.getBoardIdx().getBoardIdx());
+        // 새 이미지 찾기
+        List<Image> newImages = images.stream()
+                .filter(image -> image.getImageIdx().getImageIdx() == 0)
+                .collect(Collectors.toList());
 
-            // 새 이미지 추가
-            newImages.forEach(imageDTO -> imageDAO.save(imageDTO));
+        // 새 이미지 추가
+        newImages.forEach(image -> imageDAO.save(image, boardDTO.getBoardIdx()));
 
-            // 기존 이미지 제거
-            oldImages.stream()
-                    .filter(imageDTO -> !newImages.contains(imageDTO))
-                    .forEach(imageDTO -> imageDAO.deleteByImageIdx(imageDTO.getImageIdx().getImageIdx()));
+        // 기존 이미지 찾기
+        List<ImageDTO> oldImages =
+                imageDAO.findImagesByBoardId(boardDTO.getBoardIdx());
+
+        // 기존 이미지 제거
+        oldImages.stream()
+                .filter(imageDTO -> !newImages.contains(imageDTO))
+                .forEach(imageDTO -> imageDAO.deleteByImageIdx(imageDTO.getImageIdx()));
     }
 
     public void deleteBoardWithImagesAndComment(BoardDTO boardDTO) {
-        boardDAO.deleteById(boardDTO.getBoardIdx().getBoardId(), boardDTO.getPassword().getPassword());
-        commentDAO.deleteAllByBoardIdx(boardDTO.getBoardIdx().getBoardIdx());
-        imageDAO.deleteAllByBoardIdx(boardDTO.getBoardIdx().getBoardId());
+        boardDAO.deleteById(boardDTO.getBoardIdx(), boardDTO.getPassword());
+        commentDAO.deleteAllByBoardIdx(boardDTO.getBoardIdx());
+        imageDAO.deleteAllByBoardIdx(boardDTO.getBoardIdx());
     }
 }
 
