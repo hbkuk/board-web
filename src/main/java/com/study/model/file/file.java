@@ -18,7 +18,7 @@ public class file {
         this.fileIdx = builder.fileIdx;
         this.saveFileName = builder.saveFileName;
         this.originalName = builder.originalFileName;
-        this.fileSize = builder.fileSize;
+        this.fileSize = new fileSize(0);
         this.boardIdx = builder.boardIdx;
     }
 
@@ -53,7 +53,7 @@ public class file {
         }
 
         public file build() {
-            if (!Stream.of(saveFileName, originalFileName, fileSize).allMatch(Objects::nonNull)) {
+            if (!Stream.of(saveFileName, originalFileName).allMatch(Objects::nonNull)) {
                 throw new IllegalArgumentException("필수값이 입력되지 않았습니다.");
             }
             return new file(this);

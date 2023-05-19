@@ -22,4 +22,22 @@ public class BoardDTO {
     private boolean hasFile;
     private List<CommentDTO> comments;
     private List<FileDTO> files;
+
+    @Override
+    public String toString() {
+        return "BoardDTO{" +
+                "boardIdx=" + boardIdx +
+                ", category=" + category +
+                ", title='" + title + '\'' +
+                ", writer='" + writer + '\'' +
+                ", content='" + content + '\'' +
+                ", password='" + password + '\'' +
+                ", hit=" + hit +
+                ", regDate=" + regDate +
+                ", modDate=" + modDate +
+                ", hasFile=" + hasFile +
+                ", comments=" + comments +
+                ", files=" + files +
+                '}';
+    }
 }

@@ -116,22 +116,18 @@ public class fileDAO {
         }
     }
 
-        public FileDTO save(file file, long boardIdx){
+        public void save(file file, long boardIdx){
             FileDTO fileDTO = new FileDTO();
             try {
                 statement = connection.prepareStatement("INSERT INTO file (save_name, original_name, size, board_idx) VALUES (?, ?, ?, ?)");
-                statement.setString(1, file.getOriginalName().getFileName());
-                statement.setInt(2, file.getFileSize().getImageSize());
-                statement.setLong(3, boardIdx);
+                statement.setString(1, file.getSaveFileName());
+                statement.setString(2, file.getOriginalName().getFileName());
+                statement.setInt(3, file.getFileSize().getImageSize());
+                statement.setLong(4, boardIdx);
                 statement.executeUpdate();
-                ResultSet generatedKeys = statement.getGeneratedKeys();
-                if (generatedKeys.next()) {
-                    fileDTO.setFileIdx(generatedKeys.getLong(1));
-                }
-                return fileDTO;
+
             } catch (SQLException e) {
                 e.printStackTrace();
-                return fileDTO;
             } finally {
                 try {
                     if (statement != null) {

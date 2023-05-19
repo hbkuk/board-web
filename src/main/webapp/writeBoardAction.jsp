@@ -13,7 +13,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%
-
     MultipartRequest multi =
             FileUploadUtils.fileUpload((HttpServletRequest) request);
 
@@ -26,30 +25,30 @@
             .content(new BoardContent(multi.getParameter("content")))
             .build();
 
-    Enumeration files = multi.getFileNames();
     List<file> buildFiles = new ArrayList<>();
 
-    while(files.hasMoreElements()){
+    Enumeration files = multi.getFileNames();
+
+    while (files.hasMoreElements()) {
         String file = (String) files.nextElement();
-        try{
-            File fileObj = new File(multi.getOriginalFileName(file));
 
-            file buildFile = new file.Builder()
-                    .saveFileName(multi.getFilesystemName(file))
-                    .originalName(new originalName(multi.getOriginalFileName(file)))
-                    .fileSize(new fileSize((int) fileObj.length()))
-                    .build();
+        String originalFileName = multi.getOriginalFileName(file);
+        String saveFileName = multi.getFilesystemName(file);
 
-            buildFiles.add(buildFile);
-        } catch(NullPointerException e){
-            // 예외 처리..
-        }
+        file buildFile = new file.Builder()
+                .saveFileName(saveFileName)
+                .originalName(new originalName(originalFileName))
+                .build();
+
+        buildFiles.add(buildFile);
     }
 
     BoardDTO boardDTO = boardService.saveBoardWithImages(board, buildFiles);
 
-    // 해당 글로 이동
-    String redirectUrl = String.format("./boardView.jsp?board_idx=%d", boardDTO.getBoardIdx());
-    request.getRequestDispatcher(redirectUrl).forward(request, response);
+    System.out.println(boardDTO.toString());
+    System.out.println(buildFiles.size());
 
+    // 해당 글로 이동
+     String redirectUrl = String.format("./boardView.jsp?board_idx=%d", boardDTO.getBoardIdx());
+     request.getRequestDispatcher(redirectUrl).forward(request, response);
 %>

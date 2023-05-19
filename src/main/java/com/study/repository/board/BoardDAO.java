@@ -4,12 +4,7 @@ import com.study.dto.BoardDTO;
 import com.study.model.board.Board;
 import com.study.model.board.Category;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +40,9 @@ public class BoardDAO {
                 boardDTO.setPassword((resultSet.getString("password")));
                 boardDTO.setHit(resultSet.getInt("hit"));
                 boardDTO.setRegDate(resultSet.getTimestamp("regdate").toLocalDateTime());
-                boardDTO.setModDate(resultSet.getTimestamp("moddate").toLocalDateTime());
+                if (resultSet.getTimestamp("moddate") != null) {
+                    boardDTO.setModDate(resultSet.getTimestamp("moddate").toLocalDateTime());
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -142,7 +139,9 @@ public class BoardDAO {
     public BoardDTO save(Board board) {
         BoardDTO boardDTO = new BoardDTO();
         try {
-            statement = connection.prepareStatement("INSERT INTO board (category, title, writer, content, password, hit, regdate) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            statement = connection.prepareStatement(
+                    "INSERT INTO board (category, title, writer, content, password, hit, regdate) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                    Statement.RETURN_GENERATED_KEYS );
             statement.setString(1, String.valueOf(board.getCategory()));
             statement.setString(2, board.getTitle().getTitle());
             statement.setString(3, board.getWriter().getWriter());

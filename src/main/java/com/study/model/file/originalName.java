@@ -16,7 +16,7 @@ public class originalName {
             throw new IllegalArgumentException("유효하지 않은 확장자입니다.");
         }
 
-        this.fileName = this.fileName;
+        this.fileName = fileName;
     }
 
     private boolean isInvalidImageName(String fileName) {

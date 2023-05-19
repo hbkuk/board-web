@@ -70,14 +70,13 @@
 </div>
 <div class="contents1">
     <div class="con_title" style="margin-top: 40px;">
-            <strong><%= board.getWriter()%>
-            </strong>
+        <strong><%= board.getWriter() %></strong>
         <p style="margin: 0px; text-align: right">
-            등록 일시 : <strong><%=board.getRegDate()%>></strong> | 수정 일시 : <strong><%= board.getModDate()%>
-        </strong>
+            등록 일시: <strong><%= board.getRegDate() %></strong> ∣
+            수정일시: <strong>
+            <% if (board.getModDate() == null) { %>-<% } else { %><%= board.getModDate() %><% } %></strong>
         </p>
     </div>
-
     <div class="contents_sub">
         <!--게시판-->
         <div class="board_view">

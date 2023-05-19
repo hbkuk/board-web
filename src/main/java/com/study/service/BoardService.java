@@ -54,14 +54,17 @@ public class BoardService {
     }
 
     public BoardDTO saveBoardWithImages(Board board, List<file> files) {
-        System.out.println("hit" + board.getHit().getHit());
-
         BoardDTO boardDTO = boardDAO.save(board);
 
         if (files.size() != 0) {
             files.forEach(image -> imageDAO.save(image, boardDTO.getBoardIdx()));
         }
 
+        return boardDTO;
+    }
+
+    public BoardDTO saveBoard(Board board) {
+        BoardDTO boardDTO = boardDAO.save(board);
         return boardDTO;
     }
 
