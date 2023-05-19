@@ -1,7 +1,7 @@
 package com.study.repository.file;
 
 import com.study.dto.FileDTO;
-import com.study.model.file.file;
+import com.study.model.file.File;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -116,7 +116,7 @@ public class fileDAO {
         }
     }
 
-        public void save(file file, long boardIdx){
+        public void save(File file, long boardIdx){
             FileDTO fileDTO = new FileDTO();
             try {
                 statement = connection.prepareStatement("INSERT INTO file (save_name, original_name, size, board_idx) VALUES (?, ?, ?, ?)");

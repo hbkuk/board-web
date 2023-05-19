@@ -7,43 +7,56 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 @Getter
-public class file {
-    private final fileIdx fileIdx;
+public class File {
+    private final FileIdx fileIdx;
     private final String saveFileName;
-    private final originalName originalName;
-    private final fileSize fileSize;
+    private final FileOriginalName originalName;
+    private final FileSize fileSize;
     private final BoardIdx boardIdx;
 
-    public file(Builder builder) {
-        this.fileIdx = builder.fileIdx;
+    public File(FileIdx fileIdx, String saveFileName, FileOriginalName originalName,
+                FileSize fileSize, BoardIdx boardIdx) {
+        this.fileIdx = fileIdx;
+        this.saveFileName = saveFileName;
+        this.originalName = originalName;
+        this.fileSize = fileSize;
+        this.boardIdx = boardIdx;
+    }
+
+    public File(String saveFileName, FileOriginalName originalName) {
+        this(new FileIdx(0), saveFileName, originalName, new FileSize(0), new BoardIdx(0));
+    }
+
+    public File(Builder builder) {
+        this.fileIdx = builder.FileIdx;
         this.saveFileName = builder.saveFileName;
         this.originalName = builder.originalFileName;
-        this.fileSize = new fileSize(0);
+        this.fileSize = new FileSize(0);
         this.boardIdx = builder.boardIdx;
     }
 
     public static class Builder {
-        private fileIdx fileIdx;
+        private FileIdx FileIdx;
         private String saveFileName;
-        private originalName originalFileName;
-        private fileSize fileSize;
+        private FileOriginalName originalFileName;
+        private FileSize fileSize;
         private BoardIdx boardIdx;
 
         public Builder(){};
 
-        public Builder fileIdx(fileIdx imageIdx) {
-            this.fileIdx = imageIdx;
+        public Builder fileIdx(FileIdx imageIdx) {
+            this.FileIdx = imageIdx;
             return this;
         }
         public Builder saveFileName(String saveFileName) {
             this.saveFileName = saveFileName;
             return this;
         }
-        public Builder originalName(originalName originalName) {
+        public Builder originalName(FileOriginalName originalName) {
             this.originalFileName = originalName;
             return this;
         }
-        public Builder fileSize(fileSize imageSize) {
+        public Builder fileSize(FileSize imageSize) {
             this.fileSize = imageSize;
             return this;
         }
@@ -52,11 +65,11 @@ public class file {
             return this;
         }
 
-        public file build() {
+        public File build() {
             if (!Stream.of(saveFileName, originalFileName).allMatch(Objects::nonNull)) {
                 throw new IllegalArgumentException("필수값이 입력되지 않았습니다.");
             }
-            return new file(this);
+            return new File(this);
         }
     }
 }

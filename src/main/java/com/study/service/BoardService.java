@@ -5,7 +5,7 @@ import com.study.dto.CommentDTO;
 import com.study.dto.FileDTO;
 import com.study.model.board.Board;
 import com.study.model.comment.Comment;
-import com.study.model.file.file;
+import com.study.model.file.File;
 import com.study.repository.board.BoardDAO;
 import com.study.repository.comment.CommentDAO;
 import com.study.repository.file.fileDAO;
@@ -53,7 +53,7 @@ public class BoardService {
         return boardDTO;
     }
 
-    public BoardDTO saveBoardWithImages(Board board, List<file> files) {
+    public BoardDTO saveBoardWithImages(Board board, List<File> files) {
         BoardDTO boardDTO = boardDAO.save(board);
 
         if (files.size() != 0) {
@@ -90,7 +90,7 @@ public class BoardService {
         return boardDTO;
     }
 
-    public void updateBoardWithImages(Board board, List<file> images) {
+    public void updateBoardWithImages(Board board, List<File> images) {
         BoardDTO boardDTO = boardDAO.update(board);
 
         if( boardDTO == null ) {
@@ -98,7 +98,7 @@ public class BoardService {
         }
 
         // 새 이미지 찾기
-        List<file> newImages = images.stream()
+        List<File> newImages = images.stream()
                 .filter(image -> image.getFileIdx().getImageIdx() == 0)
                 .collect(Collectors.toList());
 

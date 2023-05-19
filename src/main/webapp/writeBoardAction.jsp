@@ -2,53 +2,51 @@
 <%@ page import="com.study.dto.BoardDTO" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="com.study.model.file.file" %>
+<%@ page import="com.study.model.file.File" %>
 <%@ page import="com.study.model.board.*" %>
 <%@ page import="com.study.utils.FileUploadUtils" %>
 <%@ page import="com.oreilly.servlet.MultipartRequest" %>
 <%@ page import="java.util.Enumeration" %>
-<%@ page import="java.io.File" %>
-<%@ page import="com.study.model.file.originalName" %>
-<%@ page import="com.study.model.file.fileSize" %>
+<%@ page import="com.study.model.file.FileOriginalName" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%
-    MultipartRequest multi =
-            FileUploadUtils.fileUpload((HttpServletRequest) request);
+    // 파일 업로드
+    MultipartRequest multi = FileUploadUtils.fileUpload((HttpServletRequest) request);
 
+    // DB 저장
     BoardService boardService = BoardService.getInstance();
-    Board board = new Board.Builder()
-            .category(Category.valueOf(multi.getParameter("category")))
-            .writer(new BoardWriter(multi.getParameter("writer")))
-            .title(new Title(multi.getParameter("title")))
-            .password(new Password(multi.getParameter("password")))
-            .content(new BoardContent(multi.getParameter("content")))
-            .build();
+    BoardDTO boardDTO = boardService.saveBoardWithImages(buildBoardFromRequest(multi), buildFilesFromRequest(multi));
 
-    List<file> buildFiles = new ArrayList<>();
+    // 저장 후 이동
+    String redirectUrl = String.format("./boardView.jsp?board_idx=%d", boardDTO.getBoardIdx());
+    request.getRequestDispatcher(redirectUrl).forward(request, response);
+%>
 
-    Enumeration files = multi.getFileNames();
 
-    while (files.hasMoreElements()) {
-        String file = (String) files.nextElement();
+<%!
+    private List<File> buildFilesFromRequest(MultipartRequest multi) {
+        List<File> files = new ArrayList<>();
+        Enumeration fileNames = multi.getFileNames();
 
-        String originalFileName = multi.getOriginalFileName(file);
-        String saveFileName = multi.getFilesystemName(file);
+        while (fileNames.hasMoreElements()) {
+            String file = (String) fileNames.nextElement();
 
-        file buildFile = new file.Builder()
-                .saveFileName(saveFileName)
-                .originalName(new originalName(originalFileName))
-                .build();
-
-        buildFiles.add(buildFile);
+            files.add(buildFileFromRequest(multi.getOriginalFileName(file), multi.getFilesystemName(file)));
+        }
+        return files;
     }
 
-    BoardDTO boardDTO = boardService.saveBoardWithImages(board, buildFiles);
+    private File buildFileFromRequest(String saveFileName, String originalFileName) {
+        return new File(saveFileName, new FileOriginalName(originalFileName));
+    }
 
-    System.out.println(boardDTO.toString());
-    System.out.println(buildFiles.size());
-
-    // 해당 글로 이동
-     String redirectUrl = String.format("./boardView.jsp?board_idx=%d", boardDTO.getBoardIdx());
-     request.getRequestDispatcher(redirectUrl).forward(request, response);
+    private Board buildBoardFromRequest(MultipartRequest multi) {
+        return new Board(
+                Category.valueOf(multi.getParameter("category")),
+                new Title(multi.getParameter("title")),
+                new BoardWriter(multi.getParameter("writer")),
+                new BoardContent(multi.getParameter("content")),
+                new Password(multi.getParameter("password")) );
+    }
 %>

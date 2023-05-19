@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public enum fileNameExtension {
+public enum FileNameExtension {
     PNG, JPEG, BMP, GIF, JPG;
 
     public static boolean contains(String extension) {

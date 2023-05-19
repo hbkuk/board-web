@@ -5,12 +5,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class originalName {
+public class FileOriginalName {
     private static final String IMAGE_NAME_EXTENSION__REGEX = "\\.(\\w+)$";
     private static final Pattern EXTENSION_PATTERN_COMPILE = Pattern.compile(IMAGE_NAME_EXTENSION__REGEX);
     private String fileName;
 
-    public originalName(String fileName) {
+    public FileOriginalName(String fileName) {
 
         if (isInvalidImageName(fileName)) {
             throw new IllegalArgumentException("유효하지 않은 확장자입니다.");
@@ -24,7 +24,7 @@ public class originalName {
         if (!matcher.find()) {
             return true;
         }
-        if (!fileNameExtension.contains(matcher.group(1).toUpperCase())) {
+        if (!FileNameExtension.contains(matcher.group(1).toUpperCase())) {
             return true;
         }
         return false;
@@ -44,7 +44,7 @@ public class originalName {
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-        originalName imageName1 = (originalName) o;
+        FileOriginalName imageName1 = (FileOriginalName) o;
         return Objects.equals(fileName, imageName1.fileName);
     }
 

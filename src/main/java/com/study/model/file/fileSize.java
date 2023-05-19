@@ -2,12 +2,12 @@ package com.study.model.file;
 
 import java.util.Objects;
 
-public class fileSize {
+public class FileSize {
 
     private static final int MAX_IMAGE_SIZE_VALUE = 10_485_760;
     private int imageSize;
 
-    public fileSize(int imageSize) {
+    public FileSize(int imageSize) {
         if (imageSize >= MAX_IMAGE_SIZE_VALUE) {
             throw new IllegalArgumentException("이미지의 크기가 10_485_760 byte 이상일 수 없습니다.");
         }
@@ -24,7 +24,7 @@ public class fileSize {
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-        fileSize imageSize1 = (fileSize) o;
+        FileSize imageSize1 = (FileSize) o;
         return imageSize == imageSize1.imageSize;
     }
 

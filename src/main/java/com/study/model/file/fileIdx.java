@@ -5,11 +5,11 @@ import lombok.Getter;
 import java.util.Objects;
 
 @Getter
-public class fileIdx {
+public class FileIdx {
     private static final int MIN_IMAGEIDX_VALUE = 0;
     private long imageIdx = 0;
 
-    public fileIdx(long value) {
+    public FileIdx(long value) {
         if(value < MIN_IMAGEIDX_VALUE) {
             throw new IllegalArgumentException("이미지 번호는 음수일 수 없습니다.");
         }
@@ -22,7 +22,7 @@ public class fileIdx {
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-        fileIdx imageIdx1 = (fileIdx) o;
+        FileIdx imageIdx1 = (FileIdx) o;
         return imageIdx == imageIdx1.imageIdx;
     }
 

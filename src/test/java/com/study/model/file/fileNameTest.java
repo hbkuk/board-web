@@ -12,9 +12,9 @@ public class fileNameTest {
 
     @Test
     void create() {
-        originalName imageName = new originalName("test.png");
+        FileOriginalName imageName = new FileOriginalName("test.png");
 
-        assertThat(imageName).isEqualTo(new originalName("test.png"));
+        assertThat(imageName).isEqualTo(new FileOriginalName("test.png"));
     }
 
     @DisplayName("유효하지 않은 확장자일 경우 예외가 발생한다.")
@@ -23,7 +23,7 @@ public class fileNameTest {
     void invalid_image_name_extension(String name) {
         assertThatExceptionOfType(IllegalArgumentException.class)
                 .isThrownBy(() -> {
-                    new originalName(name);
+                    new FileOriginalName(name);
                 })
                 .withMessageMatching("유효하지 않은 확장자입니다.");
     }

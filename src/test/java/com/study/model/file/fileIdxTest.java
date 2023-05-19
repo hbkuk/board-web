@@ -13,9 +13,9 @@ public class fileIdxTest {
     @ParameterizedTest
     @ValueSource(ints = {1, 100, 2000, 3000, 40000, 50000})
     void create_imageIdx(int number) {
-        fileIdx imageIdx = new fileIdx(number);
+        FileIdx imageIdx = new FileIdx(number);
 
-        assertThat(imageIdx).isEqualTo(new fileIdx(number));
+        assertThat(imageIdx).isEqualTo(new FileIdx(number));
     }
 
     @ParameterizedTest
@@ -24,7 +24,7 @@ public class fileIdxTest {
     void invalid_imageIdx(int number) {
         assertThatExceptionOfType(IllegalArgumentException.class)
                 .isThrownBy(() -> {
-                    new fileIdx(number);
+                    new FileIdx(number);
                 })
                 .withMessageMatching("이미지 번호는 음수일 수 없습니다.");
     }
