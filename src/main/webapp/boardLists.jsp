@@ -1,8 +1,10 @@
+<%@page isELIgnored="false" %>
 <%@ page import="com.study.service.BoardService" %>
 <%@ page import="com.study.dto.BoardDTO" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.study.model.board.Category" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
 <%
@@ -20,7 +22,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>Insert title here</title>
-    <link rel="stylesheet" type="text/css" href="<c:url value="/css/board_view.css"/>">
+    <link rel="stylesheet" type="text/css" href="<c:url value="/css/board.css"/>">
 </head>
 
 <body>
@@ -28,20 +30,18 @@
 <div class="con_title">
     <h1>자유 게시판 - 목록</h1>
 </div>
-<div class="con_txt">
+<div class="con_txt" style="margin-top: 50px;">
     <div class="contents_sub">
         <table style="border: 1px solid #ccc; padding: 10px;">
             <tr style="text-align: center;">
-                <td>등록일<input type="date" id="start_date" placeholder="시작 날짜"></td>
-                <td><input type="date" id="end_date" placeholder="끝 날짜"></td>
+                <td width="30%">등록일 | <input type="date" id="start_date" placeholder="시작 날짜"> ~ <input type="date" id="end_date" placeholder="끝 날짜"></td>
                 <td><select id="category">
                     <option value="전체">전체 카테고리</option>
                     <c:forEach items="${Category.values()}" var="category">
                         <option value="${category.name()}">${category.name()}</option>
                     </c:forEach>
-                </select></td>
-                <td><input type="text" id="search_query" placeholder="검색어를 입력해 주세요. (제목+작성자+내용)" style="width: 200px;"></td>
-                <td><button>검색</button></td>
+                </select> |
+                <input type="text" id="search_query" placeholder="검색어를 입력해 주세요. (제목+작성자+내용)" style="width: 500px;"> | <button>검색</button></td>
             </tr>
         </table>
     </div>
@@ -49,7 +49,7 @@
 <div class="con_txt">
     <div class="contents_sub">
         <div class="board_top">
-            <div class="bold">총 <span class="txt_orange">100</span>건</div>
+            <div class="bold">총 <span class="txt_orange"><%=boardList.size()%></span>건</div>
         </div>
 
         <!--게시판-->
@@ -81,14 +81,15 @@
                     </c:otherwise>
                 </c:choose>
                 <c:choose>
-                    <c:set var="truncatedTitle" value="${fn:length(board.title) > 80 ? fn:substring(board.title, 0, 80) : board.title}" />
                     <c:when test="${fn:length(board.title) > 80}">
-                        <c:set var="remainingWords" value="${fn:substring(board.title, 80)}" />
-                        <!-- Process the remaining words here -->
+                        <c:set var="truncatedTitle" value="${fn:substring(board.title, 0, 80)}" />
+                        <c:set var="remainingWords" value="${fn:substring(board.title, 80, fn:length(board.title))}" />
                     </c:when>
-                    <!-- Output the truncated title -->
-                    ${truncatedTitle}
+                    <c:otherwise>
+                        <c:set var="truncatedTitle" value="${board.title}" />
+                    </c:otherwise>
                 </c:choose>
+                    <td><a href=boardView.jsp?board_idx=${board.boardIdx}>${truncatedTitle}</a></td>
                     <td width="10%">${board.writer}</td>
                     <td width="5%">${board.hit}</td>
                     <td width="12%">${board.regDate}</td>

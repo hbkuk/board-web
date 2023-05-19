@@ -5,22 +5,22 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class fileName {
+public class originalName {
     private static final String IMAGE_NAME_EXTENSION__REGEX = "\\.(\\w+)$";
     private static final Pattern EXTENSION_PATTERN_COMPILE = Pattern.compile(IMAGE_NAME_EXTENSION__REGEX);
-    private String imageName;
+    private String fileName;
 
-    public fileName(String imageName) {
+    public originalName(String fileName) {
 
-        if (isInvalidImageName(imageName)) {
+        if (isInvalidImageName(fileName)) {
             throw new IllegalArgumentException("유효하지 않은 확장자입니다.");
         }
 
-        this.imageName = imageName;
+        this.fileName = this.fileName;
     }
 
-    private boolean isInvalidImageName(String imageName) {
-        Matcher matcher = getMatcher(imageName);
+    private boolean isInvalidImageName(String fileName) {
+        Matcher matcher = getMatcher(fileName);
         if (!matcher.find()) {
             return true;
         }
@@ -30,8 +30,8 @@ public class fileName {
         return false;
     }
 
-    public String getImageName() {
-        return imageName;
+    public String getFileName() {
+        return fileName;
     }
 
     private Matcher getMatcher(String imageName) {
@@ -44,12 +44,12 @@ public class fileName {
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-        fileName imageName1 = (fileName) o;
-        return Objects.equals(imageName, imageName1.imageName);
+        originalName imageName1 = (originalName) o;
+        return Objects.equals(fileName, imageName1.fileName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(imageName);
+        return Objects.hash(fileName);
     }
 }

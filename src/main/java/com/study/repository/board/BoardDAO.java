@@ -102,7 +102,7 @@ public class BoardDAO {
 
     public List<BoardDTO> findAllWithImageCheck() {
         try {
-            statement = connection.prepareStatement("SELECT b.*, (CASE WHEN EXISTS (SELECT 1 FROM image i WHERE i.board_idx = b.board_idx) THEN 1 ELSE 0 END) AS has_image FROM board b LEFT JOIN image i ON b.board_idx = i.board_idx group by b.board_idx");
+            statement = connection.prepareStatement("SELECT b.*, (CASE WHEN EXISTS (SELECT 1 FROM file f WHERE f.board_idx = b.board_idx) THEN 1 ELSE 0 END) AS has_file FROM board b LEFT JOIN file f ON b.board_idx = f.board_idx group by b.board_idx");
             resultSet = statement.executeQuery();
             List<BoardDTO> boards = new ArrayList<>();
             while (resultSet.next()) {
@@ -116,7 +116,7 @@ public class BoardDAO {
                 boardDTO.setHit(resultSet.getInt("hit"));
                 boardDTO.setRegDate(resultSet.getTimestamp("regdate").toLocalDateTime());
                 boardDTO.setModDate(resultSet.getTimestamp("moddate").toLocalDateTime());
-                boolean hasImage = resultSet.getInt("has_image") == 1;
+                boolean hasImage = resultSet.getInt("has_file") == 1;
                 boardDTO.setHasFile(hasImage);
                 boards.add(boardDTO);
             }
@@ -187,6 +187,31 @@ public class BoardDAO {
                 return null;
             }
             boardDTO.setBoardIdx(board.getBoardIdx().getBoardIdx());
+            return boardDTO;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public BoardDTO increaseHitCount(long boardIdx) {
+        BoardDTO boardDTO = new BoardDTO();
+        try {
+            statement = connection.prepareStatement("UPDATE board SET hit = hit + 1 WHERE board_idx = ?");
+            statement.setLong(1, boardIdx);
+            int rowsAffected = statement.executeUpdate();
+            if (rowsAffected == 0) {
+                return null;
+            }
+            boardDTO.setBoardIdx(boardIdx);
             return boardDTO;
         } catch (SQLException e) {
             e.printStackTrace();

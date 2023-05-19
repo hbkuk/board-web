@@ -27,17 +27,18 @@ public class fileDAO {
     }
 
     public FileDTO findById(Long id) {
-        FileDTO imageDTO = new FileDTO();
+        FileDTO fileDTO = new FileDTO();
         try {
             statement = connection.prepareStatement("SELECT * FROM file WHERE file_idx = ?");
             statement.setLong(1, id);
             resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
-                imageDTO.setFileIdx(resultSet.getLong("file_idx"));
-                imageDTO.setFileName(resultSet.getString("name"));
-                imageDTO.setFileSize(resultSet.getInt("size"));
-                imageDTO.setBoardIdx(resultSet.getLong("board_idx"));
+                fileDTO.setFileIdx(resultSet.getLong("file_idx"));
+                fileDTO.setSaveFileName(resultSet.getString("save_name"));
+                fileDTO.setOriginalFileName(resultSet.getString("original_name"));
+                fileDTO.setFileSize(resultSet.getInt("size"));
+                fileDTO.setBoardIdx(resultSet.getLong("board_idx"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -54,12 +55,12 @@ public class fileDAO {
                 e.printStackTrace();
             }
         }
-        return imageDTO;
+        return fileDTO;
     }
 
     public boolean hasImageByBoardId(long boardId) {
         try {
-            String sql = "SELECT * FROM file WHERE board_id = ? LIMIT 1";
+            String sql = "SELECT * FROM file WHERE board_idx = ? LIMIT 1";
             statement = connection.prepareStatement(sql);
             statement.setLong(1, boardId);
             ResultSet resultSet = statement.executeQuery();
@@ -87,16 +88,17 @@ public class fileDAO {
             statement = connection.prepareStatement("SELECT * FROM file WHERE board_idx = ?");
             statement.setLong(1, boardIdx);
             resultSet = statement.executeQuery();
-            List<FileDTO> images = new ArrayList<>();
+            List<FileDTO> files = new ArrayList<>();
             while (resultSet.next()) {
-                FileDTO imageDTO = new FileDTO();
-                imageDTO.setFileIdx(resultSet.getLong("file_idx"));
-                imageDTO.setFileName(resultSet.getString("name"));
-                imageDTO.setFileSize(resultSet.getInt("size"));
-                imageDTO.setBoardIdx(resultSet.getLong("board_idx"));
-                images.add(imageDTO);
+                FileDTO fileDTO = new FileDTO();
+                fileDTO.setFileIdx(resultSet.getLong("file_idx"));
+                fileDTO.setSaveFileName(resultSet.getString("save_name"));
+                fileDTO.setOriginalFileName(resultSet.getString("original_name"));
+                fileDTO.setFileSize(resultSet.getInt("size"));
+                fileDTO.setBoardIdx(resultSet.getLong("board_idx"));
+                files.add(fileDTO);
             }
-            return images;
+            return files;
         } catch (SQLException e) {
             e.printStackTrace();
             return new ArrayList<>();
@@ -115,21 +117,21 @@ public class fileDAO {
     }
 
         public FileDTO save(file file, long boardIdx){
-            FileDTO imageDTO = new FileDTO();
+            FileDTO fileDTO = new FileDTO();
             try {
-                statement = connection.prepareStatement("INSERT INTO file (name, size, board_idx) VALUES (?, ?, ?)");
-                statement.setString(1, file.getImageName().getImageName());
-                statement.setInt(2, file.getImageSize().getImageSize());
+                statement = connection.prepareStatement("INSERT INTO file (save_name, original_name, size, board_idx) VALUES (?, ?, ?, ?)");
+                statement.setString(1, file.getOriginalName().getFileName());
+                statement.setInt(2, file.getFileSize().getImageSize());
                 statement.setLong(3, boardIdx);
                 statement.executeUpdate();
                 ResultSet generatedKeys = statement.getGeneratedKeys();
                 if (generatedKeys.next()) {
-                    imageDTO.setFileIdx(generatedKeys.getLong(1));
+                    fileDTO.setFileIdx(generatedKeys.getLong(1));
                 }
-                return imageDTO;
+                return fileDTO;
             } catch (SQLException e) {
                 e.printStackTrace();
-                return imageDTO;
+                return fileDTO;
             } finally {
                 try {
                     if (statement != null) {

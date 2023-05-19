@@ -7,7 +7,8 @@ import lombok.Setter;
 @Getter
 public class FileDTO {
     private long fileIdx;
-    private String fileName;
+    private String saveFileName;
+    private String originalFileName;
     private int fileSize;
     private long BoardIdx;
 }

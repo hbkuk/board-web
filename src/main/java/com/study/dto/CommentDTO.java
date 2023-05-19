@@ -14,4 +14,16 @@ public class CommentDTO {
     private String content;
     private LocalDateTime regDate;
     private long boardIdx;
+
+    @Override
+    public String toString() {
+        return "CommentDTO{" +
+                "commentIdx=" + commentIdx +
+                ", writer='" + writer + '\'' +
+                ", password='" + password + '\'' +
+                ", content='" + content + '\'' +
+                ", regDate=" + regDate +
+                ", boardIdx=" + boardIdx +
+                '}';
+    }
 }

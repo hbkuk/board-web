@@ -41,6 +41,20 @@ public class HitTest {
 
         // then
         assertThat(hit.getHit()).isEqualTo(afterIncreaseHit);
+    }
 
+    @Test
+    void create_new_board() {
+        // given
+        Board board = new Board.Builder()
+                .category(Category.JAVA)
+                .title(new Title("제목 1"))
+                .writer(new BoardWriter("테스터"))
+                .content(new BoardContent("내용 1"))
+                .password(new Password("rkskekfkakqkt!1"))
+                .build();
+
+        // when
+        assertThat(board.getHit().getHit()).isNotNull();
     }
 }

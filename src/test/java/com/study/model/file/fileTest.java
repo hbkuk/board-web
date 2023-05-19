@@ -14,9 +14,9 @@ public class fileTest {
 
     @Test
     void create_image() {
-        file image = new file.Builder()
-                .imageName(new fileName("test.jpg"))
-                .imageSize(new fileSize(127904))
+        file file = new file.Builder()
+                .originalName(new originalName("test.jpg"))
+                .fileSize(new fileSize(127904))
                 .boardIdx(new BoardIdx(1))
                 .build();
     }
@@ -30,8 +30,8 @@ public class fileTest {
         @ValueSource(strings = {"test.png", "test.jpeg", "test.bmp", "test.gif", "test.jpg"})
         void valid_image_name_extension(String name) {
             file image = new file.Builder()
-                    .imageName(new fileName(name))
-                    .imageSize(new fileSize(127904))
+                    .originalName(new originalName(name))
+                    .fileSize(new fileSize(127904))
                     .boardIdx(new BoardIdx(1))
                     .build();
         }
@@ -43,8 +43,8 @@ public class fileTest {
             assertThatExceptionOfType(IllegalArgumentException.class)
                     .isThrownBy(() -> {
                         new file.Builder()
-                                .imageName(new fileName(name))
-                                .imageSize(new fileSize(127904))
+                                .originalName(new originalName(name))
+                                .fileSize(new fileSize(127904))
                                 .boardIdx(new BoardIdx(1))
                                 .build();
                     })
@@ -61,8 +61,8 @@ public class fileTest {
         @ValueSource(ints = {1_048_576, 1_048_577, 10_485_758, 10_485_759})
         void valid_image_size(int imageSize) {
             file image = new file.Builder()
-                    .imageName(new fileName("test.png"))
-                    .imageSize(new fileSize(imageSize))
+                    .originalName(new originalName("test.png"))
+                    .fileSize(new fileSize(imageSize))
                     .boardIdx(new BoardIdx(1))
                     .build();
         }
@@ -75,8 +75,8 @@ public class fileTest {
             assertThatExceptionOfType(IllegalArgumentException.class)
                     .isThrownBy(() -> {
                         file image = new file.Builder()
-                                .imageName(new fileName("test.png"))
-                                .imageSize(new fileSize(imageSize))
+                                .originalName(new originalName("test.png"))
+                                .fileSize(new fileSize(imageSize))
                                 .boardIdx(new BoardIdx(1))
                                 .build();
                     })

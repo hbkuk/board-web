@@ -29,12 +29,12 @@ public class Comment {
     public static class Builder {
 
         private CommentIdx commentIdx;
+
         private CommentWriter writer;
         private Password password;
         private CommentContent content;
         private RegDate regDate;
         private BoardIdx boardIdx;
-
         public Builder() {
         }
 
@@ -42,6 +42,7 @@ public class Comment {
             this.commentIdx = commentIdx;
             return this;
         }
+
         public Builder writer(CommentWriter Writer) {
             this.writer = Writer;
             return this;
@@ -62,13 +63,24 @@ public class Comment {
             this.boardIdx = BoardIdx;
             return this;
         }
-
         public Comment build() {
             if (!Stream.of(writer, password, content, boardIdx).allMatch(Objects::nonNull)) {
                 throw new IllegalArgumentException("필수값이 입력되지 않았습니다.");
             }
             return new Comment(this);
         }
+
     }
 
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "commentIdx=" + commentIdx +
+                ", writer=" + writer +
+                ", password=" + password +
+                ", content=" + content +
+                ", regDate=" + regDate +
+                ", boardIdx=" + boardIdx +
+                '}';
+    }
 }

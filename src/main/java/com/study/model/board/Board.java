@@ -38,15 +38,15 @@ public class Board {
 
 
     public Board(Builder builder) {
-        this.boardIdx = builder.boardIdx;
+        this.boardIdx = new BoardIdx(0);
         this.category = builder.category;
         this.title = builder.title;
         this.writer = builder.writer;
         this.content = builder.content;
         this.password = builder.password;
-        this.hit = builder.hit;
-        this.regDate = builder.regDate;
-        this.modDate = builder.modDate;
+        this.hit = new Hit(0);
+        this.regDate = new RegDate(LocalDateTime.now());
+        this.modDate = null;
     }
 
     public static class Builder {

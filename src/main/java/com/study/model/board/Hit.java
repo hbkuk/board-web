@@ -4,6 +4,7 @@ import java.util.Objects;
 
 public class Hit {
     private static final int MIN_HIT_VALUE = 0;
+
     private int hit = 0;
 
     public Hit(int hit) {
@@ -13,12 +14,12 @@ public class Hit {
         this.hit = hit;
     }
 
-    public int getHit() {
-        return this.hit;
-    }
-
     public Hit increase() {
         return new Hit(this.hit + 1);
+    }
+
+    public int getHit() {
+        return hit;
     }
 
     @Override

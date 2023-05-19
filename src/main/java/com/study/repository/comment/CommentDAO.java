@@ -155,19 +155,18 @@ public class CommentDAO {
     public CommentDTO save(Comment comment) {
         CommentDTO commentDTO = new CommentDTO();
         try {
-            statement = connection.prepareStatement("INSERT INTO comment (writer, password, content, board_idx) VALUES (?, ?, ?, ?)");
+            statement = connection.prepareStatement("INSERT INTO comment (writer, password, content, regdate, board_idx) VALUES (?, ?, ?, ?, ?)");
             statement.setString(1, comment.getWriter().getWriter());
             statement.setString(2, comment.getPassword().getPassword());
             statement.setString(3, comment.getContent().getCommentContent());
             statement.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
+            statement.setLong(5, comment.getBoardIdx().getBoardIdx());
             statement.executeUpdate();
-            ResultSet generatedKeys = statement.getGeneratedKeys();
-            if (generatedKeys.next()) {
-                commentDTO.setCommentIdx(generatedKeys.getLong(1));
-            }
+
+            commentDTO.setBoardIdx(comment.getBoardIdx().getBoardIdx());
             return commentDTO;
         } catch (SQLException e) {
-            return commentDTO;
+            return null;
         } finally {
             try {
                 if (statement != null) {
