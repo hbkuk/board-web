@@ -20,7 +20,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>Insert title here</title>
-    <link rel="stylesheet" type="text/css" href="<c:url value="/css/board.css"/>">
+    <link rel="stylesheet" type="text/css" href="<c:url value="/css/board_view.css"/>">
 </head>
 
 <body>
@@ -73,14 +73,22 @@
                     <td width="10%">${board.category}</td>
                     <td width="3%"> &nbsp; </td>
                 <c:choose>
-                    <c:when test="${board.hasImage eq true}">
+                    <c:when test="${board.hasFile eq true}">
                         <td width="3%"> OK </td>
                     </c:when>
                     <c:otherwise>
                         <td width="3%"> nothing </td>
                     </c:otherwise>
                 </c:choose>
-                    <td><a href=boardView.jsp?seq=${board.boardIdx}>${board.title}</a></td>
+                <c:choose>
+                    <c:set var="truncatedTitle" value="${fn:length(board.title) > 80 ? fn:substring(board.title, 0, 80) : board.title}" />
+                    <c:when test="${fn:length(board.title) > 80}">
+                        <c:set var="remainingWords" value="${fn:substring(board.title, 80)}" />
+                        <!-- Process the remaining words here -->
+                    </c:when>
+                    <!-- Output the truncated title -->
+                    ${truncatedTitle}
+                </c:choose>
                     <td width="10%">${board.writer}</td>
                     <td width="5%">${board.hit}</td>
                     <td width="12%">${board.regDate}</td>

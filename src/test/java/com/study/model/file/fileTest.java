@@ -1,4 +1,4 @@
-package com.study.model.image;
+package com.study.model.file;
 
 import com.study.model.board.BoardIdx;
 import org.junit.jupiter.api.DisplayName;
@@ -10,13 +10,13 @@ import org.junit.jupiter.params.provider.ValueSource;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 @DisplayName("이미지의 ")
-public class ImageTest {
+public class fileTest {
 
     @Test
     void create_image() {
-        Image image = new Image.Builder()
-                .imageName(new ImageName("test.jpg"))
-                .imageSize(new ImageSize(127904))
+        file image = new file.Builder()
+                .imageName(new fileName("test.jpg"))
+                .imageSize(new fileSize(127904))
                 .boardIdx(new BoardIdx(1))
                 .build();
     }
@@ -29,9 +29,9 @@ public class ImageTest {
         @ParameterizedTest
         @ValueSource(strings = {"test.png", "test.jpeg", "test.bmp", "test.gif", "test.jpg"})
         void valid_image_name_extension(String name) {
-            Image image = new Image.Builder()
-                    .imageName(new ImageName(name))
-                    .imageSize(new ImageSize(127904))
+            file image = new file.Builder()
+                    .imageName(new fileName(name))
+                    .imageSize(new fileSize(127904))
                     .boardIdx(new BoardIdx(1))
                     .build();
         }
@@ -42,9 +42,9 @@ public class ImageTest {
         void invalid_image_name_extension(String name) {
             assertThatExceptionOfType(IllegalArgumentException.class)
                     .isThrownBy(() -> {
-                        new Image.Builder()
-                                .imageName(new ImageName(name))
-                                .imageSize(new ImageSize(127904))
+                        new file.Builder()
+                                .imageName(new fileName(name))
+                                .imageSize(new fileSize(127904))
                                 .boardIdx(new BoardIdx(1))
                                 .build();
                     })
@@ -60,9 +60,9 @@ public class ImageTest {
         @ParameterizedTest
         @ValueSource(ints = {1_048_576, 1_048_577, 10_485_758, 10_485_759})
         void valid_image_size(int imageSize) {
-            Image image = new Image.Builder()
-                    .imageName(new ImageName("test.png"))
-                    .imageSize(new ImageSize(imageSize))
+            file image = new file.Builder()
+                    .imageName(new fileName("test.png"))
+                    .imageSize(new fileSize(imageSize))
                     .boardIdx(new BoardIdx(1))
                     .build();
         }
@@ -74,9 +74,9 @@ public class ImageTest {
 
             assertThatExceptionOfType(IllegalArgumentException.class)
                     .isThrownBy(() -> {
-                        Image image = new Image.Builder()
-                                .imageName(new ImageName("test.png"))
-                                .imageSize(new ImageSize(imageSize))
+                        file image = new file.Builder()
+                                .imageName(new fileName("test.png"))
+                                .imageSize(new fileSize(imageSize))
                                 .boardIdx(new BoardIdx(1))
                                 .build();
                     })

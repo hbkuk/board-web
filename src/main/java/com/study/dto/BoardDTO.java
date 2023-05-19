@@ -19,7 +19,7 @@ public class BoardDTO {
     private int hit;
     private LocalDateTime regDate;
     private LocalDateTime modDate;
-    private boolean hasImage;
+    private boolean hasFile;
     private List<CommentDTO> comments;
-    private List<ImageDTO> images;
+    private List<FileDTO> files;
 }

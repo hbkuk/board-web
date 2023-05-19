@@ -5,9 +5,9 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class ImageDTO {
-    private long imageIdx;
-    private String imageName;
-    private int imageSize;
+public class FileDTO {
+    private long fileIdx;
+    private String fileName;
+    private int fileSize;
     private long BoardIdx;
 }

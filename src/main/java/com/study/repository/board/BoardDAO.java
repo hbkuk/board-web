@@ -117,7 +117,7 @@ public class BoardDAO {
                 boardDTO.setRegDate(resultSet.getTimestamp("regdate").toLocalDateTime());
                 boardDTO.setModDate(resultSet.getTimestamp("moddate").toLocalDateTime());
                 boolean hasImage = resultSet.getInt("has_image") == 1;
-                boardDTO.setHasImage(hasImage);
+                boardDTO.setHasFile(hasImage);
                 boards.add(boardDTO);
             }
             return boards;

@@ -1,7 +1,7 @@
-package com.study.repository.image;
+package com.study.repository.file;
 
-import com.study.dto.ImageDTO;
-import com.study.model.image.Image;
+import com.study.dto.FileDTO;
+import com.study.model.file.file;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -11,13 +11,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImageDAO {
+public class fileDAO {
 
     private Connection connection;
     private PreparedStatement statement;
     private ResultSet resultSet;
 
-    public ImageDAO() {
+    public fileDAO() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/ebrainsoft_study", "ebsoft", "ebsoft");
@@ -26,17 +26,17 @@ public class ImageDAO {
         }
     }
 
-    public ImageDTO findById(Long id) {
-        ImageDTO imageDTO = new ImageDTO();
+    public FileDTO findById(Long id) {
+        FileDTO imageDTO = new FileDTO();
         try {
-            statement = connection.prepareStatement("SELECT * FROM image WHERE image_idx = ?");
+            statement = connection.prepareStatement("SELECT * FROM file WHERE file_idx = ?");
             statement.setLong(1, id);
             resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
-                imageDTO.setImageIdx(resultSet.getLong("image_idx"));
-                imageDTO.setImageName(resultSet.getString("name"));
-                imageDTO.setImageSize(resultSet.getInt("size"));
+                imageDTO.setFileIdx(resultSet.getLong("file_idx"));
+                imageDTO.setFileName(resultSet.getString("name"));
+                imageDTO.setFileSize(resultSet.getInt("size"));
                 imageDTO.setBoardIdx(resultSet.getLong("board_idx"));
             }
         } catch (SQLException e) {
@@ -59,7 +59,7 @@ public class ImageDAO {
 
     public boolean hasImageByBoardId(long boardId) {
         try {
-            String sql = "SELECT * FROM image WHERE board_id = ? LIMIT 1";
+            String sql = "SELECT * FROM file WHERE board_id = ? LIMIT 1";
             statement = connection.prepareStatement(sql);
             statement.setLong(1, boardId);
             ResultSet resultSet = statement.executeQuery();
@@ -82,17 +82,17 @@ public class ImageDAO {
     }
 
 
-    public List<ImageDTO> findImagesByBoardId(Long boardIdx) {
+    public List<FileDTO> findImagesByBoardId(Long boardIdx) {
         try {
-            statement = connection.prepareStatement("SELECT * FROM image WHERE board_idx = ?");
+            statement = connection.prepareStatement("SELECT * FROM file WHERE board_idx = ?");
             statement.setLong(1, boardIdx);
             resultSet = statement.executeQuery();
-            List<ImageDTO> images = new ArrayList<>();
+            List<FileDTO> images = new ArrayList<>();
             while (resultSet.next()) {
-                ImageDTO imageDTO = new ImageDTO();
-                imageDTO.setImageIdx(resultSet.getLong("image_idx"));
-                imageDTO.setImageName(resultSet.getString("name"));
-                imageDTO.setImageSize(resultSet.getInt("size"));
+                FileDTO imageDTO = new FileDTO();
+                imageDTO.setFileIdx(resultSet.getLong("file_idx"));
+                imageDTO.setFileName(resultSet.getString("name"));
+                imageDTO.setFileSize(resultSet.getInt("size"));
                 imageDTO.setBoardIdx(resultSet.getLong("board_idx"));
                 images.add(imageDTO);
             }
@@ -114,17 +114,17 @@ public class ImageDAO {
         }
     }
 
-        public ImageDTO save(Image image, long boardIdx){
-            ImageDTO imageDTO = new ImageDTO();
+        public FileDTO save(file file, long boardIdx){
+            FileDTO imageDTO = new FileDTO();
             try {
-                statement = connection.prepareStatement("INSERT INTO image (image_name, image_size, board_idx) VALUES (?, ?, ?)");
-                statement.setString(1, image.getImageName().getImageName());
-                statement.setInt(2, image.getImageSize().getImageSize());
+                statement = connection.prepareStatement("INSERT INTO file (name, size, board_idx) VALUES (?, ?, ?)");
+                statement.setString(1, file.getImageName().getImageName());
+                statement.setInt(2, file.getImageSize().getImageSize());
                 statement.setLong(3, boardIdx);
                 statement.executeUpdate();
                 ResultSet generatedKeys = statement.getGeneratedKeys();
                 if (generatedKeys.next()) {
-                    imageDTO.setImageIdx(generatedKeys.getLong(1));
+                    imageDTO.setFileIdx(generatedKeys.getLong(1));
                 }
                 return imageDTO;
             } catch (SQLException e) {
@@ -174,7 +174,7 @@ public class ImageDAO {
 
     public void deleteByImageIdx(Long image_idx) {
         try {
-            statement = connection.prepareStatement("DELETE FROM image WHERE image_idx = ?");
+            statement = connection.prepareStatement("DELETE FROM file WHERE file_idx = ?");
             statement.setLong(1, image_idx);
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -192,7 +192,7 @@ public class ImageDAO {
 
     public void deleteAllByBoardIdx(Long board_idx) {
         try {
-            statement = connection.prepareStatement("DELETE FROM image WHERE board_idx = ?");
+            statement = connection.prepareStatement("DELETE FROM file WHERE board_idx = ?");
             statement.setLong(1, board_idx);
             statement.executeUpdate();
         } catch (SQLException e) {

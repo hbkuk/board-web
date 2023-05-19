@@ -1,4 +1,4 @@
-package com.study.model.image;
+package com.study.model.file;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -8,20 +8,20 @@ import org.junit.jupiter.params.provider.ValueSource;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
-public class ImageSizeTest {
+public class fileSizeTest {
 
     @Test
     void create_image_size() {
-        ImageSize imageSize = new ImageSize(1_048_576);
+        fileSize imageSize = new fileSize(1_048_576);
 
-        assertThat(imageSize).isEqualTo(new ImageSize(1_048_576));
+        assertThat(imageSize).isEqualTo(new fileSize(1_048_576));
     }
 
     @DisplayName("10_485_760 byte 미만이여만 한다.")
     @ParameterizedTest
     @ValueSource(ints = {1_048_576, 1_048_577, 10_485_758, 10_485_759})
     void valid_image_size(int imageSize) {
-            new ImageSize(imageSize);
+            new fileSize(imageSize);
     }
 
     @DisplayName("10_485_760 byte 이상일 경우 예외가 발생한다.")
@@ -30,7 +30,7 @@ public class ImageSizeTest {
     void invalid_image_size(int imageSize) {
         assertThatExceptionOfType(IllegalArgumentException.class)
                 .isThrownBy(() -> {
-                    new ImageSize(imageSize);
+                    new fileSize(imageSize);
                 })
                 .withMessageMatching("이미지의 크기가 10_485_760 byte 이상일 수 없습니다.");
 

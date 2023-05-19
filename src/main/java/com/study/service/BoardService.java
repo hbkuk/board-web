@@ -1,12 +1,12 @@
 package com.study.service;
 
 import com.study.dto.BoardDTO;
-import com.study.dto.ImageDTO;
+import com.study.dto.FileDTO;
 import com.study.model.board.Board;
-import com.study.model.image.Image;
+import com.study.model.file.file;
 import com.study.repository.board.BoardDAO;
 import com.study.repository.comment.CommentDAO;
-import com.study.repository.image.ImageDAO;
+import com.study.repository.file.fileDAO;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -18,12 +18,12 @@ public class BoardService {
     }
     private final BoardDAO boardDAO;
     private final CommentDAO commentDAO;
-    private final ImageDAO imageDAO;
+    private final fileDAO imageDAO;
 
     private BoardService() {
         boardDAO = new BoardDAO();
         commentDAO = new CommentDAO();
-        imageDAO = new ImageDAO();
+        imageDAO = new fileDAO();
     }
 
     public static BoardService getInstance() {
@@ -41,12 +41,12 @@ public class BoardService {
         }
 
         boardDTO.setComments(commentDAO.findAllByBoardId(boardIdx));
-        boardDTO.setImages(imageDAO.findImagesByBoardId(boardIdx));
+        boardDTO.setFiles(imageDAO.findImagesByBoardId(boardIdx));
 
         return boardDTO;
     }
 
-    public BoardDTO saveBoardWithImages(Board board, List<Image> images) {
+    public BoardDTO saveBoardWithImages(Board board, List<file> images) {
         BoardDTO boardDTO = boardDAO.save(board);
 
         if (images.size() != 0) {
@@ -64,12 +64,12 @@ public class BoardService {
             throw new NoSuchElementException("해당 글을 찾을 수 없습니다.");
         }
 
-        boardDTO.setImages(imageDAO.findImagesByBoardId(boardId));
+        boardDTO.setFiles(imageDAO.findImagesByBoardId(boardId));
 
         return boardDTO;
     }
 
-    public void updateBoardWithImages(Board board, List<Image> images) {
+    public void updateBoardWithImages(Board board, List<file> images) {
         BoardDTO boardDTO = boardDAO.update(board);
 
         if( boardDTO == null ) {
@@ -77,7 +77,7 @@ public class BoardService {
         }
 
         // 새 이미지 찾기
-        List<Image> newImages = images.stream()
+        List<file> newImages = images.stream()
                 .filter(image -> image.getImageIdx().getImageIdx() == 0)
                 .collect(Collectors.toList());
 
@@ -85,13 +85,13 @@ public class BoardService {
         newImages.forEach(image -> imageDAO.save(image, boardDTO.getBoardIdx()));
 
         // 기존 이미지 찾기
-        List<ImageDTO> oldImages =
+        List<FileDTO> oldImages =
                 imageDAO.findImagesByBoardId(boardDTO.getBoardIdx());
 
         // 기존 이미지 제거
         oldImages.stream()
                 .filter(imageDTO -> !newImages.contains(imageDTO))
-                .forEach(imageDTO -> imageDAO.deleteByImageIdx(imageDTO.getImageIdx()));
+                .forEach(imageDTO -> imageDAO.deleteByImageIdx(imageDTO.getFileIdx()));
     }
 
     public void deleteBoardWithImagesAndComment(BoardDTO boardDTO) {

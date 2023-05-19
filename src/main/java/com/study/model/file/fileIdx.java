@@ -1,15 +1,15 @@
-package com.study.model.image;
+package com.study.model.file;
 
 import lombok.Getter;
 
 import java.util.Objects;
 
 @Getter
-public class ImageIdx {
+public class fileIdx {
     private static final int MIN_IMAGEIDX_VALUE = 0;
     private long imageIdx = 0;
 
-    public ImageIdx(long value) {
+    public fileIdx(long value) {
         if(value < MIN_IMAGEIDX_VALUE) {
             throw new IllegalArgumentException("이미지 번호는 음수일 수 없습니다.");
         }
@@ -22,7 +22,7 @@ public class ImageIdx {
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-        ImageIdx imageIdx1 = (ImageIdx) o;
+        fileIdx imageIdx1 = (fileIdx) o;
         return imageIdx == imageIdx1.imageIdx;
     }
 
