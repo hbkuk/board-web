@@ -9,27 +9,26 @@ import com.study.model.file.File;
 import com.study.repository.board.BoardDAO;
 import com.study.repository.comment.CommentDAO;
 import com.study.repository.file.fileDAO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
+@Slf4j
 public class BoardService {
-    private static final Logger log = LoggerFactory.getLogger(BoardService.class);
+//    private static final Logger log = LoggerFactory.getLogger(BoardService.class);
 
     private static class LazyHolder {
         private static final BoardService INSTANCE = new BoardService();
     }
     private final BoardDAO boardDAO;
     private final CommentDAO commentDAO;
-    private final fileDAO imageDAO;
+    private final fileDAO fileDAO;
 
     private BoardService() {
         boardDAO = new BoardDAO();
         commentDAO = new CommentDAO();
-        imageDAO = new fileDAO();
+        fileDAO = new fileDAO();
     }
 
     public static BoardService getInstance() {
@@ -40,6 +39,14 @@ public class BoardService {
         return boardDAO.findAllWithImageCheck();
     }
 
+    public BoardDTO getBoardByBoardIdx(long boardIdx) {
+        BoardDTO boardDTO = boardDAO.increaseHitCount(boardIdx);
+        if( boardDTO == null ) {
+            throw new NoSuchElementException("해당 글을 찾을 수 없습니다.");
+        }
+        return boardDTO;
+    }
+
     public BoardDTO getBoardWithDetails(long boardIdx) {
         BoardDTO boardDTO = boardDAO.increaseHitCount(boardIdx);
         if( boardDTO == null ) {
@@ -48,7 +55,17 @@ public class BoardService {
 
         boardDTO = boardDAO.findById(boardIdx);
         boardDTO.setComments(commentDAO.findAllByBoardId(boardIdx));
-        boardDTO.setFiles(imageDAO.findImagesByBoardId(boardIdx));
+        boardDTO.setFiles(fileDAO.findImagesByBoardId(boardIdx));
+
+        return boardDTO;
+    }
+
+    public BoardDTO getBoardWithImages(long boardIdx) {
+        BoardDTO boardDTO = boardDAO.findById(boardIdx);
+        if( boardDTO == null ) {
+            throw new NoSuchElementException("해당 글을 찾을 수 없습니다.");
+        }
+        boardDTO.setFiles(fileDAO.findImagesByBoardId(boardIdx));
 
         return boardDTO;
     }
@@ -57,14 +74,9 @@ public class BoardService {
         BoardDTO boardDTO = boardDAO.save(board);
 
         if (files.size() != 0) {
-            files.forEach(image -> imageDAO.save(image, boardDTO.getBoardIdx()));
+            files.forEach(image -> fileDAO.save(image, boardDTO.getBoardIdx()));
         }
 
-        return boardDTO;
-    }
-
-    public BoardDTO saveBoard(Board board) {
-        BoardDTO boardDTO = boardDAO.save(board);
         return boardDTO;
     }
 
@@ -78,47 +90,31 @@ public class BoardService {
     }
 
 
-    public BoardDTO getBoard(long boardId) {
-        BoardDTO boardDTO = boardDAO.findById(boardId);
-
-        if( boardDTO == null ) {
-            throw new NoSuchElementException("해당 글을 찾을 수 없습니다.");
-        }
-
-        boardDTO.setFiles(imageDAO.findImagesByBoardId(boardId));
-
-        return boardDTO;
-    }
-
-    public void updateBoardWithImages(Board board, List<File> images) {
+    public BoardDTO updateBoardWithImages(Board board, List<File> newFiles, List<Integer> oldFiles) {
         BoardDTO boardDTO = boardDAO.update(board);
 
         if( boardDTO == null ) {
             throw new NoSuchElementException("해당 글을 찾을 수 없습니다.");
         }
 
-        // 새 이미지 찾기
-        List<File> newImages = images.stream()
-                .filter(image -> image.getFileIdx().getImageIdx() == 0)
-                .collect(Collectors.toList());
-
         // 새 이미지 추가
-        newImages.forEach(image -> imageDAO.save(image, boardDTO.getBoardIdx()));
+        newFiles.forEach(file -> fileDAO.save(file, boardDTO.getBoardIdx()));
 
-        // 기존 이미지 찾기
-        List<FileDTO> oldImages =
-                imageDAO.findImagesByBoardId(boardDTO.getBoardIdx());
+        // DB 확인
+        List<FileDTO> dbFiles =
+                fileDAO.findImagesByBoardId(boardDTO.getBoardIdx());
 
-        // 기존 이미지 제거
-        oldImages.stream()
-                .filter(imageDTO -> !newImages.contains(imageDTO))
-                .forEach(imageDTO -> imageDAO.deleteByImageIdx(imageDTO.getFileIdx()));
+        // oldFiles과 DB 매칭
+        List<Integer> oldFilesIdx = oldFiles;
+
+
+        return boardDTO;
     }
 
     public void deleteBoardWithImagesAndComment(BoardDTO boardDTO) {
         boardDAO.deleteById(boardDTO.getBoardIdx(), boardDTO.getPassword());
         commentDAO.deleteAllByBoardIdx(boardDTO.getBoardIdx());
-        imageDAO.deleteAllByBoardIdx(boardDTO.getBoardIdx());
+        fileDAO.deleteAllByBoardIdx(boardDTO.getBoardIdx());
     }
 }
 

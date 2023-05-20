@@ -8,18 +8,16 @@ import java.io.IOException;
 
 public class FileUploadUtils {
 
-    public static MultipartRequest fileUpload(HttpServletRequest request) {
+    private static final String UPLOAD_PATH = "C:\\git\\ebrain\\eb-study-templates-1week\\src\\main\\webapp\\download";
 
-        String uploadPath = "C:\\git\\ebrain\\eb-study-templates-1week\\src\\main\\webapp\\download";
-        int maxFileSize = 2 * 1024 * 1024;
-        String encoding = "utf-8";
+    public static MultipartRequest fileUpload(HttpServletRequest request) {
 
         try {
             MultipartRequest multi = new MultipartRequest(
                     request,
-                    uploadPath,
-                    maxFileSize,
-                    encoding,
+                    UPLOAD_PATH,
+                    2 * 1024 * 1024,
+                    "utf-8",
                     new DefaultFileRenamePolicy());
 
             return multi;

@@ -3,12 +3,17 @@ package com.study.repository.board;
 import com.study.dto.BoardDTO;
 import com.study.model.board.Board;
 import com.study.model.board.Category;
+import lombok.extern.slf4j.Slf4j;
 
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Board repository 접근
+ */
+@Slf4j
 public class BoardDAO {
 
     private Connection connection;
@@ -24,9 +29,28 @@ public class BoardDAO {
         }
     }
 
+    /**
+     * db connection 생성하여 리턴
+     * @return
+     */
+    private Connection connect(){
+        return null;
+        //TODO: connection
+    }
+
+    /**
+     * ID 를 사용하여 게시물 한 건 조회
+     * @param id 아이디
+     * @return
+     */
     public BoardDTO findById(Long id) {
         BoardDTO boardDTO = null;
+
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
         try {
+            connection = connect();
             statement = connection.prepareStatement("SELECT * FROM board WHERE board_idx = ?");
             statement.setLong(1, id);
             resultSet = statement.executeQuery();
@@ -54,6 +78,7 @@ public class BoardDAO {
                 if (statement != null) {
                     statement.close();
                 }
+                connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -172,21 +197,36 @@ public class BoardDAO {
     public BoardDTO update(Board board) {
         BoardDTO boardDTO = new BoardDTO();
         try {
+            // Update the board
             statement = connection.prepareStatement("UPDATE board SET title = ?, writer = ?, content = ?, moddate = ? WHERE board_idx = ? and password = ?");
-
             statement.setString(1, board.getTitle().getTitle());
             statement.setString(2, board.getWriter().getWriter());
             statement.setString(3, board.getContent().getContent());
             statement.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
             statement.setLong(5, board.getBoardIdx().getBoardIdx());
             statement.setString(6, board.getPassword().getPassword());
-
             int rowsAffected = statement.executeUpdate();
+
+            // Check if the board was successfully updated
             if (rowsAffected == 0) {
                 return null;
             }
-            boardDTO.setBoardIdx(board.getBoardIdx().getBoardIdx());
-            return boardDTO;
+
+            // Retrieve the updated board information
+            statement = connection.prepareStatement("SELECT * FROM board WHERE board_idx = ?");
+            statement.setLong(1, board.getBoardIdx().getBoardIdx());
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                // Mapping the retrieved data to boardDTO
+                boardDTO.setBoardIdx(resultSet.getLong("board_idx"));
+                // Set other boardDTO properties accordingly
+                // ...
+                return boardDTO;
+            } else {
+                // Failed to retrieve the updated board
+                return null;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
@@ -200,6 +240,7 @@ public class BoardDAO {
             }
         }
     }
+
 
     public BoardDTO increaseHitCount(long boardIdx) {
         BoardDTO boardDTO = new BoardDTO();

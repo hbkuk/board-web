@@ -5,6 +5,7 @@ import com.study.model.board.Password;
 import com.study.model.board.RegDate;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -17,12 +18,27 @@ public class Comment {
     private final RegDate regDate;
     private final BoardIdx boardIdx;
 
+    public Comment(CommentIdx commentIdx, CommentWriter writer, Password password,
+                   CommentContent content, RegDate regDate, BoardIdx boardIdx) {
+        this.commentIdx = commentIdx;
+        this.writer = writer;
+        this.password = password;
+        this.content = content;
+        this.regDate = regDate;
+        this.boardIdx = boardIdx;
+    }
+
+    public Comment(CommentWriter writer, Password password,
+                   CommentContent content, BoardIdx boardIdx) {
+        this(new CommentIdx(0), writer, password, content, new RegDate(LocalDateTime.now()), boardIdx);
+    }
+
     public Comment(Builder builder) {
-        this.commentIdx = builder.commentIdx;
+        this.commentIdx = new CommentIdx(0);
         this.writer = builder.writer;
         this.password = builder.password;
         this.content = builder.content;
-        this.regDate = builder.regDate;
+        this.regDate = new RegDate(LocalDateTime.now());
         this.boardIdx = builder.boardIdx;
     }
 
@@ -35,6 +51,7 @@ public class Comment {
         private CommentContent content;
         private RegDate regDate;
         private BoardIdx boardIdx;
+
         public Builder() {
         }
 
