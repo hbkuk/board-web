@@ -25,20 +25,34 @@ dependencies {
     implementation 'com.mikemybytes:junit5-formatted-source:0.2.0'
     implementation 'com.mikemybytes:junit5-formatted-source-parent:0.2.0'
     implementation 'com.mikemybytes:junit5-formatted-source-tests:0.2.0'
+
     implementation 'servlets.com:cos:05Nov2002'
+
     compileOnly('jakarta.servlet:jakarta.servlet-api:5.0.0')
+
     implementation group: 'javax.servlet', name: 'jstl', version: '1.2'
 
     implementation 'mysql:mysql-connector-java:8.0.26'
+
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+
     implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.28'
+
     compileOnly 'org.projectlombok:lombok:1.18.20'
+
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
+
     testImplementation("org.assertj:assertj-core:3.22.0")
-    testImplementation "org.mockito:mockito-core:3.+"
+
+    //testImplementation 'org.mockito:mockito-core:3.11.2'
+    testImplementation 'org.mockito:mockito-junit-jupiter:3.11.2'
+
+
     implementation 'ch.qos.logback:logback-classic:1.2.3'
+
     implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4'
+
     compileOnly 'javax.servlet:javax.servlet-api:4.0.1'
 }
 
