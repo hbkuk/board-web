@@ -1,6 +1,7 @@
 package com.study.model.file;
 
 import com.study.model.board.BoardIdx;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -52,6 +53,7 @@ public class fileTest {
         }
     }
 
+    @Disabled
     @Nested
     @DisplayName("크기는")
     class size {

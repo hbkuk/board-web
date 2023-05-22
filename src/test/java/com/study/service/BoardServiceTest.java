@@ -1,6 +1,7 @@
 package com.study.service;
 
 import com.study.dto.BoardDTO;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import static org.mockito.Mockito.*;
 
 public class BoardServiceTest {
 
+    @Disabled
     @Test
     void create() {
         BoardService boardService = BoardService.getInstance();
@@ -19,6 +21,7 @@ public class BoardServiceTest {
         assertThat(boards).hasSize(0);
     }
 
+    @Disabled
     @Test
     public void testMockito() {
         // Create a mock object

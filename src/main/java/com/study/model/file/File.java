@@ -66,7 +66,7 @@ public class File {
         }
 
         public File build() {
-            if (!Stream.of(saveFileName, originalFileName).allMatch(Objects::nonNull)) {
+            if (!Stream.of(originalFileName).allMatch(Objects::nonNull)) {
                 throw new IllegalArgumentException("필수값이 입력되지 않았습니다.");
             }
             return new File(this);
