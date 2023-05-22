@@ -9,9 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
-public class fileDAO {
+public class FileDAO {
 
-    public fileDAO() {
+    public FileDAO() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {

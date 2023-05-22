@@ -7,7 +7,7 @@ import com.study.model.comment.Comment;
 import com.study.model.file.File;
 import com.study.repository.board.BoardDAO;
 import com.study.repository.comment.CommentDAO;
-import com.study.repository.file.fileDAO;
+import com.study.repository.file.FileDAO;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -17,19 +17,20 @@ import java.util.stream.Collectors;
 
 @Slf4j
 public class BoardService {
-//    private static final Logger log = LoggerFactory.getLogger(BoardService.class);
+
+    private BoardDAO boardDAO;
+    private CommentDAO commentDAO;
+    private FileDAO fileDAO;
 
     private static class LazyHolder {
-        private static final BoardService INSTANCE = new BoardService();
+        private static final BoardService INSTANCE =
+                new BoardService(new BoardDAO(), new CommentDAO(), new FileDAO());
     }
-    private final BoardDAO boardDAO;
-    private final CommentDAO commentDAO;
-    private final fileDAO fileDAO;
 
-    private BoardService() {
-        boardDAO = new BoardDAO();
-        commentDAO = new CommentDAO();
-        fileDAO = new fileDAO();
+    private BoardService(BoardDAO boardDAO, CommentDAO commentDAO, FileDAO fileDAO ) {
+        this.boardDAO = boardDAO;
+        this.commentDAO =commentDAO;
+        this.fileDAO = fileDAO;
     }
 
     public static BoardService getInstance() {
