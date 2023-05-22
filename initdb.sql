@@ -1,39 +1,40 @@
 CREATE TABLE board (
-  board_idx BIGINT NOT NULL,
-  category VARCHAR(100) NOT NULL,
-  title VARCHAR(200) NOT NULL,
-  writer VARCHAR(10) NOT NULL,
-  content VARCHAR(2000) NOT NULL,
-  password VARCHAR(16) NOT NULL,
-  hit INT NOT NULL,
-  regdate DATETIME NOT NULL,
-  moddate DATETIME NULL,
+                       board_idx BIGINT NOT NULL auto_increment,
+                       category VARCHAR(100) NOT NULL,
+                       title VARCHAR(200) NOT NULL,
+                       writer VARCHAR(10) NOT NULL,
+                       content VARCHAR(2000) NOT NULL,
+                       password VARCHAR(16) NOT NULL,
+                       hit INT NOT NULL,
+                       regdate DATETIME NOT NULL,
+                       moddate DATETIME NULL,
 
-  PRIMARY KEY (board_idx)
+                       PRIMARY KEY (board_idx)
 );
 
 CREATE TABLE comment (
-  comment_idx BIGINT NOT NULL,
-  writer VARCHAR(10) NOT NULL,
-  password VARCHAR(16) NOT NULL,
-  content VARCHAR(2000) NOT NULL,
-  regdate DATETIME NOT NULL,
-  board_idx BIGINT NOT NULL,
+                         comment_idx BIGINT NOT NULL auto_increment,
+                         writer VARCHAR(10) NOT NULL,
+                         password VARCHAR(16) NOT NULL,
+                         content VARCHAR(2000) NOT NULL,
+                         regdate DATETIME NOT NULL,
+                         board_idx BIGINT NOT NULL,
 
-  PRIMARY KEY (comment_idx),
-  FOREIGN KEY (board_idx) REFERENCES board (board_idx)
+                         PRIMARY KEY (comment_idx),
+                         FOREIGN KEY (board_idx) REFERENCES board (board_idx)
 );
 
 CREATE TABLE file (
-  file_idx BIGINT NOT NULL,
-  save_name VARCHAR(255) NOT NULL,
-  original_name VARCHAR(255) NOT NULL,
-  size int NOT NULL,
-  board_idx BIGINT NOT NULL,
+                      file_idx BIGINT NOT NULL auto_increment,
+                      save_name VARCHAR(255) NOT NULL,
+                      original_name VARCHAR(255) NOT NULL,
+                      size int NOT NULL,
+                      board_idx BIGINT NOT NULL,
 
-  PRIMARY KEY (file_idx),
-  FOREIGN KEY (board_idx) REFERENCES board (board_idx)
+                      PRIMARY KEY (file_idx),
+                      FOREIGN KEY (board_idx) REFERENCES board (board_idx)
 );
+
 
 
 INSERT INTO board (board_idx, category, title, writer, content, password, hit, regdate, moddate)
