@@ -22,19 +22,10 @@ public class BoardService {
     private CommentDAO commentDAO;
     private FileDAO fileDAO;
 
-    private static class LazyHolder {
-        private static final BoardService INSTANCE =
-                new BoardService(new BoardDAO(), new CommentDAO(), new FileDAO());
-    }
-
-    private BoardService(BoardDAO boardDAO, CommentDAO commentDAO, FileDAO fileDAO ) {
+    public BoardService(BoardDAO boardDAO, CommentDAO commentDAO, FileDAO fileDAO) {
         this.boardDAO = boardDAO;
-        this.commentDAO =commentDAO;
+        this.commentDAO = commentDAO;
         this.fileDAO = fileDAO;
-    }
-
-    public static BoardService getInstance() {
-        return LazyHolder.INSTANCE;
     }
 
     public List<BoardDTO> getBoardListDetails() {

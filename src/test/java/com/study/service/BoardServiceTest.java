@@ -1,43 +1,42 @@
 package com.study.service;
 
-import com.study.dto.BoardDTO;
-import org.junit.jupiter.api.Disabled;
+import com.study.repository.board.BoardDAO;
+import com.study.repository.comment.CommentDAO;
+import com.study.repository.file.FileDAO;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
+import java.util.NoSuchElementException;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class BoardServiceTest {
+    @Mock
+    private BoardDAO boardDAO;
+    @Mock
+    private CommentDAO commentDAO;
+    @Mock
+    private FileDAO fileDAO;
 
-    @Disabled
-    @Test
-    void create() {
-        BoardService boardService = BoardService.getInstance();
+    private BoardService boardService;
 
-        List<BoardDTO> boards = boardService.getBoardListDetails();
-        assertThat(boards).hasSize(0);
+    @BeforeEach
+    void setUp() {
+        boardService = new BoardService(boardDAO, commentDAO, fileDAO);
     }
 
-    @Disabled
-    @Test
-    public void testMockito() {
-        // Create a mock object
-        List<String> mockedList = mock(List.class);
+    @Test()
+    void create() {
+        when(boardDAO.increaseHitCount(1)).thenReturn(null);
 
-        // Define the behavior of the mock object
-        when(mockedList.get(0)).thenReturn("Mockito");
-
-        // Use the mock object
-        String result = mockedList.get(0);
-
-        // Verify the interactions
-        verify(mockedList).get(0);
-
-        // Assert the result
-        assertEquals("Mockito", result);
+        assertThatExceptionOfType(NoSuchElementException.class)
+                .isThrownBy(() -> {boardService.getBoardWithDetails(1);});
     }
 }
+
 
