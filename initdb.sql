@@ -1,3 +1,7 @@
+drop table comment;
+drop table file;
+drop table board;
+
 CREATE TABLE board (
                        board_idx BIGINT NOT NULL auto_increment,
                        category VARCHAR(100) NOT NULL,

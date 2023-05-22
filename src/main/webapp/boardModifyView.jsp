@@ -19,31 +19,31 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <title>Insert title here</title>
     <link rel="stylesheet" type="text/css" href="<c:url value="/css/board_write.css"/>">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script type="text/javascript">
-        window.onload = function () {
+    window.onload = function () {
             document.getElementById("wbtn").onclick = function () {
-                if (document.wfrm.writer.value.trim() == '') {
+                if (document.wfrm.writer.value.trim() === '') {
                     alert("글쓴이를 입력하셔야 합니다.");
                     return false;
                 }
 
-                if (document.wfrm.title.value.trim() == '') {
+                if (document.wfrm.title.value.trim() === '') {
                     alert("글제목을 입력하셔야 합니다.");
                     return false;
                 }
 
-                if (document.wfrm.password.value.trim() == '') {
+                if (document.wfrm.password.value.trim() === '') {
                     alert("비밀번호를 입력하셔야 합니다.");
                     return false;
                 }
                 document.wfrm.submit();
             };
 
-            function deleteFile(fileId) {
-                var element = document.getElementById(fileId);
-                element.parentNode.removeChild(element);
-            }
-        }
+        $('.delete-button').on('click', function() {
+            $(this).parent('.upload_file').remove();
+        });
+    }
     </script>
 </head>
 
@@ -51,7 +51,7 @@
 <!-- 상단 디자인 -->
 <div class="contents1">
     <h1>게시판 - 등록</h1>
-    <form action="./writeModifyAction.jsp" method="post" name="wfrm" enctype="multipart/form-data">
+    <form action="<c:url value="/action/modifyBoardAction.jsp"/>" method="post" name="wfrm" enctype="multipart/form-data">
         <input type="hidden" name="board_idx" value="<%=board.getBoardIdx()%>" />
         <input type="hidden" name="category" value="<%=board.getCategory()%>" />
         <div class="contents_sub" style="margin-top: 50px;">
@@ -100,12 +100,14 @@
                         <th>이미지</th>
                         <td colspan="3">
                             <c:forEach items="<%=board.getFiles()%>" var="file">
-                                <input type="hidden" name="file_idx" value="${file.fileIdx}" class="board_view_input" />
-                                <a href="download.jsp?file_idx=${file.fileIdx}">${file.originalFileName}</a>
-                                <input type="button" class="board_view_delete" onclick="deleteFile('upload${file.boardIdx}')">삭제</input><br/><br/>
+                                <div class="upload_file">
+                                    <input type="hidden" name="file_idx" value="${file.fileIdx}" class="board_view_input" />
+                                    <a href="download.jsp?file_idx=${file.fileIdx}">${file.originalFileName}</a>
+                                    <input type="button" class="board_view_delete delete-button" value="delete"/><br/><br/>
+                                </div>
                             </c:forEach>
                             <c:forEach begin="<%=board.getFiles().size() + 1%>" end="3" var="index">
-                                <input type="file" multiple="multiple" name="upload${index}" class="board_view_input" />
+                                <input type="file" multiple="multiple" name="upload" class="board_view_input" />
                             </c:forEach>
                         </td>
                     </tr>

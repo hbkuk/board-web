@@ -127,7 +127,7 @@
                     </form>
                 </c:forEach>
             </table>
-            <form action="./writeCommentAction.jsp" method="post" name="cfrm">
+            <form action="action/writeCommentAction.jsp" method="post" name="cfrm">
                 <input type="hidden" name="board_idx" value="<%=board.getBoardIdx() %>">
                 <table>
                     <tr>

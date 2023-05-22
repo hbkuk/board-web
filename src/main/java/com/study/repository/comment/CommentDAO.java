@@ -15,22 +15,22 @@ import java.util.List;
 
 public class CommentDAO {
 
-    private Connection connection;
-    private PreparedStatement statement;
-    private ResultSet resultSet;
-
     public CommentDAO() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/ebrainsoft_study", "ebsoft", "ebsoft");
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
 
     public CommentDTO findById(Long boardIdx) {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
         CommentDTO commentDTO = new CommentDTO();
         try {
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3316/ebsoft", "ebsoft", "123456");
             statement = connection.prepareStatement("SELECT * FROM comment WHERE comment_idx = ?");
             statement.setLong(1, boardIdx);
             resultSet = statement.executeQuery();
@@ -52,6 +52,9 @@ public class CommentDAO {
                 if (statement != null) {
                     statement.close();
                 }
+                if (connection != null) {
+                    connection.close();
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -60,7 +63,12 @@ public class CommentDAO {
     }
 
     public List<CommentDTO> findAllByBoardId(long boardIdx) {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
         try {
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3316/ebsoft", "ebsoft", "123456");
             statement = connection.prepareStatement("SELECT * FROM comment WHERE board_idx = ?");
             statement.setLong(1, boardIdx);
             resultSet = statement.executeQuery();
@@ -88,6 +96,9 @@ public class CommentDAO {
                 if (statement != null) {
                     statement.close();
                 }
+                if (connection != null) {
+                    connection.close();
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -95,11 +106,16 @@ public class CommentDAO {
     }
 
     public boolean hasImageByBoardId(long boardId) {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
         try {
-            String sql = "SELECT * FROM image WHERE board_id = ? limit 1";
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3316/ebsoft", "ebsoft", "123456");
+            String sql = "SELECT * FROM file WHERE board_idx = ? limit 1";
             statement = connection.prepareStatement(sql);
             statement.setLong(1, boardId);
-            ResultSet resultSet = statement.executeQuery();
+            resultSet = statement.executeQuery();
             return resultSet.next();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -112,6 +128,9 @@ public class CommentDAO {
                 if (statement != null) {
                     statement.close();
                 }
+                if (connection != null) {
+                    connection.close();
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -119,7 +138,12 @@ public class CommentDAO {
     }
 
     public List<CommentDTO> findAll() {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
         try {
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3316/ebsoft", "ebsoft", "123456");
             statement = connection.prepareStatement("SELECT * FROM comment");
             resultSet = statement.executeQuery();
             List<CommentDTO> comments = new ArrayList<>();
@@ -146,6 +170,9 @@ public class CommentDAO {
                 if (statement != null) {
                     statement.close();
                 }
+                if (connection != null) {
+                    connection.close();
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -153,8 +180,12 @@ public class CommentDAO {
     }
 
     public CommentDTO save(Comment comment) {
+        Connection connection = null;
+        PreparedStatement statement = null;
+
         CommentDTO commentDTO = new CommentDTO();
         try {
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3316/ebsoft", "ebsoft", "123456");
             statement = connection.prepareStatement("INSERT INTO comment (writer, password, content, regdate, board_idx) VALUES (?, ?, ?, ?, ?)");
             statement.setString(1, comment.getWriter().getWriter());
             statement.setString(2, comment.getPassword().getPassword());
@@ -172,13 +203,21 @@ public class CommentDAO {
                 if (statement != null) {
                     statement.close();
                 }
+                if (connection != null) {
+                    connection.close();
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
     }
     public void deleteByCommentIdx(Long commentId) {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
         try {
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3316/ebsoft", "ebsoft", "123456");
             statement = connection.prepareStatement("DELETE FROM comment WHERE comment_idx = ?");
             statement.setLong(1, commentId);
             statement.executeUpdate();
@@ -186,11 +225,11 @@ public class CommentDAO {
             e.printStackTrace();
         } finally {
             try {
-                if (resultSet != null) {
-                    resultSet.close();
-                }
                 if (statement != null) {
                     statement.close();
+                }
+                if (connection != null) {
+                    connection.close();
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -199,7 +238,11 @@ public class CommentDAO {
     }
 
     public void deleteAllByBoardIdx(Long boardIdx) {
+        Connection connection = null;
+        PreparedStatement statement = null;
+
         try {
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3316/ebsoft", "ebsoft", "123456");
             statement = connection.prepareStatement("DELETE FROM comment WHERE board_idx = ?");
             statement.setLong(1, boardIdx);
             statement.executeUpdate();
@@ -207,11 +250,11 @@ public class CommentDAO {
             e.printStackTrace();
         } finally {
             try {
-                if (resultSet != null) {
-                    resultSet.close();
-                }
                 if (statement != null) {
                     statement.close();
+                }
+                if (connection != null) {
+                    connection.close();
                 }
             } catch (SQLException e) {
                 e.printStackTrace();

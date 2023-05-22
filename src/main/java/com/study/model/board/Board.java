@@ -36,9 +36,8 @@ public class Board {
         this(new BoardIdx(0), category, title, writer, content, password, new Hit(0), new RegDate(LocalDateTime.now()), null);
     }
 
-
     public Board(Builder builder) {
-        this.boardIdx = new BoardIdx(0);
+        this.boardIdx = builder.boardIdx;
         this.category = builder.category;
         this.title = builder.title;
         this.writer = builder.writer;

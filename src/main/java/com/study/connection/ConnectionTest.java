@@ -7,9 +7,9 @@ import java.sql.Statement;
 
 public class ConnectionTest {
 
-    static final String DB_URL = "jdbc:mysql://localhost:3306/ebrainsoft_study";
+    static final String DB_URL = "jdbc:mysql://localhost:3316/ebsoft";
     static final String USER = "ebsoft";
-    static final String PASS = "ebsoft";
+    static final String PASS = "123456";
 
     public Connection getConnection() throws Exception{
 

@@ -15,6 +15,10 @@ public class BoardContent {
         this.content = content;
     }
 
+    /**
+     * 컨텐츠 내용을 리턴함.
+     * @return
+     */
     public String getContent() {
         return content;
     }

@@ -8,6 +8,7 @@
 <%@ page import="com.oreilly.servlet.MultipartRequest" %>
 <%@ page import="java.util.Enumeration" %>
 <%@ page import="com.study.model.file.FileOriginalName" %>
+<%@ page import="com.study.model.file.FileSize" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%
@@ -21,8 +22,8 @@
     BoardDTO boardDTO = boardService.saveBoardWithImages(buildBoardFromRequest(multi), buildFilesFromRequest(multi));
 
     // 저장 후 이동
-    String redirectUrl = String.format("./boardView.jsp?board_idx=%d", boardDTO.getBoardIdx());
-    request.getRequestDispatcher(redirectUrl).forward(request, response);
+    String redirectUrl = String.format("/boardView.jsp?board_idx=%d", boardDTO.getBoardIdx());
+    response.sendRedirect(redirectUrl);
 %>
 
 
@@ -32,15 +33,22 @@
         Enumeration fileNames = multi.getFileNames();
 
         while (fileNames.hasMoreElements()) {
-            String file = (String) fileNames.nextElement();
+            String fileName = (String) fileNames.nextElement();
 
-            files.add(buildFileFromRequest(multi.getOriginalFileName(file), multi.getFilesystemName(file)));
+            String originalFileName = multi.getOriginalFileName(fileName);
+            String fileSystemName = multi.getFilesystemName(fileName);
+
+            if (originalFileName != null && fileSystemName != null) {
+                java.io.File file = new java.io.File(
+                        "C:\\git\\ebrain\\eb-study-templates-1week\\src\\main\\webapp\\download", fileSystemName);
+                files.add(buildFileFromRequest(originalFileName, fileSystemName, (int) file.length()));
+            }
         }
         return files;
     }
 
-    private File buildFileFromRequest(String saveFileName, String originalFileName) {
-        return new File(saveFileName, new FileOriginalName(originalFileName));
+    private File buildFileFromRequest(String saveFileName, String originalFileName, int fileSize) {
+        return new File(saveFileName, new FileOriginalName(originalFileName), new FileSize(fileSize));
     }
 
     private Board buildBoardFromRequest(MultipartRequest multi) {

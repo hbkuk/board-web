@@ -23,15 +23,15 @@ public class File {
         this.boardIdx = boardIdx;
     }
 
-    public File(String saveFileName, FileOriginalName originalName) {
-        this(new FileIdx(0), saveFileName, originalName, new FileSize(0), new BoardIdx(0));
+    public File(String saveFileName, FileOriginalName originalName, FileSize fileSize) {
+        this(new FileIdx(0), saveFileName, originalName, fileSize, new BoardIdx(0));
     }
 
     public File(Builder builder) {
         this.fileIdx = builder.FileIdx;
         this.saveFileName = builder.saveFileName;
         this.originalName = builder.originalFileName;
-        this.fileSize = new FileSize(0);
+        this.fileSize = builder.fileSize;
         this.boardIdx = builder.boardIdx;
     }
 

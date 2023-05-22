@@ -22,6 +22,6 @@
 
 
     // 해당 글로 이동
-    String redirectUrl = String.format("./boardView.jsp?board_idx=%d", commentDTO.getBoardIdx());
-    request.getRequestDispatcher(redirectUrl).forward(request, response);
+    String redirectUrl = String.format("/boardView.jsp?board_idx=%d", commentDTO.getBoardIdx());
+    response.sendRedirect(redirectUrl);
 %>

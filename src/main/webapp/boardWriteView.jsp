@@ -43,7 +43,7 @@
 <!-- 상단 디자인 -->
 <div class="contents1">
     <h1>게시판 - 등록</h1>
-    <form action="./writeBoardAction.jsp" method="post" name="wfrm" enctype="multipart/form-data">
+    <form action="action/writeBoardAction.jsp" method="post" name="wfrm" enctype="multipart/form-data">
         <div class="contents_sub" style="margin-top: 50px;">
             <!--게시판-->
             <div class="board_write">
