@@ -132,12 +132,18 @@ public class BoardService {
 
     /**
      * 삭제할 게시물의 정보를 인자로 받아 게시물 번호에 해당하는 게시물, 댓글, 파일 정보를 삭제합니다.
-     * @param boardDTO 삭제할 게시물 정보
+     * @param deleteBoardDTO 삭제할 게시물 정보
      */
-    public void deleteBoardWithFilesAndComment(BoardDTO boardDTO) {
-        boardDAO.deleteById(boardDTO.getBoardIdx(), boardDTO.getPassword());
-        commentDAO.deleteAllByBoardIdx(boardDTO.getBoardIdx());
-        fileDAO.deleteAllByBoardId(boardDTO.getBoardIdx());
+    public void deleteBoardWithFilesAndComment(BoardDTO deleteBoardDTO) throws IllegalArgumentException {
+        BoardDTO boardDTO = boardDAO.findById(deleteBoardDTO.getBoardIdx());
+
+        if( !boardDTO.getPassword().equals(deleteBoardDTO.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 다릅니다.");
+        }
+
+        boardDAO.deleteById(deleteBoardDTO.getBoardIdx(), deleteBoardDTO.getPassword());
+        commentDAO.deleteAllByBoardIdx(deleteBoardDTO.getBoardIdx());
+        fileDAO.deleteAllByBoardId(deleteBoardDTO.getBoardIdx());
     }
 
     /**
