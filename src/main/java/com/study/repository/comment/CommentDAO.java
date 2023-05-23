@@ -15,9 +15,11 @@ import java.util.List;
 
 public class CommentDAO {
 
+    private static final String FIND = "SELECT * FROM tb_comment WHERE comment_idx = ?";
     private static final String FIND_ALL = "SELECT * FROM tb_comment WHERE board_idx = ?";
     private static final String SAVE = "INSERT INTO tb_comment (writer, password, content, regdate, board_idx) VALUES (?, ?, ?, ?, ?)";
-    private static final String DELETE = "DELETE FROM tb_comment WHERE board_idx = ?";
+    private static final String DELETE_ALL = "DELETE FROM tb_comment WHERE board_idx = ?";
+    private static final String DELETE = "DELETE FROM tb_comment WHERE comment_idx = ?";
 
     public CommentDAO() {
         try {
@@ -25,6 +27,48 @@ public class CommentDAO {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    public CommentDTO findByCommentIdx(long commentIdx) {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
+        CommentDTO commentDTO = null;
+        try {
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3316/ebsoft", "ebsoft", "123456");
+            statement = connection.prepareStatement(FIND);
+            statement.setLong(1, commentIdx);
+            resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                commentDTO = new CommentDTO();
+                commentDTO.setCommentIdx(resultSet.getLong("comment_idx"));
+                commentDTO.setWriter(resultSet.getString("writer"));
+                commentDTO.setPassword(resultSet.getString("password"));
+                commentDTO.setContent((resultSet.getString("content")));
+                commentDTO.setRegDate(resultSet.getTimestamp("regdate").toLocalDateTime());
+                commentDTO.setBoardIdx(resultSet.getLong("board_idx"));
+            }
+            return commentDTO;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+                if (statement != null) {
+                    statement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return commentDTO;
     }
 
     public List<CommentDTO> findAllByBoardId(long boardIdx) {
@@ -109,9 +153,34 @@ public class CommentDAO {
 
         try {
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3316/ebsoft", "ebsoft", "123456");
-            statement = connection.prepareStatement(DELETE);
+            statement = connection.prepareStatement(DELETE_ALL);
             statement.setLong(1, boardIdx);
             statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void deleteCommentByCommentIdx(CommentDTO commentDTO) {
+        Connection connection = null;
+        PreparedStatement statement = null;
+
+        try {
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3316/ebsoft", "ebsoft", "123456");
+            statement = connection.prepareStatement(DELETE);
+            statement.setLong(1, commentDTO.getCommentIdx());
+            int result = statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {

@@ -106,6 +106,7 @@
             <table>
             <c:forEach items="<%=board.getComments()%>" var="comment">
                 <form action='action/deleteCommentAction.jsp' method='post' name="dcfrm" id='dcfrm${comment.commentIdx}'>
+                    <input type='hidden' name='board_idx' value="<%=board.getBoardIdx()%>">
                     <input type='hidden' name='comment_idx' value="${comment.commentIdx}">
                     <tr>
                         <td class='coment_re'>

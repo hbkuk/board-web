@@ -174,6 +174,23 @@ public class BoardService {
     //TODO: javadocs
     /**
      *
+     * @param comment
+     * @return
+     */
+    public Long deleteCommentByCommentIdx(CommentDTO deleteComment) {
+        CommentDTO commentDTO = commentDAO.findByCommentIdx(deleteComment.getCommentIdx());
+
+        if( !commentDTO.getPassword().equals(deleteComment.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 다릅니다.");
+        }
+        commentDAO.deleteCommentByCommentIdx(deleteComment);
+
+        return deleteComment.getBoardIdx();
+    }
+
+    //TODO: javadocs
+    /**
+     *
      * @param fileIdx
      * @return
      */
