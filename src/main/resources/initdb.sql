@@ -1,6 +1,6 @@
-drop table comment;
-drop table file;
-drop table board;
+drop table if exists comment;
+drop table if exists file;
+drop table if exists board;
 
 CREATE TABLE board (
                        board_idx BIGINT NOT NULL auto_increment,
@@ -43,19 +43,8 @@ CREATE TABLE file (
 
 INSERT INTO board (board_idx, category, title, writer, content, password, hit, regdate, moddate)
 VALUES
-    (1, 'JAVA', 'Title 1', '테스터1', 'Content 1', 'password1!', 10, '2023-05-18 10:00:00', '2023-05-18 12:00:00'),
-    (2, 'JAVASCRIPT', 'Title 2', '테스터2', 'Content 2', 'password2!', 5, '2023-05-18 11:00:00', '2023-05-18 13:00:00'),
-    (3, 'SPRING', 'Title 3', '테스터3', 'Content 3', 'password3!', 8, '2023-05-18 12:00:00', '2023-05-18 14:00:00');
+    (1, 'JAVA', 'Title 1', '테스터1', 'Content 1', 'password1!', 10, '2023-05-18 10:00:00', null),
+    (2, 'JAVASCRIPT', 'Title 2', '테스터2', 'Content 2', 'password2!', 5, '2023-05-18 11:00:00', null),
+    (3, 'SPRING', 'Title 3', '테스터3', 'Content 3', 'password3!', 8, '2023-05-18 12:00:00', null);
 
 
-INSERT INTO comment (comment_idx, writer, password, content, regdate, board_idx)
-VALUES
-    (1, '테스터4', 'password1!', 'Comment 1', '2023-05-18 10:30:00', 1),
-    (2, '테스터5', 'password1!', 'Comment 2', '2023-05-18 11:30:00', 1),
-    (3, '테스터6', 'password1!', 'Comment 3', '2023-05-18 12:30:00', 2);
-
-INSERT INTO file (file_idx, save_name, original_name, size, board_idx)
-VALUES
-    (1, 'image1.jpg', 'image1.jpg', 1024, 1),
-    (2, 'image2.jpg', 'image2.jpg', 2048, 1),
-    (3, 'image3.jpg', 'image3.jpg', 3072, 2);
