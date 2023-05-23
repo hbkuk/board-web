@@ -3,13 +3,16 @@
 <%@ page import="com.study.dto.BoardDTO" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.study.model.board.Category" %>
+<%@ page import="com.study.repository.board.BoardDAO" %>
+<%@ page import="com.study.repository.comment.CommentDAO" %>
+<%@ page import="com.study.repository.file.FileDAO" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
 <%
     // Get the instance of BoardService
-    BoardService boardService = BoardService.getInstance();
+    BoardService boardService = new BoardService(new BoardDAO(), new CommentDAO(), new FileDAO());
 
     // Call the getBoardListDetails method
     List<BoardDTO> boardList = boardService.getBoardListDetails();

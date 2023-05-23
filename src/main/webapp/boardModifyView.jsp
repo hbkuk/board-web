@@ -1,5 +1,8 @@
 <%@ page import="com.study.service.BoardService" %>
 <%@ page import="com.study.dto.BoardDTO" %>
+<%@ page import="com.study.repository.board.BoardDAO" %>
+<%@ page import="com.study.repository.comment.CommentDAO" %>
+<%@ page import="com.study.repository.file.FileDAO" %>
 <%@page isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -7,7 +10,7 @@
 <%
     long boardIdx = Long.parseLong(request.getParameter("board_idx"));
 
-    BoardService boardService = BoardService.getInstance();
+    BoardService boardService = new BoardService(new BoardDAO(), new CommentDAO(), new FileDAO());
 
     BoardDTO board = boardService.getBoardWithImages(boardIdx);
 %>
