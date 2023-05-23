@@ -108,7 +108,7 @@
 
         <div class="btn_area">
             <div class="align_right">
-                <input type="button" value="쓰기" class="btn_write btn_txt01" style="cursor: pointer;" onclick="location.href='writeView.jsp'" />
+                <input type="button" value="쓰기" class="btn_write btn_txt01" style="cursor: pointer;" onclick="location.href='boardWriteView.jsp'" />
             </div>
         </div>
     </div>

@@ -150,11 +150,12 @@ public class BoardService {
             throw new IllegalArgumentException("비밀번호가 다릅니다.");
         }
 
-        boardDAO.deleteById(deleteBoardDTO.getBoardIdx(), deleteBoardDTO.getPassword());
         commentDAO.deleteAllByBoardIdx(deleteBoardDTO.getBoardIdx());
 
         List<Long> indexesToDelete = fileDAO.findFileIndexesByBoardId(boardDTO.getBoardIdx());
         deleteFilesFromdatabaseAndDirectory(indexesToDelete);
+
+        boardDAO.deleteById(deleteBoardDTO.getBoardIdx(), deleteBoardDTO.getPassword());
     }
 
     /**

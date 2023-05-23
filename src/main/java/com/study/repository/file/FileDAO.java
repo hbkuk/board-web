@@ -36,6 +36,7 @@ public class FileDAO {
             statement.setLong(1, fileIdx);
             resultSet = statement.executeQuery();
             if (resultSet.next()) {
+                log.debug("resultSet.getString(saved_name) : {}", resultSet.getString("saved_name"));
                 return resultSet.getString("saved_name");
             }
             return null;
