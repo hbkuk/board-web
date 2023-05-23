@@ -2,7 +2,6 @@ package com.study.repository.board;
 
 import com.study.dto.BoardDTO;
 import com.study.model.board.Board;
-import com.study.model.board.Category;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.*;
@@ -16,6 +15,18 @@ import java.util.List;
 @Slf4j
 public class BoardDAO {
 
+    private static final String FIND_BY_ID = "SELECT b.board_idx, c.category_idx, c.category, b.title, b.writer, b.content, b.password, b.hit, b.regdate, b.moddate FROM tb_board b JOIN tb_category c ON b.category_idx = c.category_idx WHERE b.board_idx = ?";
+    private static final String FIND_ALL = "SELECT b.board_idx, c.category, b.title, b.writer, b.content, b.password, b.hit, b.regdate, b.moddate,\n" +
+            "(CASE WHEN EXISTS (SELECT 1 FROM tb_file f WHERE f.board_idx = b.board_idx) THEN 1 ELSE 0 END) AS has_file\n" +
+            "FROM tb_board b\n" +
+            "JOIN tb_category c ON b.category_idx = c.category_idx\n" +
+            "LEFT OUTER JOIN tb_file f ON b.board_idx = f.board_idx\n" +
+            "GROUP BY b.board_idx";
+    private static final String SAVE = "INSERT INTO tb_board (category_idx, title, writer, content, password, hit, regdate) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    private static final String UPDATE = "UPDATE tb_board SET title = ?, writer = ?, content = ?, moddate = ? WHERE board_idx = ? and password = ?";
+    private static final String INCREASE_HIT = "UPDATE tb_board SET hit = hit + 1 WHERE board_idx = ?";
+    private static final String DELETE = "DELETE FROM tb_board WHERE board_idx = ? and password = ?";
+
     public BoardDAO() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -24,11 +35,6 @@ public class BoardDAO {
         }
     }
 
-    /**
-     * ID 를 사용하여 게시물 한 건 조회
-     * @param id 아이디
-     * @return
-     */
     public BoardDTO findById(Long id) {
         Connection connection = null;
         PreparedStatement statement = null;
@@ -37,21 +43,22 @@ public class BoardDAO {
         BoardDTO boardDTO = null;
         try {
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3316/ebsoft", "ebsoft", "123456");
-            statement = connection.prepareStatement("SELECT * FROM board WHERE board_idx = ?");
+            statement = connection.prepareStatement(FIND_BY_ID);
             statement.setLong(1, id);
             resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 boardDTO = new BoardDTO();
-                boardDTO.setBoardIdx(resultSet.getLong("board_idx"));
-                boardDTO.setCategory(Category.valueOf(resultSet.getString("category")));
-                boardDTO.setTitle(resultSet.getString("title"));
-                boardDTO.setWriter(resultSet.getString("writer"));
-                boardDTO.setContent(resultSet.getString("content"));
-                boardDTO.setPassword((resultSet.getString("password")));
-                boardDTO.setHit(resultSet.getInt("hit"));
-                boardDTO.setRegDate(resultSet.getTimestamp("regdate").toLocalDateTime());
-                if (resultSet.getTimestamp("moddate") != null) {
-                    boardDTO.setModDate(resultSet.getTimestamp("moddate").toLocalDateTime());
+                boardDTO.setBoardIdx(resultSet.getLong("b.board_idx"));
+                boardDTO.setCategoryIdx(resultSet.getInt("c.category_idx"));
+                boardDTO.setCategory(resultSet.getString("c.category"));
+                boardDTO.setTitle(resultSet.getString("b.title"));
+                boardDTO.setWriter(resultSet.getString("b.writer"));
+                boardDTO.setContent(resultSet.getString("b.content"));
+                boardDTO.setPassword((resultSet.getString("b.password")));
+                boardDTO.setHit(resultSet.getInt("b.hit"));
+                boardDTO.setRegDate(resultSet.getTimestamp("b.regdate").toLocalDateTime());
+                if (resultSet.getTimestamp("b.moddate") != null) {
+                    boardDTO.setModDate(resultSet.getTimestamp("b.moddate").toLocalDateTime());
                 }
             }
         } catch (SQLException e) {
@@ -74,50 +81,6 @@ public class BoardDAO {
         return boardDTO;
     }
 
-    public List<BoardDTO> findAll() {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet resultSet = null;
-
-        try {
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3316/ebsoft", "ebsoft", "123456");
-            statement = connection.prepareStatement("SELECT * FROM board");
-            resultSet = statement.executeQuery();
-            List<BoardDTO> boards = new ArrayList<>();
-            while (resultSet.next()) {
-                BoardDTO boardDTO = new BoardDTO();
-                boardDTO.setCategory(Category.valueOf(resultSet.getString("category")));
-                boardDTO.setTitle(resultSet.getString("title"));
-                boardDTO.setWriter(resultSet.getString("writer"));
-                boardDTO.setContent(resultSet.getString("content"));
-                boardDTO.setPassword((resultSet.getString("password")));
-                boardDTO.setHit(resultSet.getInt("hit"));
-                boardDTO.setRegDate(resultSet.getTimestamp("regdate").toLocalDateTime());
-                boardDTO.setModDate(resultSet.getTimestamp("moddate").toLocalDateTime());
-                boards.add(boardDTO);
-            }
-            return boards;
-        } catch (SQLException e) {
-            // Handle exception
-            e.printStackTrace();
-            return new ArrayList<>();
-        } finally {
-            try {
-                if (resultSet != null) {
-                    resultSet.close();
-                }
-                if (statement != null) {
-                    statement.close();
-                }
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     public List<BoardDTO> findAllWithImageCheck() {
         Connection connection = null;
         PreparedStatement statement = null;
@@ -125,21 +88,21 @@ public class BoardDAO {
 
         try {
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3316/ebsoft", "ebsoft", "123456");
-            statement = connection.prepareStatement("SELECT b.*, (CASE WHEN EXISTS (SELECT 1 FROM file f WHERE f.board_idx = b.board_idx) THEN 1 ELSE 0 END) AS has_file FROM board b LEFT JOIN file f ON b.board_idx = f.board_idx group by b.board_idx");
+            statement = connection.prepareStatement(FIND_ALL);
             resultSet = statement.executeQuery();
             List<BoardDTO> boards = new ArrayList<>();
             while (resultSet.next()) {
                 BoardDTO boardDTO = new BoardDTO();
-                boardDTO.setBoardIdx(resultSet.getLong("board_idx"));
-                boardDTO.setCategory(Category.valueOf(resultSet.getString("category")));
-                boardDTO.setTitle(resultSet.getString("title"));
-                boardDTO.setWriter(resultSet.getString("writer"));
-                boardDTO.setContent(resultSet.getString("content"));
-                boardDTO.setPassword((resultSet.getString("password")));
-                boardDTO.setHit(resultSet.getInt("hit"));
-                boardDTO.setRegDate(resultSet.getTimestamp("regdate").toLocalDateTime());
-                if(resultSet.getTimestamp("moddate") != null ) {
-                    boardDTO.setModDate(resultSet.getTimestamp("moddate").toLocalDateTime());
+                boardDTO.setBoardIdx(resultSet.getLong("b.board_idx"));
+                boardDTO.setCategory(resultSet.getString("c.category"));
+                boardDTO.setTitle(resultSet.getString("b.title"));
+                boardDTO.setWriter(resultSet.getString("b.writer"));
+                boardDTO.setContent(resultSet.getString("b.content"));
+                boardDTO.setPassword((resultSet.getString("b.password")));
+                boardDTO.setHit(resultSet.getInt("b.hit"));
+                boardDTO.setRegDate(resultSet.getTimestamp("b.regdate").toLocalDateTime());
+                if(resultSet.getTimestamp("b.moddate") != null ) {
+                    boardDTO.setModDate(resultSet.getTimestamp("b.moddate").toLocalDateTime());
                 }
                 boolean hasImage = resultSet.getInt("has_file") == 1;
                 boardDTO.setHasFile(hasImage);
@@ -174,9 +137,7 @@ public class BoardDAO {
         BoardDTO boardDTO = new BoardDTO();
         try {
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3316/ebsoft", "ebsoft", "123456");
-            statement = connection.prepareStatement(
-                    "INSERT INTO board (category, title, writer, content, password, hit, regdate) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                    Statement.RETURN_GENERATED_KEYS );
+            statement = connection.prepareStatement(SAVE,Statement.RETURN_GENERATED_KEYS );
             statement.setString(1, String.valueOf(board.getCategory()));
             statement.setString(2, board.getTitle().getTitle());
             statement.setString(3, board.getWriter().getWriter());
@@ -215,7 +176,7 @@ public class BoardDAO {
         BoardDTO boardDTO = null;
         try {
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3316/ebsoft", "ebsoft", "123456");
-            statement = connection.prepareStatement("UPDATE board SET title = ?, writer = ?, content = ?, moddate = ? WHERE board_idx = ? and password = ?");
+            statement = connection.prepareStatement(UPDATE);
             statement.setString(1, board.getTitle().getTitle());
             statement.setString(2, board.getWriter().getWriter());
             statement.setString(3, board.getContent().getContent());
@@ -257,7 +218,7 @@ public class BoardDAO {
         BoardDTO boardDTO = new BoardDTO();
         try {
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3316/ebsoft", "ebsoft", "123456");
-            statement = connection.prepareStatement("UPDATE board SET hit = hit + 1 WHERE board_idx = ?");
+            statement = connection.prepareStatement(INCREASE_HIT);
             statement.setLong(1, boardIdx);
             int rowsAffected = statement.executeUpdate();
             if (rowsAffected == 0) {
@@ -288,7 +249,7 @@ public class BoardDAO {
 
         try {
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3316/ebsoft", "ebsoft", "123456");
-            statement = connection.prepareStatement("DELETE FROM board WHERE board_idx = ? and password = ?");
+            statement = connection.prepareStatement(DELETE);
             statement.setLong(1, id);
             statement.setString(2, password);
 

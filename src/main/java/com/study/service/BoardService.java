@@ -1,19 +1,22 @@
 package com.study.service;
 
 import com.study.dto.BoardDTO;
+import com.study.dto.CategoryDTO;
 import com.study.dto.CommentDTO;
 import com.study.model.board.Board;
 import com.study.model.comment.Comment;
 import com.study.model.file.File;
 import com.study.repository.board.BoardDAO;
+import com.study.repository.category.CategoryDAO;
 import com.study.repository.comment.CommentDAO;
 import com.study.repository.file.FileDAO;
-import com.study.utils.FileUploadUtils;
+import com.study.utils.FileUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class BoardService {
@@ -21,11 +24,13 @@ public class BoardService {
     private BoardDAO boardDAO;
     private CommentDAO commentDAO;
     private FileDAO fileDAO;
+    private CategoryDAO categoryDAO;
 
-    public BoardService(BoardDAO boardDAO, CommentDAO commentDAO, FileDAO fileDAO) {
+    public BoardService(BoardDAO boardDAO, CommentDAO commentDAO, FileDAO fileDAO, CategoryDAO categoryDAO) {
         this.boardDAO = boardDAO;
         this.commentDAO = commentDAO;
         this.fileDAO = fileDAO;
+        this.categoryDAO = categoryDAO;
     }
 
     /**
@@ -120,14 +125,18 @@ public class BoardService {
      */
     private void deleteFilesFromdatabaseAndDirectory(List<Long> indexesToDelete) {
 
+        // 저장 디렉토리에서 파일 삭제
+        List<String> fileNamesToDelete = indexesToDelete.stream()
+                .map(fileIdx -> fileDAO.findSavedFileNameById(fileIdx))
+                .collect(Collectors.toList());
+
+        fileNamesToDelete.stream()
+                .forEach(fileName -> FileUtils.deleteUploadedFile(fileName));
+
         // DB 파일 삭제
         indexesToDelete.stream()
                 .forEach(fileIdx -> fileDAO.deleteByFileId(fileIdx));
 
-        // 저장 디렉토리에서 파일 삭제
-        indexesToDelete.stream()
-                .map(fileIdx -> fileDAO.findSavedFileNameById(fileIdx))
-                .forEach(fileName -> FileUploadUtils.deleteUploadedFile(fileName));
     }
 
     /**
@@ -143,7 +152,9 @@ public class BoardService {
 
         boardDAO.deleteById(deleteBoardDTO.getBoardIdx(), deleteBoardDTO.getPassword());
         commentDAO.deleteAllByBoardIdx(deleteBoardDTO.getBoardIdx());
-        fileDAO.deleteAllByBoardId(deleteBoardDTO.getBoardIdx());
+
+        List<Long> indexesToDelete = fileDAO.findFileIndexesByBoardId(boardDTO.getBoardIdx());
+        deleteFilesFromdatabaseAndDirectory(indexesToDelete);
     }
 
     /**
@@ -157,6 +168,25 @@ public class BoardService {
         log.debug("New Commnet / request! Comment  : {} ", comment.toString());
 
         return commentDAO.save(comment);
+    }
+
+    //TODO: javadocs
+    /**
+     *
+     * @param fileIdx
+     * @return
+     */
+    public String getSavedFileName(long fileIdx) {
+        return fileDAO.findSavedFileNameById(fileIdx);
+    }
+
+    //TODO: javadocs
+    /**
+     *
+     * @return
+     */
+    public List<CategoryDTO> getAllCategory() {
+        return categoryDAO.findAll();
     }
 
     /**

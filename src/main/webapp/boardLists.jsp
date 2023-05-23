@@ -2,20 +2,23 @@
 <%@ page import="com.study.service.BoardService" %>
 <%@ page import="com.study.dto.BoardDTO" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.study.model.board.Category" %>
 <%@ page import="com.study.repository.board.BoardDAO" %>
 <%@ page import="com.study.repository.comment.CommentDAO" %>
 <%@ page import="com.study.repository.file.FileDAO" %>
+<%@ page import="com.study.dto.CategoryDTO" %>
+<%@ page import="com.study.repository.category.CategoryDAO" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
 <%
     // Get the instance of BoardService
-    BoardService boardService = new BoardService(new BoardDAO(), new CommentDAO(), new FileDAO());
+    BoardService boardService = new BoardService(new BoardDAO(), new CommentDAO(), new FileDAO(), new CategoryDAO());
 
     // Call the getBoardListDetails method
     List<BoardDTO> boardList = boardService.getBoardListDetails();
+
+    List<CategoryDTO> categorys = boardService.getAllCategory();
 %>
 
 <!DOCTYPE html>
@@ -40,8 +43,8 @@
                 <td width="30%">등록일 | <input type="date" id="start_date" placeholder="시작 날짜"> ~ <input type="date" id="end_date" placeholder="끝 날짜"></td>
                 <td><select id="category">
                     <option value="전체">전체 카테고리</option>
-                    <c:forEach items="${Category.values()}" var="category">
-                        <option value="${category.name()}">${category.name()}</option>
+                    <c:forEach items="<%=categorys%>" var="category">
+                        <option value="${category.categoryIdx}">${category.category}</option>
                     </c:forEach>
                 </select> |
                 <input type="text" id="search_query" placeholder="검색어를 입력해 주세요. (제목+작성자+내용)" style="width: 500px;"> | <button>검색</button></td>

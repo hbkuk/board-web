@@ -1,6 +1,5 @@
 package com.study.dto;
 
-import com.study.model.board.Category;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,7 +10,8 @@ import java.util.List;
 @Setter
 public class BoardDTO {
     private long boardIdx;
-    private Category category;
+    private int categoryIdx;
+    private String category;
     private String title;
     private String writer;
     private String content;
@@ -27,7 +27,8 @@ public class BoardDTO {
     public String toString() {
         return "BoardDTO{" +
                 "boardIdx=" + boardIdx +
-                ", category=" + category +
+                ", categoryIdx=" + categoryIdx +
+                ", category='" + category + '\'' +
                 ", title='" + title + '\'' +
                 ", writer='" + writer + '\'' +
                 ", content='" + content + '\'' +

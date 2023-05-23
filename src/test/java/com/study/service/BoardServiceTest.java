@@ -6,6 +6,7 @@ import com.study.model.file.File;
 import com.study.model.file.FileOriginalName;
 import com.study.model.file.FileSize;
 import com.study.repository.board.BoardDAO;
+import com.study.repository.category.CategoryDAO;
 import com.study.repository.comment.CommentDAO;
 import com.study.repository.file.FileDAO;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,12 +37,14 @@ public class BoardServiceTest {
     private CommentDAO commentDAO;
     @Mock
     private FileDAO fileDAO;
+    @Mock
+    private CategoryDAO categoryDAO;
 
     private BoardService boardService;
 
     @BeforeEach
     void setUp() {
-        boardService = new BoardService(boardDAO, commentDAO, fileDAO);
+        boardService = new BoardService(boardDAO, commentDAO, fileDAO, categoryDAO);
     }
 
         @Nested
@@ -93,7 +96,7 @@ public class BoardServiceTest {
                 long expectedBoardIdx = 1L;
 
                 Board board = new Board.Builder()
-                        .category(Category.JAVA)
+                        .category(1)
                         .title(new Title("Title 1"))
                         .writer(new BoardWriter("테스터"))
                         .content(new BoardContent("Content 1"))
@@ -127,7 +130,7 @@ public class BoardServiceTest {
                 long expectedBoardIdx = 1L;
 
                 Board board = new Board.Builder()
-                        .category(Category.JAVA)
+                        .category(1)
                         .title(new Title("Title 1"))
                         .writer(new BoardWriter("테스터"))
                         .content(new BoardContent("Content 1"))
@@ -208,7 +211,7 @@ public class BoardServiceTest {
 
                     Board updateBoard = new Board.Builder()
                             .boardIdx(new BoardIdx(boardIdx))
-                            .category(Category.JAVA)
+                            .category(1)
                             .title(new Title("Title 1"))
                             .writer(new BoardWriter("테스터"))
                             .content(new BoardContent("Content 1"))
@@ -242,7 +245,7 @@ public class BoardServiceTest {
 
                     Board updateBoard = new Board.Builder()
                             .boardIdx(new BoardIdx(boardIdx))
-                            .category(Category.JAVA)
+                            .category(1)
                             .title(new Title("Title 1"))
                             .writer(new BoardWriter("테스터"))
                             .content(new BoardContent("Content 1"))
@@ -280,7 +283,7 @@ public class BoardServiceTest {
 
                     Board updateBoard = new Board.Builder()
                             .boardIdx(new BoardIdx(boardIdx))
-                            .category(Category.JAVA)
+                            .category(1)
                             .title(new Title("Title 1"))
                             .writer(new BoardWriter("테스터"))
                             .content(new BoardContent("Content 1"))
@@ -323,7 +326,7 @@ public class BoardServiceTest {
 
                     Board updateBoard = new Board.Builder()
                             .boardIdx(new BoardIdx(boardIdx))
-                            .category(Category.JAVA)
+                            .category(1)
                             .title(new Title("Title 1"))
                             .writer(new BoardWriter("테스터"))
                             .content(new BoardContent("Content 1"))
@@ -380,15 +383,23 @@ public class BoardServiceTest {
             actureBoardDTO.setBoardIdx(boardIdx);
             actureBoardDTO.setPassword("qudrnr132!");
 
+            List<Long> dbFileIndexes = Arrays.asList(10L, 11L, 12L);
+
             when(boardDAO.findById(boardIdx)).thenReturn(actureBoardDTO);
+            when(fileDAO.findFileIndexesByBoardId(deleteBoardDTO.getBoardIdx())).thenReturn(dbFileIndexes);
+            when(fileDAO.findSavedFileNameById(10L)).thenReturn("image1.jpg");
+            when(fileDAO.findSavedFileNameById(11L)).thenReturn("image2.jpg");
+            when(fileDAO.findSavedFileNameById(12L)).thenReturn("image3.jpg");
 
             // when
             boardService.deleteBoardWithFilesAndComment(deleteBoardDTO);
 
+
             // then
             verify(boardDAO, times(1)).deleteById(boardIdx, deleteBoardDTO.getPassword());
             verify(commentDAO, times(1)).deleteAllByBoardIdx(boardIdx);
-            verify(fileDAO, times(1)).deleteAllByBoardId(boardIdx);
+            dbFileIndexes.stream()
+                    .forEach(fileIdx -> verify(fileDAO, times(1)).deleteByFileId(fileIdx));
 
         }
 

@@ -11,52 +11,18 @@ import java.util.List;
 @Slf4j
 public class FileDAO {
 
+    private static final String FIND_SAVED_FILE_NAME = "SELECT saved_name FROM tb_file WHERE file_idx = ?";
+    private static final String FIND_FILES = "SELECT * FROM tb_file WHERE board_idx = ?";
+    private static final String FIND_FILE_INDEXS = "SELECT file_idx FROM tb_file WHERE board_idx = ?";
+    private static final String SAVE = "INSERT INTO tb_file (saved_name, original_name, size, board_idx) VALUES (?, ?, ?, ?)";
+    private static final String DELETE = "DELETE FROM tb_file WHERE file_idx = ?";
+
     public FileDAO() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-    }
-
-    public FileDTO findById(Long fileIdx) {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet resultSet = null;
-
-        FileDTO fileDTO = new FileDTO();
-        try {
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3316/ebsoft", "ebsoft", "123456");
-            statement = connection.prepareStatement("SELECT * FROM file WHERE file_idx = ?");
-            statement.setLong(1, fileIdx);
-            resultSet = statement.executeQuery();
-
-            if (resultSet.next()) {
-                fileDTO.setFileIdx(resultSet.getLong("file_idx"));
-                fileDTO.setSaveFileName(resultSet.getString("save_name"));
-                fileDTO.setOriginalFileName(resultSet.getString("original_name"));
-                fileDTO.setFileSize(resultSet.getInt("size"));
-                fileDTO.setBoardIdx(resultSet.getLong("board_idx"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (resultSet != null) {
-                    resultSet.close();
-                }
-                if (statement != null) {
-                    statement.close();
-                }
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                // Handle exception
-                e.printStackTrace();
-            }
-        }
-        return fileDTO;
     }
 
     public String findSavedFileNameById(Long fileIdx) {
@@ -66,11 +32,11 @@ public class FileDAO {
 
         try {
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3316/ebsoft", "ebsoft", "123456");
-            statement = connection.prepareStatement("SELECT save_name FROM file WHERE file_idx = ?");
+            statement = connection.prepareStatement(FIND_SAVED_FILE_NAME);
             statement.setLong(1, fileIdx);
             resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                return resultSet.getString("save_name");
+                return resultSet.getString("saved_name");
             }
             return null;
         } catch (SQLException e) {
@@ -94,39 +60,6 @@ public class FileDAO {
         return null;
     }
 
-    public boolean hasImageByBoardId(long boardId) {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet resultSet = null;
-
-        try {
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3316/ebsoft", "ebsoft", "123456");
-            String sql = "SELECT * FROM file WHERE board_idx = ? LIMIT 1";
-            statement = connection.prepareStatement(sql);
-            statement.setLong(1, boardId);
-            resultSet = statement.executeQuery();
-            return resultSet.next();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        } finally {
-            try {
-                if (resultSet != null) {
-                    resultSet.close();
-                }
-                if (statement != null) {
-                    statement.close();
-                }
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-
     public List<FileDTO> findFilesByBoardId(Long boardIdx) {
         Connection connection = null;
         PreparedStatement statement = null;
@@ -134,14 +67,14 @@ public class FileDAO {
 
         try {
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3316/ebsoft", "ebsoft", "123456");
-            statement = connection.prepareStatement("SELECT * FROM file WHERE board_idx = ?");
+            statement = connection.prepareStatement(FIND_FILES);
             statement.setLong(1, boardIdx);
             resultSet = statement.executeQuery();
             List<FileDTO> files = new ArrayList<>();
             while (resultSet.next()) {
                 FileDTO fileDTO = new FileDTO();
                 fileDTO.setFileIdx(resultSet.getLong("file_idx"));
-                fileDTO.setSaveFileName(resultSet.getString("save_name"));
+                fileDTO.setSaveFileName(resultSet.getString("saved_name"));
                 fileDTO.setOriginalFileName(resultSet.getString("original_name"));
                 fileDTO.setFileSize(resultSet.getInt("size"));
                 fileDTO.setBoardIdx(resultSet.getLong("board_idx"));
@@ -175,7 +108,7 @@ public class FileDAO {
 
         try {
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3316/ebsoft", "ebsoft", "123456");
-            statement = connection.prepareStatement("SELECT file_idx FROM file WHERE board_idx = ?");
+            statement = connection.prepareStatement(FIND_FILE_INDEXS);
             statement.setLong(1, boardIdx);
             resultSet = statement.executeQuery();
             List<Long> fileIndexes = new ArrayList<>();
@@ -214,7 +147,7 @@ public class FileDAO {
 
         try {
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3316/ebsoft", "ebsoft", "123456");
-            preparedStatement = connection.prepareStatement("INSERT INTO file (save_name, original_name, size, board_idx) VALUES (?, ?, ?, ?)");
+            preparedStatement = connection.prepareStatement(SAVE);
             preparedStatement.setString(1, file.getSaveFileName());
             preparedStatement.setString(2, file.getOriginalName().getFileName());
             preparedStatement.setInt(3, file.getFileSize().getImageSize());
@@ -251,7 +184,7 @@ public class FileDAO {
 
         try {
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3316/ebsoft", "ebsoft", "123456");
-            statement = connection.prepareStatement("DELETE FROM file WHERE file_idx = ?");
+            statement = connection.prepareStatement(DELETE);
             statement.setLong(1, image_idx);
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -269,30 +202,4 @@ public class FileDAO {
             }
         }
     }
-
-    public void deleteAllByBoardId(Long boardId) {
-        Connection connection = null;
-        PreparedStatement statement = null;
-
-        try {
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3316/ebsoft", "ebsoft", "123456");
-            statement = connection.prepareStatement("DELETE FROM file WHERE board_idx = ?");
-            statement.setLong(1, boardId);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    }
+}

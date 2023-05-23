@@ -47,7 +47,7 @@ public class HitTest {
     void create_new_board() {
         // given
         Board board = new Board.Builder()
-                .category(Category.JAVA)
+                .category(1)
                 .title(new Title("제목 1"))
                 .writer(new BoardWriter("테스터"))
                 .content(new BoardContent("내용 1"))

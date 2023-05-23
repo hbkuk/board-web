@@ -4,21 +4,25 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="com.study.model.file.File" %>
 <%@ page import="com.study.model.board.*" %>
-<%@ page import="com.study.utils.FileUploadUtils" %>
+<%@ page import="com.study.utils.FileUtils" %>
 <%@ page import="com.oreilly.servlet.MultipartRequest" %>
 <%@ page import="java.util.Enumeration" %>
 <%@ page import="com.study.model.file.FileOriginalName" %>
 <%@ page import="com.study.model.file.FileSize" %>
+<%@ page import="com.study.repository.board.BoardDAO" %>
+<%@ page import="com.study.repository.comment.CommentDAO" %>
+<%@ page import="com.study.repository.file.FileDAO" %>
+<%@ page import="com.study.repository.category.CategoryDAO" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%
     request.setCharacterEncoding("UTF-8");
 
     // 파일 업로드
-    MultipartRequest multi = FileUploadUtils.fileUpload((HttpServletRequest) request);
+    MultipartRequest multi = FileUtils.fileUpload((HttpServletRequest) request);
 
     // DB 저장
-    BoardService boardService = BoardService.getInstance();
+    BoardService boardService = new BoardService(new BoardDAO(), new CommentDAO(), new FileDAO(), new CategoryDAO());
     BoardDTO boardDTO = boardService.saveBoardWithImages(buildBoardFromRequest(multi), buildFilesFromRequest(multi));
 
     // 저장 후 이동
@@ -53,7 +57,7 @@
 
     private Board buildBoardFromRequest(MultipartRequest multi) {
         return new Board(
-                Category.valueOf(multi.getParameter("category")),
+                (Integer.parseInt(multi.getParameter("category"))),
                 new Title(multi.getParameter("title")),
                 new BoardWriter(multi.getParameter("writer")),
                 new BoardContent(multi.getParameter("content")),

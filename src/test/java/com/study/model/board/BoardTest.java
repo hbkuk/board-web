@@ -21,7 +21,7 @@ public class BoardTest {
         void not_null_category() {
             // given
             Board board = new Board.Builder()
-                    .category(Category.JAVA)
+                    .category(1)
                     .title(new Title("제목 1"))
                     .writer(new BoardWriter("테스터"))
                     .content(new BoardContent("내용 1"))
@@ -29,7 +29,7 @@ public class BoardTest {
                     .build();
 
             // when
-            Category category = board.getCategory();
+            int category = board.getCategory();
 
             //then
             assertThat(category).isNotNull();
@@ -67,7 +67,7 @@ public class BoardTest {
 
             // when
             new Board.Builder()
-                    .category(Category.JAVA)
+                    .category(1)
                     .title(new Title(shortTitle))
                     .writer(new BoardWriter("테스터"))
                     .content(new BoardContent("내용 1"))
@@ -75,7 +75,7 @@ public class BoardTest {
                     .build();
 
             new Board.Builder()
-                    .category(Category.JAVA)
+                    .category(1)
                     .title(new Title(longTitle.toString()))
                     .writer(new BoardWriter("테스터"))
                     .content(new BoardContent("내용 1"))
@@ -98,7 +98,7 @@ public class BoardTest {
             assertThatExceptionOfType(IllegalArgumentException.class)
                     .isThrownBy(() -> {
                             new Board.Builder()
-                                .category(Category.JAVA)
+                                .category(1)
                                 .title(new Title(shortTitle))
                                 .writer(new BoardWriter("테스터"))
                                     .content(new BoardContent("내용 1"))
@@ -109,7 +109,7 @@ public class BoardTest {
             assertThatExceptionOfType(IllegalArgumentException.class)
                     .isThrownBy(() -> {
                             new Board.Builder()
-                                .category(Category.JAVA)
+                                .category(1)
                                 .title(new Title(longTitle))
                                 .writer(new BoardWriter("테스터"))
                                     .content(new BoardContent("내용 1"))
@@ -130,7 +130,7 @@ public class BoardTest {
         void writer_length_valid(String writer) {
             // given
                 new Board.Builder()
-                    .category(Category.JAVA)
+                    .category(1)
                     .title(new Title("제목 1"))
                     .writer(new BoardWriter(writer))
                     .content(new BoardContent("내용 1"))
@@ -146,7 +146,7 @@ public class BoardTest {
             assertThatExceptionOfType(IllegalArgumentException.class)
                     .isThrownBy(() -> {
                         new Board.Builder()
-                            .category(Category.JAVA)
+                            .category(1)
                             .title(new Title("제목 1"))
                             .writer(new BoardWriter(writer))
                                 .content(new BoardContent("내용 1"))
@@ -171,7 +171,7 @@ public class BoardTest {
             void writer_length_valid(String password) {
                 // given
                     new Board.Builder()
-                        .category(Category.JAVA)
+                        .category(1)
                         .title(new Title("제목 1"))
                         .writer(new BoardWriter("테스터"))
                         .content(new BoardContent("내용 1"))
@@ -188,7 +188,7 @@ public class BoardTest {
                 assertThatExceptionOfType(IllegalArgumentException.class)
                         .isThrownBy(() -> {
                                 new Board.Builder()
-                                    .category(Category.JAVA)
+                                    .category(1)
                                     .title(new Title("제목 1"))
                                     .writer(new BoardWriter("테스터"))
                                     .content(new BoardContent("내용 1"))
@@ -208,7 +208,7 @@ public class BoardTest {
             void password_regex_pass(String password) {
                 // given
                     new Board.Builder()
-                        .category(Category.JAVA)
+                        .category(1)
                         .title(new Title("제목 1"))
                         .writer(new BoardWriter("테스터"))
                         .content(new BoardContent("내용 1"))
@@ -223,7 +223,7 @@ public class BoardTest {
                 assertThatExceptionOfType(IllegalArgumentException.class)
                         .isThrownBy(() -> {
                                 new Board.Builder()
-                                    .category(Category.JAVA)
+                                    .category(1)
                                     .title(new Title("제목 1"))
                                     .writer(new BoardWriter("테스터"))
                                     .content(new BoardContent("내용 1"))
@@ -250,7 +250,7 @@ public class BoardTest {
 
                 // when
                 new Board.Builder()
-                        .category(Category.JAVA)
+                        .category(1)
                         .title(new Title("제목 1"))
                         .writer(new BoardWriter("테스터"))
                         .content(new BoardContent(shortContent))
@@ -258,7 +258,7 @@ public class BoardTest {
                         .build();
 
                 new Board.Builder()
-                        .category(Category.JAVA)
+                        .category(1)
                         .title(new Title("제목 1"))
                         .writer(new BoardWriter("테스터"))
                         .content(new BoardContent(longContent.toString()))
@@ -279,7 +279,7 @@ public class BoardTest {
                 assertThatExceptionOfType(IllegalArgumentException.class)
                         .isThrownBy(() -> {
                             new Board.Builder()
-                                    .category(Category.JAVA)
+                                    .category(1)
                                     .title(new Title("제목 1"))
                                     .writer(new BoardWriter("테스터"))
                                     .content(new BoardContent(shortContent))
@@ -290,7 +290,7 @@ public class BoardTest {
                 assertThatExceptionOfType(IllegalArgumentException.class)
                         .isThrownBy(() -> {
                             new Board.Builder()
-                                    .category(Category.JAVA)
+                                    .category(1)
                                     .title(new Title("제목 1"))
                                     .writer(new BoardWriter("테스터"))
                                     .content(new BoardContent(longContent.toString()))

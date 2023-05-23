@@ -1,10 +1,13 @@
 <%@ page import="java.io.File" %>
 <%@ page import="java.io.FileInputStream" %>
-<%@ page import="java.io.BufferedInputStream" %>
-<%@ page import="java.io.BufferedOutputStream" %>
 <%@ page import="java.io.InputStream" %>
 <%@ page import="java.io.OutputStream" %>
 <%@ page import="java.io.FileNotFoundException" %>
+<%@ page import="com.study.repository.board.BoardDAO" %>
+<%@ page import="com.study.repository.comment.CommentDAO" %>
+<%@ page import="com.study.repository.file.FileDAO" %>
+<%@ page import="com.study.repository.category.CategoryDAO" %>
+<%@ page import="com.study.service.BoardService" %>
 
 <%
 
@@ -14,11 +17,16 @@
     String root = request.getSession().getServletContext().getRealPath("/");
     String savePath = root + "download";
 
+    BoardService boardService = new BoardService(new BoardDAO(), new CommentDAO(), new FileDAO(), new CategoryDAO());
+    Long fileIdx = Long.parseLong(request.getParameter("file_idx"));
+
+    String savedFileName = boardService.getSavedFileName(fileIdx);
+
     // 서버에 실제 저장된 파일명
-    String filename = "image1.jpg" ;
+    String filename = savedFileName;
 
     // 실제 내보낼 파일명
-    String orgfilename = "image1.jpg" ;
+    String orgfilename = savedFileName;
 
 
     InputStream in = null;

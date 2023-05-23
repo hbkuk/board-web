@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 @Getter
 public class Board {
     private final BoardIdx boardIdx;
-    private final Category category;
+    private final int category;
     private final Title title;
     private final BoardWriter writer;
     private final BoardContent content;
@@ -18,7 +18,7 @@ public class Board {
     private final RegDate regDate;
     private final ModDate modDate;
 
-    public Board(BoardIdx boardIdx, Category category, Title title, BoardWriter writer,
+    public Board(BoardIdx boardIdx, int category, Title title, BoardWriter writer,
                  BoardContent content, Password password, Hit hit, RegDate regDate, ModDate modDate) {
         this.boardIdx = boardIdx;
         this.category = category;
@@ -31,7 +31,7 @@ public class Board {
         this.modDate = modDate;
     }
 
-    public Board(Category category, Title title, BoardWriter writer,
+    public Board(int category, Title title, BoardWriter writer,
                  BoardContent content, Password password) {
         this(new BoardIdx(0), category, title, writer, content, password, new Hit(0), new RegDate(LocalDateTime.now()), null);
     }
@@ -51,7 +51,7 @@ public class Board {
     public static class Builder {
 
         private BoardIdx boardIdx;
-        private Category category;
+        private int category;
         private Title title;
         private BoardWriter writer;
         private BoardContent content;
@@ -63,7 +63,7 @@ public class Board {
         public Builder() {
         }
 
-        public Builder category(Category category) {
+        public Builder category(int category) {
             this.category = category;
             return this;
         }
@@ -109,7 +109,7 @@ public class Board {
         }
 
         public Board build() {
-            if (!Stream.of(category, title, writer, content, password).allMatch(Objects::nonNull)) {
+            if ( category == 0 || !Stream.of(title, writer, content, password).allMatch(Objects::nonNull)) {
                 throw new IllegalArgumentException("필수값이 입력되지 않았습니다.");
             }
             return new Board(this);

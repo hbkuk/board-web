@@ -2,11 +2,14 @@ package com.study.utils;
 
 import com.oreilly.servlet.MultipartRequest;
 import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.io.IOException;
 
-public class FileUploadUtils {
+@Slf4j
+public class FileUtils {
 
     private static final String UPLOAD_PATH = "C:\\git\\ebrain\\eb-study-templates-1week\\src\\main\\webapp\\download";
 
@@ -36,8 +39,10 @@ public class FileUploadUtils {
      * @param fileName 삭제할 파일이름
      * @return 디렉토리의 파일이 삭제되었으면 true, 그렇지 않다면 false
      */
-    public static boolean deleteUploadedFile(String fileName) {
-        return new java.io.File(UPLOAD_PATH, fileName).delete();
+    public static void deleteUploadedFile(String fileName) {
+        log.debug("삭제할 File : {}{}{} ", UPLOAD_PATH,"\\",fileName);
+        File file = new File(UPLOAD_PATH, fileName);
+        file.delete();
     }
 
 }

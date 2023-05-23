@@ -4,6 +4,7 @@
 <%@ page import="com.study.repository.board.BoardDAO" %>
 <%@ page import="com.study.repository.comment.CommentDAO" %>
 <%@ page import="com.study.repository.file.FileDAO" %>
+<%@ page import="com.study.repository.category.CategoryDAO" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="x" uri="http://java.sun.com/jsp/jstl/xml" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -11,7 +12,7 @@
 <%
     long boardIdx = Long.parseLong(request.getParameter("board_idx"));
 
-    BoardService boardService = new BoardService(new BoardDAO(), new CommentDAO(), new FileDAO());
+    BoardService boardService = new BoardService(new BoardDAO(), new CommentDAO(), new FileDAO(), new CategoryDAO());
 
     BoardDTO board = boardService.getBoardWithDetails(boardIdx);
 %>

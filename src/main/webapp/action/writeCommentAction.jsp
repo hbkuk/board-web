@@ -5,6 +5,10 @@
 <%@ page import="com.study.model.comment.CommentContent" %>
 <%@ page import="com.study.model.board.BoardIdx" %>
 <%@ page import="com.study.dto.CommentDTO" %>
+<%@ page import="com.study.repository.board.BoardDAO" %>
+<%@ page import="com.study.repository.comment.CommentDAO" %>
+<%@ page import="com.study.repository.file.FileDAO" %>
+<%@ page import="com.study.repository.category.CategoryDAO" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
 <%
@@ -16,7 +20,7 @@
             new CommentContent(request.getParameter("commnet_content")),
             new BoardIdx(Long.parseLong(request.getParameter("board_idx"))));
 
-    BoardService boardService = BoardService.getInstance();
+    BoardService boardService = new BoardService(new BoardDAO(), new CommentDAO(), new FileDAO(), new CategoryDAO());
 
     CommentDTO commentDTO = boardService.saveComment(comment);
 

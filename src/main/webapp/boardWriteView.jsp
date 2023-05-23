@@ -1,10 +1,20 @@
+<%@ page import="com.study.service.BoardService" %>
+<%@ page import="com.study.repository.board.BoardDAO" %>
+<%@ page import="com.study.repository.comment.CommentDAO" %>
+<%@ page import="com.study.repository.file.FileDAO" %>
+<%@ page import="com.study.repository.category.CategoryDAO" %>
+<%@ page import="com.study.dto.CategoryDTO" %>
+<%@ page import="java.util.List" %>
 <%@page isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page import="com.study.model.board.Category" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%
     String cpage = request.getParameter("cpage");
+
+    BoardService boardService = new BoardService(new BoardDAO(), new CommentDAO(), new FileDAO(), new CategoryDAO());
+
+    List<CategoryDTO> categorys = boardService.getAllCategory();
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -54,8 +64,8 @@
                         <td class="top" colspan="3">
                             <select id="category" name="category">
                                 <option value="전체">카테고리 선택</option>
-                                <c:forEach items="${Category.values()}" var="category">
-                                    <option value="${category.name()}">${category.name()}</option>
+                                <c:forEach items="<%=categorys%>" var="category">
+                                    <option value="${category.categoryIdx}">${category.category}</option>
                                 </c:forEach>
                             </select>
                         </td>

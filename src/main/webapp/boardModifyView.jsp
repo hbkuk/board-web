@@ -3,6 +3,7 @@
 <%@ page import="com.study.repository.board.BoardDAO" %>
 <%@ page import="com.study.repository.comment.CommentDAO" %>
 <%@ page import="com.study.repository.file.FileDAO" %>
+<%@ page import="com.study.repository.category.CategoryDAO" %>
 <%@page isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -10,7 +11,7 @@
 <%
     long boardIdx = Long.parseLong(request.getParameter("board_idx"));
 
-    BoardService boardService = new BoardService(new BoardDAO(), new CommentDAO(), new FileDAO());
+    BoardService boardService = new BoardService(new BoardDAO(), new CommentDAO(), new FileDAO(), new CategoryDAO());
 
     BoardDTO board = boardService.getBoardWithImages(boardIdx);
 %>
@@ -56,7 +57,7 @@
     <h1>게시판 - 등록</h1>
     <form action="<c:url value="/action/modifyBoardAction.jsp"/>" method="post" name="wfrm" enctype="multipart/form-data">
         <input type="hidden" name="board_idx" value="<%=board.getBoardIdx()%>" />
-        <input type="hidden" name="category" value="<%=board.getCategory()%>" />
+        <input type="hidden" name="category" value="<%=board.getCategoryIdx()%>" />
         <div class="contents_sub" style="margin-top: 50px;">
             <!--게시판-->
             <div class="board_write">
@@ -110,7 +111,7 @@
                                 </div>
                             </c:forEach>
                             <c:forEach begin="<%=board.getFiles().size() + 1%>" end="3" var="index">
-                                <input type="file" multiple="multiple" name="upload" class="board_view_input" />
+                                <input type="file" multiple="multiple" name="upload" class="board_view_input" /><br/><br/>
                             </c:forEach>
                         </td>
                     </tr>
