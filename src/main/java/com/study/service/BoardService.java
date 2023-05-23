@@ -8,6 +8,7 @@ import com.study.model.file.File;
 import com.study.repository.board.BoardDAO;
 import com.study.repository.comment.CommentDAO;
 import com.study.repository.file.FileDAO;
+import com.study.utils.FileUploadUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -27,14 +28,20 @@ public class BoardService {
         this.fileDAO = fileDAO;
     }
 
+    /**
+     * 모든 게시물에 대한 정보와 해당 게시물에 업로드된 파일의 존재여부를 생성해 리턴합니다
+     */
     public List<BoardDTO> getBoardListDetails() {
         return boardDAO.findAllWithImageCheck();
     }
 
+    /**
+     * 게시물 번호를 인자로 받아 번호에 해당하는 게시물, 모든 댓글, 모든 파일 정보를 생성해 리턴합니다
+     * @param boardIdx 게시물 번호
+     * @return 게시물 번호에 해당하는 게시물이 있다면 BoardDTO, 그렇지 않다면 null
+     */
     public BoardDTO getBoardWithDetails(long boardIdx) {
-        if( boardDAO.increaseHitCount(boardIdx) == null ) {
-            throw new NoSuchElementException("해당 글을 찾을 수 없습니다.");
-        }
+        isEmpty(boardDAO.increaseHitCount(boardIdx));
 
         BoardDTO boardDTO = boardDAO.findById(boardIdx);
         boardDTO.setComments(commentDAO.findAllByBoardId(boardIdx));
@@ -43,19 +50,28 @@ public class BoardService {
         return boardDTO;
     }
 
+    /**
+     * 게시물 번호를 인자로 받아 번호에 해당하는 게시물, 모든 파일 정보를 생성해 리턴합니다
+     * @param boardIdx 게시물 번호
+     * @return 게시물 번호에 해당하는 게시물이 있다면 BoardDTO, 그렇지 않다면 null
+     */
     public BoardDTO getBoardWithImages(long boardIdx) {
         log.debug("getBoardWithImages() 메서드 호출시 BoardIdx: {}", boardIdx);
 
         BoardDTO boardDTO = boardDAO.findById(boardIdx);
-        if( boardDTO == null ) {
-            throw new NoSuchElementException("해당 글을 찾을 수 없습니다.");
-        }
+        isEmpty(boardDTO);
         log.debug("getBoardWithImages() -> findById -> BoardIDX : {}", boardDTO.getBoardIdx());
         boardDTO.setFiles(fileDAO.findFilesByBoardId(boardIdx));
 
         return boardDTO;
     }
 
+    /**
+     * 게시물 정보와 업로드 할 파일을 인자로 받아 저장하고 게시물 번호를 리턴합니다
+     * @param board 게시물 정보
+     * @param files 업로드 할 파일
+     * @return 게시물이 저장되었다면 게시물 번호만 담긴 BoardDTO, 그렇지 않다면 null
+     */
     public BoardDTO saveBoardWithImages(Board board, List<File> files) {
         log.debug(" saveBoardWithImages() 메서드 호출 -> board : {} , files의 size : {} ",
                     board.toString(), files.size());
@@ -68,38 +84,29 @@ public class BoardService {
         return boardDTO;
     }
 
-    public CommentDTO saveComment(Comment comment) {
-        BoardDTO boardDTO = boardDAO.findById(comment.getBoardIdx().getBoardIdx());
-        if( boardDTO == null ) {
-            throw new NoSuchElementException("해당 글을 찾을 수 없습니다.");
-        }
-        log.debug("New Commnet / request! Comment  : {} ", comment.toString());
-        return commentDAO.save(comment);
-    }
-
-
+    /**
+     * 수정할 게시물 정보와 추가 또는 삭제할 파일의 정보를 인자로 받아서 수정하고 게시물 번호를 리턴합니다<br>
+     * 사용자가 삭제한 경우 {@code previouslyUploadedIndexes}에 파일의 번호가 포함되지 않고 인자로 전달됩니다
+     * @param updateBoard 수정할 게시물 정보
+     * @param newUploadFiles 추가로 업로드 할 파일 정보
+     * @param previouslyUploadedIndexes 이전에 업로드 된 파일의 번호
+     * @return 게시물 수정이되었다면 게시물 번호가 담긴 BoardDTO, 그렇지 않다면 null
+     */
     public BoardDTO updateBoardWithImages(Board updateBoard, List<File> newUploadFiles, List<Long> previouslyUploadedIndexes) {
         log.debug(" updateBoardWithImages() 메서드 호출 -> updateBoard : {} , newUploadFiles size : {}, previouslyUploadedIndexes size : {}",
                 updateBoard.toString(), newUploadFiles.size(), previouslyUploadedIndexes.size());
 
         BoardDTO updateReturnBoardDTO = boardDAO.update(updateBoard);
-        if( updateReturnBoardDTO == null ) {
-            throw new NoSuchElementException("해당 글을 찾을 수 없습니다.");
-        }
+        isEmpty(updateReturnBoardDTO);
 
         // DB 확인
         List<Long> dbFileIndexes = fileDAO.findFileIndexesByBoardId(updateReturnBoardDTO.getBoardIdx());
 
         List<Long> indexesToDelete = new ArrayList<>(dbFileIndexes);
         indexesToDelete.removeAll(previouslyUploadedIndexes);
-        
-        // 파일 삭제
-        indexesToDelete.stream().forEach(fileIdx -> fileDAO.deleteByFileId(fileIdx));
 
-        // 저장 디렉토리에서 파일 삭제
-        indexesToDelete.stream()
-                .map(fileIdx -> fileDAO.findSavedFileNameById(fileIdx))
-                .forEach(fileName -> new java.io.File( "C:\\git\\ebrain\\eb-study-templates-1week\\src\\main\\webapp\\download", fileName ).delete());
+        // 파일 삭제
+        deleteFilesFromdatabaseAndDirectory(indexesToDelete);
 
         // 새 이미지 추가
         newUploadFiles.forEach(file -> fileDAO.save(file, updateReturnBoardDTO.getBoardIdx()));
@@ -107,10 +114,53 @@ public class BoardService {
         return updateReturnBoardDTO;
     }
 
-    public void deleteBoardWithImagesAndComment(BoardDTO boardDTO) {
+    /**
+     * 삭제할 파일의 번호를 인자로 받아 데이터베이스 및 디렉토리에서 해당 파일 정보를 삭제합니다
+     * @param indexesToDelete 삭제할 파일의 번호 리스트
+     */
+    private void deleteFilesFromdatabaseAndDirectory(List<Long> indexesToDelete) {
+
+        // DB 파일 삭제
+        indexesToDelete.stream()
+                .forEach(fileIdx -> fileDAO.deleteByFileId(fileIdx));
+
+        // 저장 디렉토리에서 파일 삭제
+        indexesToDelete.stream()
+                .map(fileIdx -> fileDAO.findSavedFileNameById(fileIdx))
+                .forEach(fileName -> FileUploadUtils.deleteUploadedFile(fileName));
+    }
+
+    /**
+     * 삭제할 게시물의 정보를 인자로 받아 게시물 번호에 해당하는 게시물, 댓글, 파일 정보를 삭제합니다.
+     * @param boardDTO 삭제할 게시물 정보
+     */
+    public void deleteBoardWithFilesAndComment(BoardDTO boardDTO) {
         boardDAO.deleteById(boardDTO.getBoardIdx(), boardDTO.getPassword());
         commentDAO.deleteAllByBoardIdx(boardDTO.getBoardIdx());
         fileDAO.deleteAllByBoardId(boardDTO.getBoardIdx());
+    }
+
+    /**
+     * 댓글 정보를 인자로 받아 게시물 번호
+     * @param comment 댓글 정보
+     * @return 댓글이 저장되었다면 게시물 번호만 담긴 CommentDTO, 그렇지 않다면 null
+     */
+    public CommentDTO saveComment(Comment comment) {
+        BoardDTO boardDTO = boardDAO.findById(comment.getBoardIdx().getBoardIdx());
+        isEmpty(boardDTO);
+        log.debug("New Commnet / request! Comment  : {} ", comment.toString());
+
+        return commentDAO.save(comment);
+    }
+
+    /**
+     * 해당 객체가 null이라면 예외를 던집니다
+     * @param boardDTO 게시물 정보
+     */
+    private void isEmpty(BoardDTO boardDTO) {
+        if( boardDTO == null ) {
+            throw new NoSuchElementException("해당 글을 찾을 수 없습니다.");
+        }
     }
 }
 
