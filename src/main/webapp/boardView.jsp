@@ -17,52 +17,10 @@
 
     BoardDTO board = boardService.getBoardWithDetails(boardIdx);
 %>
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <title>Insert title here</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="<c:url value="/css/board_view.css"/>">
-
-    <script type="text/javascript">
-
-        window.onload = function () {
-            document.getElementById("cbtn").onclick = function () {
-
-                if (document.cfrm.comment_writer.value.trim() === '') {
-                    alert("글쓴이를 입력하셔야 합니다.");
-                    return false;
-                }
-
-                if (document.cfrm.comment_password.value.trim() === '') {
-                    alert("비밀번호를 입력하셔야 합니다.");
-                    return false;
-                }
-
-                if (document.cfrm.commnet_content.value.trim() === '') {
-                    alert("내용을 입력하셔야 합니다.");
-                    return false;
-                }
-
-                document.cfrm.submit();
-
-            };
-
-            $('.delete-button').on('click', function() {
-                if (document.dcfrm.password.value.trim() === '') {
-                    alert("비밀번호를 입력하셔야 합니다.");
-                    return false;
-                }
-                document.dcfrm.submit();
-            });
-        }
-
-    </script>
-</head>
-
+<jsp:include page="include/header.jsp" flush="false">
+    <jsp:param name="css_path" value="board_view.css"/>
+    <jsp:param name="js_path" value="board_view.js"/>
+</jsp:include>
 <body>
 <div class="con_title">
     <h2>자유 게시판 - 목록</h2>

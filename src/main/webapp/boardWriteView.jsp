@@ -16,39 +16,10 @@
 
     List<CategoryDTO> categorys = boardService.getAllCategory();
 %>
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <title>Insert title here</title>
-    <link rel="stylesheet" type="text/css" href="<c:url value="/css/board_write.css"/>">
-    <script type="text/javascript">
-        window.onload = function () {
-            document.getElementById("wbtn").onclick = function () {
-
-                // if (document.wfrm.writer.value.trim() == '') {
-                //     alert("글쓴이를 입력하셔야 합니다.");
-                //     return false;
-                // }
-                //
-                // if (document.wfrm.title.value.trim() == '') {
-                //     alert("글제목을 입력하셔야 합니다.");
-                //     return false;
-                // }
-                //
-                // if (document.wfrm.password.value.trim() == '') {
-                //     alert("비밀번호를 입력하셔야 합니다.");
-                //     return false;
-                // }
-
-                document.wfrm.submit();
-            };
-        }
-    </script>
-</head>
-
+<jsp:include page="include/header.jsp" flush="false">
+    <jsp:param name="css_path" value="board_write.css"/>
+    <jsp:param name="js_path" value="board_write_view.js"/>
+</jsp:include>
 <body>
 <!-- 상단 디자인 -->
 <div class="contents1">
@@ -106,7 +77,7 @@
             <div class="btn_area">
                 <div class="align_left">
                     <input type="button" value="취소" class="btn_list btn_txt02" style="cursor: pointer;"
-                           onclick="location.href='board_list1.jsp?cpage=<%=cpage %>'"/>
+                           onclick="location.href='boardLists.jsp'"/>
                 </div>
                 <div class="align_right">
                     <input id="wbtn" type="button" value="저장" class="btn_write btn_txt01" style="cursor: pointer;"/>

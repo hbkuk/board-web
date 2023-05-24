@@ -1,4 +1,3 @@
-<%@page isELIgnored="false" %>
 <%@ page import="com.study.service.BoardService" %>
 <%@ page import="com.study.dto.BoardDTO" %>
 <%@ page import="java.util.List" %>
@@ -7,6 +6,7 @@
 <%@ page import="com.study.repository.file.FileDAO" %>
 <%@ page import="com.study.dto.CategoryDTO" %>
 <%@ page import="com.study.repository.category.CategoryDAO" %>
+<%@page isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -21,17 +21,9 @@
 
     List<CategoryDTO> categorys = boardService.getAllCategory();
 %>
-
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Insert title here</title>
-    <link rel="stylesheet" type="text/css" href="<c:url value="/css/board.css"/>">
-</head>
-
+<jsp:include page="include/header.jsp" flush="false">
+    <jsp:param name="css_path" value="board.css"/>
+</jsp:include>
 <body>
 <!-- 상단 디자인 -->
 <div class="con_title">
