@@ -9,6 +9,7 @@
 <%@ page import="com.study.repository.category.CategoryDAO" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
 <%
@@ -57,7 +58,6 @@
         <div class="board_top">
             <div class="bold">총 <span class="txt_orange"><%=boardList.size()%></span>건</div>
         </div>
-
         <!--게시판-->
         <div class="board">
             <table>
@@ -98,8 +98,14 @@
                     <td><a href=boardView.jsp?board_idx=${board.boardIdx}>${truncatedTitle}</a></td>
                     <td width="10%">${board.writer}</td>
                     <td width="5%">${board.hit}</td>
-                    <td width="12%">${board.regDate}</td>
-                    <td width="12%">${board.modDate}</td>
+                    <td width="12%">
+                        <fmt:parseDate value="${board.regDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parsedDateTime" type="both" />
+                        <fmt:formatDate pattern="yyyy-MM-dd hh:mm" value="${ parsedDateTime }" />
+                    </td>
+                    <td width="12%">
+                        <fmt:parseDate value="${board.modDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parsedDateTime" type="both" />
+                        <fmt:formatDate pattern="yyyy-MM-dd hh:mm" value="${ parsedDateTime }" />
+                    </td>
                     <td width="3%">&nbsp;</td>
                 </tr>
             </c:forEach>

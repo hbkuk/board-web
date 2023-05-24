@@ -7,6 +7,7 @@
 <%@ page import="com.study.repository.category.CategoryDAO" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="x" uri="http://java.sun.com/jsp/jstl/xml" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%
@@ -70,9 +71,17 @@
     <div class="con_title" style="margin-top: 40px;">
         <strong><%= board.getWriter() %></strong>
         <p style="margin: 0px; text-align: right">
-            등록 일시: <strong><%= board.getRegDate() %></strong> ∣
-            수정일시: <strong>
-            <% if (board.getModDate() == null) { %>-<% } else { %><%= board.getModDate() %><% } %></strong>
+            <c:set var = "regdate" value="<%=board.getRegDate()%>"/>
+            <fmt:parseDate value="${regdate}" pattern="yyyy-MM-dd'T'HH:mm" var="parsedDateTime" type="both" />
+            등록 일시: <fmt:formatDate pattern="yyyy-MM-dd hh:mm" value="${ parsedDateTime }" />
+            |
+            <% if (board.getModDate() == null) { %>
+            수정 일시: -
+            <% } else { %>
+            <c:set var = "moddate" value="<%=board.getModDate()%>"/>
+            <fmt:parseDate value="${moddate}" pattern="yyyy-MM-dd'T'HH:mm" var="parsedDateTime" type="both" />
+            수정 일시: <fmt:formatDate pattern="yyyy-MM-dd hh:mm" value="${ parsedDateTime }" />
+            <%= board.getModDate() %><% } %>
         </p>
     </div>
     <div class="contents_sub">

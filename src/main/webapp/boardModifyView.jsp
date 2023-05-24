@@ -6,6 +6,7 @@
 <%@ page import="com.study.repository.category.CategoryDAO" %>
 <%@page isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%
@@ -65,15 +66,29 @@
                 <table>
                     <tr>
                         <th class="top">카테고리</th>
-                        <td class="top" colspan="3"><%=board.getCategory()%></td>
+                        <td class="top" colspan="3">
+                            <%=board.getCategory()%>
+                        </td>
                     </tr>
                     <tr>
                         <th class="top">등록 일시</th>
-                        <td class="top" colspan="3"><%=board.getRegDate()%></td>
+                        <td class="top" colspan="3">
+                            <c:set var = "regdate" value="<%=board.getRegDate()%>"/>
+                            <fmt:parseDate value="${regdate}" pattern="yyyy-MM-dd'T'HH:mm" var="parsedDateTime" type="both" />
+                            <fmt:formatDate pattern="yyyy-MM-dd hh:mm" value="${ parsedDateTime }" />
+                        </td>
                     </tr>
                     <tr>
                         <th class="top">수정 일시</th>
-                        <td class="top" colspan="3"><%=board.getModDate()%></td>
+                        <td class="top" colspan="3">
+                            <% if (board.getModDate() == null) { %>
+                            -
+                            <% } else { %>
+                            <c:set var = "moddate" value="<%=board.getModDate()%>"/>
+                            <fmt:parseDate value="${moddate}" pattern="yyyy-MM-dd'T'HH:mm" var="parsedDateTime" type="both" />
+                            <fmt:formatDate pattern="yyyy-MM-dd hh:mm" value="${ parsedDateTime }" />
+                            <%= board.getModDate() %><% } %>
+                        </td>
                     </tr>
                     <tr>
                         <th class="top">조회수</th>
