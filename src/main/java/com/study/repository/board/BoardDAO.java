@@ -21,7 +21,8 @@ public class BoardDAO {
             "FROM tb_board b\n" +
             "JOIN tb_category c ON b.category_idx = c.category_idx\n" +
             "LEFT OUTER JOIN tb_file f ON b.board_idx = f.board_idx\n" +
-            "GROUP BY b.board_idx";
+            "GROUP BY b.board_idx " +
+            "ORDER BY b.board_idx DESC";
     private static final String SAVE = "INSERT INTO tb_board (category_idx, title, writer, content, password, hit, regdate) VALUES (?, ?, ?, ?, ?, ?, ?)";
     private static final String UPDATE = "UPDATE tb_board SET title = ?, writer = ?, content = ?, moddate = ? WHERE board_idx = ? and password = ?";
     private static final String INCREASE_HIT = "UPDATE tb_board SET hit = hit + 1 WHERE board_idx = ?";
