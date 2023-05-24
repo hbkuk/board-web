@@ -8,13 +8,17 @@ import java.util.Map;
  */
 public class QueryUtils {
 
-    private static final String SEARCH_CONDITION_QUERY = "title LIKE '%%%s%%' OR writer LIKE '%%%s%%' OR content LIKE '%%%s%%'";
+    private static final String KEYWORD_CONDITION_QUERY = "title LIKE '%%%s%%' OR writer LIKE '%%%s%%' OR content LIKE '%%%s%%'";
     private static final String OTHER_CONDITION_QUERY = "%s='%s'";
     private static final String QUERY_COMBINED_AND_WITH_SPACE = " AND ";
     private static final String START_DATE_PARAMETER_KEY = "start_date";
     private static final String END_DATE_PARAMETER_KEY = "end_date";
-    private static final String SEARCH_CONDITION_PARAMETER_KEY = "search_condition";
+    private static final String KEYWORD_PARAMETER_KEY = "keyword";
+    private static final String CATEGORY_IDX_PARAMETER_KEY = "category_idx";
     private static final int AFTER_FINAL_COMBINER_REMOVE_LENGTH = 5;
+    private static final String[] SEARCH_CONDITIONS =
+            {START_DATE_PARAMETER_KEY, END_DATE_PARAMETER_KEY,
+                    END_DATE_PARAMETER_KEY, KEYWORD_PARAMETER_KEY, CATEGORY_IDX_PARAMETER_KEY};
 
     /**
      * 매개변수 맵에서 쿼리를 생성하여 StringBuilder 객체로 반환합니다.
@@ -25,18 +29,22 @@ public class QueryUtils {
     public static StringBuilder QueryConditionSetting(Map<String, String[]> queryMap) {
         StringBuilder queryBuilder = new StringBuilder();
 
+        if(!hasLeastOneSearchCondition(queryMap)) {
+            return queryBuilder.append("");
+        }
+
         if (isEmptyBothDate(queryMap)) {
             isDateRange(queryMap);
         }
         for (String key : queryMap.keySet()) {
 
-            if (isSearchCondition(key)) {
+            if (isKeyWordCondition(key)) {
                 queryBuilder.append(
-                        String.format(SEARCH_CONDITION_QUERY,
+                        String.format(KEYWORD_CONDITION_QUERY,
                                 queryMap.get(key)[0], queryMap.get(key)[0], queryMap.get(key)[0]));
             }
 
-            if (!isSearchCondition(key)) {
+            if (!isKeyWordCondition(key)) {
                 queryBuilder.append(
                         String.format(OTHER_CONDITION_QUERY, key, queryMap.get(key)[0]));
             }
@@ -48,13 +56,29 @@ public class QueryUtils {
     }
 
     /**
-     * 주어진 키가 검색 조건을 나타내는 문자열인 경우 true를 반환하고, 그렇지 않은 경우 false를 반환합니다.
+     * 매개변수 맵이 적어도 하나의 검색 조건을 가지고 있다면 true를 반환하고, 그렇지 않은 경우 false를 반환합니다.
+     * @param queryMap 쿼리 생성에 사용되는 매개변수 맵입니다.
+     * @return 검색 조건을 가지고 있다면 true를 반환하고, 그렇지 않은 경우 false를 반환합니다.
+     */
+    private static boolean hasLeastOneSearchCondition(Map<String, String[]> queryMap) {
+        boolean isSearchCondition = false;
+
+        for (String searchCondition : SEARCH_CONDITIONS) {
+            if (queryMap.get(searchCondition) != null && queryMap.get(searchCondition)[0] != null) {
+                isSearchCondition = true;
+            }
+        }
+        return isSearchCondition;
+    }
+
+    /**
+     * 주어진 키가 키워드 조건을 나타내는 문자열인 경우 true를 반환하고, 그렇지 않은 경우 false를 반환합니다.
      *
      * @param key 매개변수의 키
      * @return 키가 검색 조건인 경우 true, 그렇지 않은 경우 false를 반환합니다.
      */
-    private static boolean isSearchCondition(String key) {
-        return key.equals(SEARCH_CONDITION_PARAMETER_KEY);
+    private static boolean isKeyWordCondition(String key) {
+        return key.equals(KEYWORD_PARAMETER_KEY);
     }
 
     /**

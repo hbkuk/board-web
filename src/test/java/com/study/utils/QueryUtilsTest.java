@@ -13,6 +13,15 @@ import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException
 public class QueryUtilsTest {
 
     @Test
+    @DisplayName("검색 검색조건에 해당하는 파라미터가 없을 경우")
+    void notting_query_string() {
+        Map<String, String[]> parameters = new HashMap<>();
+
+        StringBuilder queryBuilder = QueryUtils.QueryConditionSetting(parameters);
+        assertThat(queryBuilder.toString()).isEqualTo("");
+    }
+
+    @Test
     @DisplayName("시작 날짜만 가지고 있을 경우")
     void only_start_date() {
         Map<String, String[]> parameters = new HashMap<>();
@@ -27,7 +36,7 @@ public class QueryUtilsTest {
     @DisplayName("검색 조건만 가지고 있을 경우")
     void only_search_query() {
         Map<String, String[]> parameters = new LinkedHashMap<>();
-        parameters.put("search_condition", new String[]{"소프트웨어 장인"});
+        parameters.put("keyword", new String[]{"소프트웨어 장인"});
 
         StringBuilder queryBuilder = QueryUtils.QueryConditionSetting(parameters);
 
@@ -64,7 +73,7 @@ public class QueryUtilsTest {
     void start_date_and_end_date_and_search_query() {
         Map<String, String[]> parameters = new LinkedHashMap<>();
         parameters.put("end_date", new String[]{"2023-05-20"});
-        parameters.put("search_condition", new String[]{"소프트웨어 장인"});
+        parameters.put("keyword", new String[]{"소프트웨어 장인"});
 
         StringBuilder queryBuilder = QueryUtils.QueryConditionSetting(parameters);
 
