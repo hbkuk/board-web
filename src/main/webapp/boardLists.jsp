@@ -6,6 +6,9 @@
 <%@ page import="com.study.repository.file.FileDAO" %>
 <%@ page import="com.study.dto.CategoryDTO" %>
 <%@ page import="com.study.repository.category.CategoryDAO" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.HashMap" %>
+<%@ page import="com.study.utils.QueryUtils" %>
 <%@page isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
@@ -17,13 +20,15 @@
     BoardService boardService = new BoardService(new BoardDAO(), new CommentDAO(), new FileDAO(), new CategoryDAO());
 
     // Call the getBoardListDetails method
-    List<BoardDTO> boardList = boardService.getBoardListDetails();
+    List<BoardDTO> boardList = boardService.getBoardListDetails(QueryUtils.buildQueryCondition(request.getParameterMap()));
 
     List<CategoryDTO> categorys = boardService.getAllCategory();
 %>
 <jsp:include page="include/header.jsp" flush="false">
     <jsp:param name="css_path" value="board.css"/>
+    <jsp:param name="js_path" value="board_lists.js"/>
 </jsp:include>
+<jsp:include page="encodingFilter.jsp" flush="false"/>
 <body>
 <!-- 상단 디자인 -->
 <div class="con_title">
@@ -31,18 +36,21 @@
 </div>
 <div class="con_txt" style="margin-top: 50px;">
     <div class="contents_sub">
-        <table style="border: 1px solid #ccc; padding: 10px;">
-            <tr style="text-align: center;">
-                <td width="30%">등록일 | <input type="date" id="start_date" placeholder="시작 날짜"> ~ <input type="date" id="end_date" placeholder="끝 날짜"></td>
-                <td><select id="category">
-                    <option value="전체">전체 카테고리</option>
-                    <c:forEach items="<%=categorys%>" var="category">
-                        <option value="${category.categoryIdx}">${category.category}</option>
-                    </c:forEach>
-                </select> |
-                <input type="text" id="search_query" placeholder="검색어를 입력해 주세요. (제목+작성자+내용)" style="width: 500px;"> | <button>검색</button></td>
-            </tr>
-        </table>
+        <form id="search" action="./boardLists.jsp" method='get'>
+            <table style="border: 1px solid #ccc; padding: 10px;">
+                <tr style="text-align: center;">
+                    <td width="30%">등록일 | <input type="date" name="start_date" placeholder="시작 날짜"> ~ <input type="date" name="end_date" placeholder="끝 날짜"></td>
+                    <td><select id="category">
+                        <option value="all">전체 카테고리</option>
+                        <c:forEach items="<%=categorys%>" var="category">
+                            <option value="${category.categoryIdx}">${category.category}</option>
+                        </c:forEach>
+                    </select> |
+                    <input type="text" name="keyword" placeholder="검색어를 입력해 주세요. (제목+작성자+내용)" style="width: 500px;"> |
+                    <button id="submitButton">Search</button>
+                </tr>
+            </table>
+        </form>
     </div>
 </div>
 <div class="con_txt">
@@ -57,7 +65,7 @@
                     <th width="3%">&nbsp;</th>
                     <th width="10%">카테고리</th>
                     <th width="3%">&nbsp;</th>
-                    <th width="3%">&nbsp;</th>
+                    <th width="5%">&nbsp;</th>
                     <th>제목</th>
                     <th width="10%">작성자</th>
                     <th width="5%">조회수</th>
@@ -72,10 +80,10 @@
                     <td width="3%"> &nbsp; </td>
                 <c:choose>
                     <c:when test="${board.hasFile eq true}">
-                        <td width="3%"> OK </td>
+                        <td width="5%"> OK </td>
                     </c:when>
                     <c:otherwise>
-                        <td width="3%"> nothing </td>
+                        <td width="5%"> NOTTING </td>
                     </c:otherwise>
                 </c:choose>
                 <c:choose>

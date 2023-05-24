@@ -6,8 +6,8 @@
 <%@ page import="com.study.dto.CommentDTO" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
+<jsp:include page="../encodingFilter.jsp" flush="false"/>
 <%
-    request.setCharacterEncoding("UTF-8");
 
     CommentDTO commentDTO = new CommentDTO();
     commentDTO.setCommentIdx(Long.parseLong(request.getParameter("comment_idx")));

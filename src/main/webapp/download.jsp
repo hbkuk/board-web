@@ -9,11 +9,8 @@
 <%@ page import="com.study.repository.category.CategoryDAO" %>
 <%@ page import="com.study.service.BoardService" %>
 
+<jsp:include page="encodingFilter.jsp" flush="false"/>
 <%
-
-    request.setCharacterEncoding("UTF-8");
-
-    // 파일 업로드된 경로
     String root = request.getSession().getServletContext().getRealPath("/");
     String savePath = root + "download";
 
@@ -37,17 +34,12 @@
 
     try{
 
-
-        // 파일을 읽어 스트림에 담기
         try{
             file = new File(savePath, filename);
             in = new FileInputStream(file);
         }catch(FileNotFoundException fe){
             skip = true;
         }
-
-
-
 
         client = request.getHeader("User-Agent");
 

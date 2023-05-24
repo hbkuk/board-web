@@ -24,6 +24,7 @@
     <jsp:param name="css_path" value="board.css"/>
     <jsp:param name="js_path" value="board_delete_view.js"/>
 </jsp:include>
+<jsp:include page="encodingFilter.jsp" flush="false"/>
 <script type="text/javascript">
     window.onload = function() {
         document.getElementById( 'dbtn' ).onclick = function() {

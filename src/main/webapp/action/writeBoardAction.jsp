@@ -15,9 +15,8 @@
 <%@ page import="com.study.repository.category.CategoryDAO" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
+<jsp:include page="../encodingFilter.jsp" flush="false"/>
 <%
-    request.setCharacterEncoding("UTF-8");
-
     // 파일 업로드
     MultipartRequest multi = FileUtils.fileUpload((HttpServletRequest) request);
 

@@ -20,6 +20,7 @@
     <jsp:param name="css_path" value="board_write.css"/>
     <jsp:param name="js_path" value="board_write_view.js"/>
 </jsp:include>
+<jsp:include page="encodingFilter.jsp" flush="false"/>
 <body>
 <!-- 상단 디자인 -->
 <div class="contents1">
