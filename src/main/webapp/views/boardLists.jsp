@@ -16,14 +16,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
 <%
-    String searchConditionQueryString = SearchConditionUtils.buildQueryString(request.getParameterMap()).toString();
+    String searchConditionQueryString = (String) request.getAttribute("searchConditionQueryString").toString();
 
-    BoardService boardService = new BoardService(new BoardDAO(), new CommentDAO(), new FileDAO(), new CategoryDAO());
+    List<BoardDTO> boardList = (List<BoardDTO>) request.getAttribute("boardLists");
 
-    List<BoardDTO> boardList = boardService.getBoardListDetails(SearchConditionUtils.buildQueryCondition(request.getParameterMap()));
+    List<CategoryDTO> categorys = (List<CategoryDTO>) request.getAttribute("categorys");
 
-    List<CategoryDTO> categorys = boardService.getAllCategory();
-
+    //TODO: 메서드 분리 및 리팩토링
     int paramCategoryIdx = 0;
     if (request.getParameter("category_idx") != null) {
         paramCategoryIdx = Integer.parseInt(request.getParameter("category_idx"));
@@ -50,18 +49,18 @@
     }
 
 %>
-<jsp:include page="include/header.jsp" flush="false">
+<jsp:include page="/include/header.jsp" flush="false">
     <jsp:param name="css_path" value="board.css"/>
     <jsp:param name="js_path" value="board_lists.js"/>
 </jsp:include>
-<jsp:include page="include/encodingFilter.jsp" flush="false"/>
+<jsp:include page="/include/encodingFilter.jsp" flush="false"/>
 <body>
 <div class="con_title">
     <h1>자유 게시판 - 목록</h1>
 </div>
 <div class="con_txt" style="margin-top: 50px;">
     <div class="contents_sub">
-        <form id="search" action="./boardLists.jsp" method='get'>
+        <form id="search" action="boardLists.jsp" method='get'>
             <table style="border: 1px solid #ccc; padding: 10px;">
                 <tr style="text-align: center;">
                     <c:set var = "paramStartDate" value="<%=startDate%>"/>
@@ -131,7 +130,7 @@
                         <c:set var="truncatedTitle" value="${board.title}" />
                     </c:otherwise>
                 </c:choose>
-                    <td><a href="boardView.jsp?board_idx=${board.boardIdx}<%= searchConditionQueryString.isEmpty() ? "" : "&" + searchConditionQueryString %>">${truncatedTitle}</a></td>
+                    <td><a href="boardView.jsp?board_idx=${board.boardIdx}<%=searchConditionQueryString.isEmpty() ? "" : "&" + searchConditionQueryString%>">${truncatedTitle}</a></td>
                     <td width="10%">${board.writer}</td>
                     <td width="5%">${board.hit}</td>
                     <td width="12%">

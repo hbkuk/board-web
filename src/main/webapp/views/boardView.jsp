@@ -5,26 +5,20 @@
 <%@ page import="com.study.repository.comment.CommentDAO" %>
 <%@ page import="com.study.repository.file.FileDAO" %>
 <%@ page import="com.study.repository.category.CategoryDAO" %>
-<%@ page import="com.study.utils.SearchConditionUtils" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="x" uri="http://java.sun.com/jsp/jstl/xml" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%
-    String searchConditionQueryString = SearchConditionUtils.buildQueryString(request.getParameterMap()).toString();
-
-    long boardIdx = Long.parseLong(request.getParameter("board_idx"));
-
-    BoardService boardService = new BoardService(new BoardDAO(), new CommentDAO(), new FileDAO(), new CategoryDAO());
-
-    BoardDTO board = boardService.getBoardWithDetails(boardIdx);
+    String searchConditionQueryString = (String) request.getAttribute("searchConditionQueryString");
+    BoardDTO board = (BoardDTO) request.getAttribute("board");
 %>
-<jsp:include page="include/header.jsp" flush="false">
+<jsp:include page="../include/header.jsp" flush="false">
     <jsp:param name="css_path" value="board_view.css"/>
     <jsp:param name="js_path" value="board_view.js"/>
 </jsp:include>
-<jsp:include page="include/encodingFilter.jsp" flush="false"/>
+<jsp:include page="../include/encodingFilter.jsp" flush="false"/>
 <body>
 <div class="con_title">
     <h2>자유 게시판 - 목록</h2>

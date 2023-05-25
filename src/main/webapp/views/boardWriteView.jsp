@@ -11,18 +11,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%
-    String searchConditionQueryString = SearchConditionUtils.buildQueryString(request.getParameterMap()).toString();
-
-    BoardService boardService = new BoardService(new BoardDAO(), new CommentDAO(), new FileDAO(), new CategoryDAO());
-
-    List<CategoryDTO> categorys = boardService.getAllCategory();
+    String searchConditionQueryString = request.getAttribute("searchConditionQueryString").toString();
+    List<CategoryDTO> categorys = (List<CategoryDTO>) request.getAttribute("cateogorys");
 %>
 
-<jsp:include page="include/header.jsp" flush="false">
+<jsp:include page="../include/header.jsp" flush="false">
     <jsp:param name="css_path" value="board_write.css"/>
     <jsp:param name="js_path" value="board_write_view.js"/>
 </jsp:include>
-<jsp:include page="include/encodingFilter.jsp" flush="false"/>
+<jsp:include page="../include/encodingFilter.jsp" flush="false"/>
 
 <body>
 <div class="contents1">
