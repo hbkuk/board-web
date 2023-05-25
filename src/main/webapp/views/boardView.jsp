@@ -1,10 +1,5 @@
 <%@page isELIgnored="false" %>
-<%@ page import="com.study.service.BoardService" %>
 <%@ page import="com.study.dto.BoardDTO" %>
-<%@ page import="com.study.repository.board.BoardDAO" %>
-<%@ page import="com.study.repository.comment.CommentDAO" %>
-<%@ page import="com.study.repository.file.FileDAO" %>
-<%@ page import="com.study.repository.category.CategoryDAO" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="x" uri="http://java.sun.com/jsp/jstl/xml" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -114,9 +109,9 @@
                 <input type="button" value="목록" class="btn_list btn_txt02" style="cursor: pointer;"
                        onclick="location.href='/boards<%= searchConditionQueryString.isEmpty() ? "" : "?" + searchConditionQueryString %>'" />
                 <input type="button" value="수정" class="btn_list btn_txt02" style="cursor: pointer;"
-                       onclick="location.href='/board/modify?board_idx=<%= board.getBoardIdx() %><%= searchConditionQueryString.isEmpty() ? "" : "&" + searchConditionQueryString %>'" />
+                       onclick="location.href='/board/modify/form?board_idx=<%= board.getBoardIdx() %><%= searchConditionQueryString.isEmpty() ? "" : "&" + searchConditionQueryString %>'" />
                 <input type="button" value="삭제" class="btn_write btn_txt01" style="cursor: pointer;"
-                       onclick="location.href='/board/delete?board_idx=<%= board.getBoardIdx() %><%= searchConditionQueryString.isEmpty() ? "" : "&" + searchConditionQueryString %>'" />
+                       onclick="location.href='/board/delete/form?board_idx=<%= board.getBoardIdx() %><%= searchConditionQueryString.isEmpty() ? "" : "&" + searchConditionQueryString %>'" />
 
             </div>
         </div>

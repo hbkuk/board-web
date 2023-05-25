@@ -1,4 +1,4 @@
-package com.study.servlet;
+package com.study.service;
 
 import com.study.dto.BoardDTO;
 import com.study.repository.board.BoardDAO;
@@ -14,7 +14,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class DeleteBoardService implements Serializable {
+public class DeleteBoardService extends Service implements Serializable {
 
     public void process(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         BoardDTO deleteBoardDTO = new BoardDTO();

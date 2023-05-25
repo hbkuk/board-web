@@ -1,4 +1,4 @@
-package com.study.servlet;
+package com.study.service;
 
 import com.study.dto.BoardDTO;
 import com.study.dto.CommentDTO;
@@ -19,7 +19,7 @@ import java.io.Serializable;
 import java.util.NoSuchElementException;
 
 @Slf4j
-public class WriteCommentService implements Serializable {
+public class WriteCommentService extends Service implements Serializable {
 
     public void process(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String searchConditionQueryString = SearchConditionUtils.buildQueryString(req.getParameterMap()).toString();

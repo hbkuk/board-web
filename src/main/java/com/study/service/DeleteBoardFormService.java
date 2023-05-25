@@ -1,4 +1,4 @@
-package com.study.servlet;
+package com.study.service;
 
 import com.study.dto.BoardDTO;
 import com.study.repository.board.BoardDAO;
@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.NoSuchElementException;
 
-public class DeleteBoardFormService implements Serializable {
+public class DeleteBoardFormService extends Service implements Serializable {
 
     public void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         BoardDTO boardDTO = BoardDAO.getInstance().increaseHitCount(Long.parseLong(req.getParameter("board_idx")));

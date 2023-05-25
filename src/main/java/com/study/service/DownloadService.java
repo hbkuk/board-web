@@ -1,4 +1,4 @@
-package com.study.servlet;
+package com.study.service;
 
 import com.study.repository.file.FileDAO;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.io.Serializable;
 
 @Slf4j
-public class DownloadService implements Serializable {
+public class DownloadService extends Service implements Serializable {
 
     public void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String root = req.getSession().getServletContext().getRealPath("/");

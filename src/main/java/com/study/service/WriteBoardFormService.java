@@ -1,4 +1,4 @@
-package com.study.servlet;
+package com.study.service;
 
 import com.study.dto.CategoryDTO;
 import com.study.repository.category.CategoryDAO;
@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 
-public class WriteBoardFormService implements Serializable {
+public class WriteBoardFormService extends Service implements Serializable {
 
     public void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<CategoryDTO> categorys = CategoryDAO.getInstance().findAll();

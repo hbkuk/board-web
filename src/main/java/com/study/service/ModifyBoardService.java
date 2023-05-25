@@ -1,4 +1,4 @@
-package com.study.servlet;
+package com.study.service;
 
 import com.oreilly.servlet.MultipartRequest;
 import com.study.dto.BoardDTO;
@@ -21,7 +21,7 @@ import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Slf4j
-public class ModifyBoardService implements Serializable {
+public class ModifyBoardService extends Service implements Serializable {
 
     public void process(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String searchConditionQueryString = SearchConditionUtils.buildQueryString(req.getParameterMap()).toString();

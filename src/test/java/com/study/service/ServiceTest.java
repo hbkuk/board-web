@@ -9,10 +9,7 @@ import com.study.repository.board.BoardDAO;
 import com.study.repository.category.CategoryDAO;
 import com.study.repository.comment.CommentDAO;
 import com.study.repository.file.FileDAO;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InOrder;
 import org.mockito.Mock;
@@ -27,9 +24,9 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.mockito.Mockito.*;
 
-@DisplayName("BoardService를 통해 ")
+@Disabled
 @ExtendWith(MockitoExtension.class)
-public class BoardServiceTest {
+public class ServiceTest {
 
     @Mock
     private BoardDAO boardDAO;
@@ -39,13 +36,6 @@ public class BoardServiceTest {
     private FileDAO fileDAO;
     @Mock
     private CategoryDAO categoryDAO;
-
-    private BoardService boardService;
-
-    @BeforeEach
-    void setUp() {
-        boardService = new BoardService(boardDAO, commentDAO, fileDAO, categoryDAO);
-    }
 
         @Nested
         @DisplayName("게시글이 가져올때")

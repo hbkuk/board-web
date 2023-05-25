@@ -1,4 +1,4 @@
-package com.study.servlet;
+package com.study.service;
 
 import com.study.dto.BoardDTO;
 import com.study.dto.CategoryDTO;
@@ -13,10 +13,9 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 
-public class ShowBoardsService implements Serializable {
-    public ShowBoardsService() {
-    }
+public class ShowBoardsService extends Service implements Serializable {
 
+    @Override
     public void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<BoardDTO> boars = BoardDAO.getInstance().findAllWithImageCheck(SearchConditionUtils.buildQueryCondition(req.getParameterMap()));
         List<CategoryDTO> categorys = CategoryDAO.getInstance().findAll();

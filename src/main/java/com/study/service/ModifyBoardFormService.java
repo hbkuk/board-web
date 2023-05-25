@@ -1,4 +1,4 @@
-package com.study.servlet;
+package com.study.service;
 
 import com.study.dto.BoardDTO;
 import com.study.repository.board.BoardDAO;
@@ -14,7 +14,7 @@ import java.io.Serializable;
 import java.util.NoSuchElementException;
 
 @Slf4j
-public class ModifyBoardFormService implements Serializable {
+public class ModifyBoardFormService extends Service implements Serializable {
 
     public void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         BoardDTO boardDTO = BoardDAO.getInstance().findById(Long.parseLong(req.getParameter("board_idx")));

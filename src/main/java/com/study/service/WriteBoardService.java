@@ -1,4 +1,4 @@
-package com.study.servlet;
+package com.study.service;
 
 import com.oreilly.servlet.MultipartRequest;
 import com.study.dto.BoardDTO;
@@ -18,7 +18,7 @@ import java.io.Serializable;
 import java.util.List;
 
 @Slf4j
-public class WriteBoardService implements Serializable {
+public class WriteBoardService extends Service implements Serializable {
 
     public void process(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String searchConditionQueryString = SearchConditionUtils.buildQueryString(req.getParameterMap()).toString();
