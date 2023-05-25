@@ -1,12 +1,6 @@
-<%@ page import="com.study.service.BoardService" %>
 <%@ page import="com.study.dto.BoardDTO" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.study.repository.board.BoardDAO" %>
-<%@ page import="com.study.repository.comment.CommentDAO" %>
-<%@ page import="com.study.repository.file.FileDAO" %>
 <%@ page import="com.study.dto.CategoryDTO" %>
-<%@ page import="com.study.repository.category.CategoryDAO" %>
-<%@ page import="com.study.utils.SearchConditionUtils" %>
 <%@ page import="java.time.LocalDate" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
 <%@page isELIgnored="false" %>
@@ -59,7 +53,7 @@
 </div>
 <div class="con_txt" style="margin-top: 50px;">
     <div class="contents_sub">
-        <form id="search" action="boardLists.jsp" method='get'>
+        <form id="search" action="/boards" method='get'>
             <table style="border: 1px solid #ccc; padding: 10px;">
                 <tr style="text-align: center;">
                     <c:set var = "paramStartDate" value="<%=startDate%>"/>
@@ -129,7 +123,7 @@
                         <c:set var="truncatedTitle" value="${board.title}" />
                     </c:otherwise>
                 </c:choose>
-                    <td><a href="boardView.jsp?board_idx=${board.boardIdx}<%=searchConditionQueryString.isEmpty() ? "" : "&" + searchConditionQueryString%>">${truncatedTitle}</a></td>
+                    <td><a href="/board?board_idx=${board.boardIdx}<%=searchConditionQueryString.isEmpty() ? "" : "&" + searchConditionQueryString%>">${truncatedTitle}</a></td>
                     <td width="10%">${board.writer}</td>
                     <td width="5%">${board.hit}</td>
                     <td width="12%">
@@ -148,7 +142,7 @@
 
         <div class="btn_area">
             <div class="align_right">
-                <input type="button" value="write" class="btn_write btn_txt01" style="cursor: pointer;" onclick="location.href='boardWriteView.jsp<%=searchConditionQueryString.isEmpty() ? "" : "?" + searchConditionQueryString%>'" />
+                <input type="button" value="작성" class="btn_write btn_txt01" style="cursor: pointer;" onclick="location.href='/board/write<%=searchConditionQueryString.isEmpty() ? "" : "?" + searchConditionQueryString%>'" />
 
             </div>
         </div>

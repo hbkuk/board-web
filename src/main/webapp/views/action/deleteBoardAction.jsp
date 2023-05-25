@@ -9,7 +9,7 @@
          pageEncoding="UTF-8" %>
 
 <%
-    String searchConditionQueryString = SearchConditionUtils.buildQueryString(request.getParameterMap()).toString();
+    String searchConditionQueryString = request.getAttribute("searchConditionQueryString").toString();
 
     BoardDTO boardDTO = new BoardDTO();
     boardDTO.setBoardIdx(Long.parseLong(request.getParameter("board_idx")));

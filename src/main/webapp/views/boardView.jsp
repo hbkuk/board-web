@@ -59,7 +59,7 @@
                             <div>
                                 <c:forEach items="<%=board.getFiles()%>" var="file">
                                     <p>
-                                        <a href="download.jsp?file_idx=${file.fileIdx}">${file.originalFileName}</a>
+                                        <a href="/download?file_idx=${file.fileIdx}">${file.originalFileName}</a>
                                     </p>
                                 </c:forEach>
                             </div>
@@ -69,7 +69,7 @@
             </table>
             <table>
             <c:forEach items="<%=board.getComments()%>" var="comment">
-                <form action="action/deleteCommentAction.jsp<%= searchConditionQueryString.isEmpty() ? "" : "?" + searchConditionQueryString %>" method="post" name="dcfrm" id="dcfrm${comment.commentIdx}">
+                <form action="/comment/delete<%= searchConditionQueryString.isEmpty() ? "" : "?" + searchConditionQueryString %>" method="post" name="dcfrm" id="dcfrm${comment.commentIdx}">
                 <input type='hidden' name='board_idx' value="<%=board.getBoardIdx()%>">
                     <input type='hidden' name='comment_idx' value="${comment.commentIdx}">
                     <tr>
@@ -88,7 +88,7 @@
                 </form>
             </c:forEach>
             </table>
-            <form action="action/writeCommentAction.jsp<%= searchConditionQueryString.isEmpty() ? "" : "?" + searchConditionQueryString %>" method="post" name="cfrm">
+            <form action="/comment/write<%= searchConditionQueryString.isEmpty() ? "" : "?" + searchConditionQueryString %>" method="post" name="cfrm">
             <input type="hidden" name="board_idx" value="<%=board.getBoardIdx() %>">
                 <table>
                     <tr>
@@ -100,7 +100,7 @@
                     </tr>
                     <tr>
                         <td class="bg01">
-                            <textarea name="commnet_content" cols="" rows="" class="coment_input_text"></textarea>
+                            <textarea name="comment_content" cols="" rows="" class="coment_input_text"></textarea>
                         </td>
                         <td align="right" class="bg01">
                             <input id="cbtn" type="button" value="댓글등록" class="btn_comment btn_txt02" style="height: 60px; display: block;">
@@ -112,11 +112,11 @@
         <div class="btn_area">
             <div style="text-align: center; margin: 0 auto;">
                 <input type="button" value="목록" class="btn_list btn_txt02" style="cursor: pointer;"
-                       onclick="location.href='boardLists.jsp<%= searchConditionQueryString.isEmpty() ? "" : "?" + searchConditionQueryString %>'" />
+                       onclick="location.href='/boards<%= searchConditionQueryString.isEmpty() ? "" : "?" + searchConditionQueryString %>'" />
                 <input type="button" value="수정" class="btn_list btn_txt02" style="cursor: pointer;"
-                       onclick="location.href='boardModifyView.jsp?board_idx=<%= board.getBoardIdx() %><%= searchConditionQueryString.isEmpty() ? "" : "&" + searchConditionQueryString %>'" />
+                       onclick="location.href='/board/modify?board_idx=<%= board.getBoardIdx() %><%= searchConditionQueryString.isEmpty() ? "" : "&" + searchConditionQueryString %>'" />
                 <input type="button" value="삭제" class="btn_write btn_txt01" style="cursor: pointer;"
-                       onclick="location.href='boardDeleteView.jsp?board_idx=<%= board.getBoardIdx() %><%= searchConditionQueryString.isEmpty() ? "" : "&" + searchConditionQueryString %>'" />
+                       onclick="location.href='/board/delete?board_idx=<%= board.getBoardIdx() %><%= searchConditionQueryString.isEmpty() ? "" : "&" + searchConditionQueryString %>'" />
 
             </div>
         </div>

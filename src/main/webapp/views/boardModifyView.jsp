@@ -1,23 +1,12 @@
-<%@ page import="com.study.service.BoardService" %>
 <%@ page import="com.study.dto.BoardDTO" %>
-<%@ page import="com.study.repository.board.BoardDAO" %>
-<%@ page import="com.study.repository.comment.CommentDAO" %>
-<%@ page import="com.study.repository.file.FileDAO" %>
-<%@ page import="com.study.repository.category.CategoryDAO" %>
-<%@ page import="com.study.utils.SearchConditionUtils" %>
 <%@page isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%
-    String searchConditionQueryString = SearchConditionUtils.buildQueryString(request.getParameterMap()).toString();
-
-    long boardIdx = Long.parseLong(request.getParameter("board_idx"));
-
-    BoardService boardService = new BoardService(new BoardDAO(), new CommentDAO(), new FileDAO(), new CategoryDAO());
-
-    BoardDTO board = boardService.getBoardWithImages(boardIdx);
+    String searchConditionQueryString = request.getAttribute("searchConditionQueryString").toString();
+    BoardDTO board = (BoardDTO) request.getAttribute("board");
 %>
 
 <jsp:include page="/include/header.jsp" flush="false">
@@ -28,7 +17,7 @@
 
 <div class="contents1">
     <h1>게시판 - 등록</h1>
-    <form action="action/modifyBoardAction.jsp<%= searchConditionQueryString.isEmpty() ? "" : "?" + searchConditionQueryString %>" method="post" name="wfrm" enctype="multipart/form-data">
+    <form action="/board/modify<%= searchConditionQueryString.isEmpty() ? "" : "?" + searchConditionQueryString %>" method="post" name="wfrm" enctype="multipart/form-data">
     <input type="hidden" name="board_idx" value="<%=board.getBoardIdx()%>" />
         <input type="hidden" name="category" value="<%=board.getCategoryIdx()%>" />
         <div class="contents_sub" style="margin-top: 50px;">
@@ -108,7 +97,7 @@
             <div class="btn_area">
                 <div class="align_left">
                     <input type="button" value="취소" class="btn_list btn_txt02" style="cursor: pointer;"
-                           onclick="location.href='boardLists.jsp<%= searchConditionQueryString.isEmpty() ? "" : "?" + searchConditionQueryString %>'">
+                           onclick="location.href='/boards<%= searchConditionQueryString.isEmpty() ? "" : "?" + searchConditionQueryString %>'">
                 </div>
                 <div class="align_right">
                     <input id="wbtn" type="button" value="저장" class="btn_write btn_txt01" style="cursor: pointer;"/>

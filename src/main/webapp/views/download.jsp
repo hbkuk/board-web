@@ -13,6 +13,7 @@
     String root = request.getSession().getServletContext().getRealPath("/");
     String savePath = root + "download";
 
+    // TODO: BoardService, 하나의 인스턴스만 사용하도록 리팩토링할 것.
     BoardService boardService = new BoardService(new BoardDAO(), new CommentDAO(), new FileDAO(), new CategoryDAO());
     Long fileIdx = Long.parseLong(request.getParameter("file_idx"));
 

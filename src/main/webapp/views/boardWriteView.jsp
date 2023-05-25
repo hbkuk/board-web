@@ -1,18 +1,12 @@
-<%@ page import="com.study.service.BoardService" %>
-<%@ page import="com.study.repository.board.BoardDAO" %>
-<%@ page import="com.study.repository.comment.CommentDAO" %>
-<%@ page import="com.study.repository.file.FileDAO" %>
-<%@ page import="com.study.repository.category.CategoryDAO" %>
 <%@ page import="com.study.dto.CategoryDTO" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.study.utils.SearchConditionUtils" %>
 <%@page isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%
     String searchConditionQueryString = request.getAttribute("searchConditionQueryString").toString();
-    List<CategoryDTO> categorys = (List<CategoryDTO>) request.getAttribute("cateogorys");
+    List<CategoryDTO> categorys = (List<CategoryDTO>) request.getAttribute("categorys");
 %>
 
 <jsp:include page="/include/header.jsp" flush="false">
@@ -23,7 +17,7 @@
 <body>
 <div class="contents1">
     <h1>게시판 - 등록</h1>
-    <form action="action/writeBoardAction.jsp<%= searchConditionQueryString.isEmpty() ? "" : "?" + searchConditionQueryString %>" method="post" name="wfrm" enctype="multipart/form-data">
+    <form action="/board/write<%= searchConditionQueryString.isEmpty() ? "" : "?" + searchConditionQueryString %>" method="post" name="wfrm" enctype="multipart/form-data">
         <div class="contents_sub" style="margin-top: 50px;">
             <!--게시판-->
             <div class="board_write">
@@ -76,7 +70,7 @@
             <div class="btn_area">
                 <div class="align_left">
                     <input type="button" value="취소" class="btn_list btn_txt02" style="cursor: pointer;"
-                           onclick="location.href='boardLists.jsp?<%=searchConditionQueryString%>'"/>
+                           onclick="location.href='/boards<%= searchConditionQueryString.isEmpty() ? "" : "&" + searchConditionQueryString %>'"/>
                 </div>
                 <div class="align_right">
                     <input id="wbtn" type="button" value="저장" class="btn_write btn_txt01" style="cursor: pointer;"/>
