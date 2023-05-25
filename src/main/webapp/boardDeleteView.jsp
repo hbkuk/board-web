@@ -29,10 +29,9 @@
 </jsp:include>
 <jsp:include page="include/encodingFilter.jsp" flush="false"/>
 <body>
-<!-- 상단 디자인 -->
 <div class="contents1">
-    <form action="action/deleteBoardAction.jsp?<%=searchConditionQueryString%>" method="post" name="dfrm">
-        <input type = "hidden" name = "board_idx" value="<%=boardDTO.getBoardIdx()%>" >
+    <form action="action/deleteBoardAction.jsp<%= searchConditionQueryString.isEmpty() ? "" : "?" + searchConditionQueryString %>" method="post" name="dfrm">
+    <input type = "hidden" name = "board_idx" value="<%=boardDTO.getBoardIdx()%>"/>
         <div class="contents_sub">
             <!--게시판-->
             <div class="board_write">
@@ -54,7 +53,7 @@
             <div class="btn_area">
                 <div class="align_left">
                     <input type="button" value="목록" class="btn_list btn_txt02" style="cursor: pointer;"
-                           onclick="location.href='boardLists.jsp?<%=searchConditionQueryString%>'"/>
+                           onclick="location.href='boardLists.jsp<%= searchConditionQueryString.isEmpty() ? "" : "?" + searchConditionQueryString %>'"/>
                 </div>
                 <div class="align_right">
                     <input id="dbtn" type="button" value="삭제" class="btn_write btn_txt01" style="cursor: pointer;" />

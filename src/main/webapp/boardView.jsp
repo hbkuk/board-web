@@ -76,8 +76,8 @@
             </table>
             <table>
             <c:forEach items="<%=board.getComments()%>" var="comment">
-                <form action='action/deleteCommentAction.jsp?<%=searchConditionQueryString%>' method='post' name="dcfrm" id='dcfrm${comment.commentIdx}'>
-                    <input type='hidden' name='board_idx' value="<%=board.getBoardIdx()%>">
+                <form action="action/deleteCommentAction.jsp<%= searchConditionQueryString.isEmpty() ? "" : "?" + searchConditionQueryString %>" method="post" name="dcfrm" id="dcfrm${comment.commentIdx}">
+                <input type='hidden' name='board_idx' value="<%=board.getBoardIdx()%>">
                     <input type='hidden' name='comment_idx' value="${comment.commentIdx}">
                     <tr>
                         <td class='coment_re'>
@@ -95,8 +95,8 @@
                 </form>
             </c:forEach>
             </table>
-            <form action="action/writeCommentAction.jsp?<%=searchConditionQueryString%>" method="post" name="cfrm">
-                <input type="hidden" name="board_idx" value="<%=board.getBoardIdx() %>">
+            <form action="action/writeCommentAction.jsp<%= searchConditionQueryString.isEmpty() ? "" : "?" + searchConditionQueryString %>" method="post" name="cfrm">
+            <input type="hidden" name="board_idx" value="<%=board.getBoardIdx() %>">
                 <table>
                     <tr>
                         <td width="94%" class="coment_re">
@@ -119,11 +119,12 @@
         <div class="btn_area">
             <div style="text-align: center; margin: 0 auto;">
                 <input type="button" value="목록" class="btn_list btn_txt02" style="cursor: pointer;"
-                       onclick="location.href='boardLists.jsp?<%=searchConditionQueryString%>'"/>
+                       onclick="location.href='boardLists.jsp<%= searchConditionQueryString.isEmpty() ? "" : "?" + searchConditionQueryString %>'" />
                 <input type="button" value="수정" class="btn_list btn_txt02" style="cursor: pointer;"
-                       onclick="location.href='boardModifyView.jsp?board_idx=<%=board.getBoardIdx()%>&<%=searchConditionQueryString%>'"/>
+                       onclick="location.href='boardModifyView.jsp?board_idx=<%= board.getBoardIdx() %><%= searchConditionQueryString.isEmpty() ? "" : "&" + searchConditionQueryString %>'" />
                 <input type="button" value="삭제" class="btn_write btn_txt01" style="cursor: pointer;"
-                       onclick="location.href='boardDeleteView.jsp?board_idx=<%=board.getBoardIdx()%>&<%=searchConditionQueryString%>'"/>
+                       onclick="location.href='boardDeleteView.jsp?board_idx=<%= board.getBoardIdx() %><%= searchConditionQueryString.isEmpty() ? "" : "&" + searchConditionQueryString %>'" />
+
             </div>
         </div>
         <!--//게시판-->

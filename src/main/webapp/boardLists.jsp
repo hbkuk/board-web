@@ -56,7 +56,6 @@
 </jsp:include>
 <jsp:include page="include/encodingFilter.jsp" flush="false"/>
 <body>
-<!-- 상단 디자인 -->
 <div class="con_title">
     <h1>자유 게시판 - 목록</h1>
 </div>
@@ -69,7 +68,7 @@
                     <c:set var = "paramEndDate" value="<%=endDate%>"/>
                     <td width="30%">등록일 | <input class="currentDate" type="date" name="start_date" value="${paramStartDate}" placeholder="시작 날짜"> ~ <input class="currentDate" type="date" name="end_date" value="${paramEndDate}" placeholder="끝 날짜"></td>
                     <td><select id="category">
-                        <option value="0">전체 카테고리</option>
+                        <option value="all">전체 카테고리</option>
                         <c:set var = "paramCategoryIdx" value="<%=paramCategoryIdx%>"/>
                         <c:set var = "categorys" value="<%=categorys%>"/>
                         <c:forEach items="${categorys}" var="category">
@@ -126,14 +125,13 @@
                 </c:choose>
                 <c:choose>
                     <c:when test="${fn:length(board.title) > 80}">
-                        <c:set var="truncatedTitle" value="${fn:substring(board.title, 0, 80)}" />
-                        <c:set var="remainingWords" value="${fn:substring(board.title, 80, fn:length(board.title))}" />
+                        <c:set var="truncatedTitle" value="${fn:substring(board.title, 0, 77)}..." />
                     </c:when>
                     <c:otherwise>
                         <c:set var="truncatedTitle" value="${board.title}" />
                     </c:otherwise>
                 </c:choose>
-                    <td><a href=boardView.jsp?board_idx=${board.boardIdx}&<%=searchConditionQueryString%>>${truncatedTitle}</a></td>
+                    <td><a href="boardView.jsp?board_idx=${board.boardIdx}<%= searchConditionQueryString.isEmpty() ? "" : "&" + searchConditionQueryString %>">${truncatedTitle}</a></td>
                     <td width="10%">${board.writer}</td>
                     <td width="5%">${board.hit}</td>
                     <td width="12%">
@@ -152,7 +150,8 @@
 
         <div class="btn_area">
             <div class="align_right">
-                <input type="button" value="쓰기" class="btn_write btn_txt01" style="cursor: pointer;" onclick="location.href='boardWriteView.jsp?<%=searchConditionQueryString%>'" />
+                <input type="button" value="write" class="btn_write btn_txt01" style="cursor: pointer;" onclick="location.href='boardWriteView.jsp<%=searchConditionQueryString.isEmpty() ? "" : "?" + searchConditionQueryString%>'" />
+
             </div>
         </div>
     </div>

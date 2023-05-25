@@ -20,7 +20,9 @@
     boardService.deleteBoardWithFilesAndComment(boardDTO);
 
     // 저장 후 이동
-    String redirectUrl = String.format("/boardLists.jsp?%s", searchConditionQueryString);
-    response.sendRedirect(redirectUrl);
-
+    if (searchConditionQueryString.isEmpty()) {
+        response.sendRedirect("/boardLists.jsp");
+    } else {
+        response.sendRedirect(String.format("/boardLists.jsp?%s", searchConditionQueryString));
+    }
 %>

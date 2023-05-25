@@ -20,6 +20,9 @@
     long boardIdx = boardService.deleteCommentByCommentIdx(commentDTO);
 
     // 저장 후 이동
-    String redirectUrl = String.format("/boardView.jsp?board_idx=%d&%s", boardIdx, searchConditionQueryString);
-    response.sendRedirect(redirectUrl);
+    if (searchConditionQueryString.isEmpty()) {
+        response.sendRedirect(String.format("/boardView.jsp?board_idx=%d", boardIdx));
+    } else {
+        response.sendRedirect(String.format("/boardView.jsp?board_idx=%d&%s", boardIdx, searchConditionQueryString));
+    }
 %>

@@ -17,16 +17,17 @@
 
     List<CategoryDTO> categorys = boardService.getAllCategory();
 %>
+
 <jsp:include page="include/header.jsp" flush="false">
     <jsp:param name="css_path" value="board_write.css"/>
     <jsp:param name="js_path" value="board_write_view.js"/>
 </jsp:include>
 <jsp:include page="include/encodingFilter.jsp" flush="false"/>
+
 <body>
-<!-- 상단 디자인 -->
 <div class="contents1">
     <h1>게시판 - 등록</h1>
-    <form action="action/writeBoardAction.jsp?<%=searchConditionQueryString%>" method="post" name="wfrm" enctype="multipart/form-data">
+    <form action="action/writeBoardAction.jsp<%= searchConditionQueryString.isEmpty() ? "" : "?" + searchConditionQueryString %>" method="post" name="wfrm" enctype="multipart/form-data">
         <div class="contents_sub" style="margin-top: 50px;">
             <!--게시판-->
             <div class="board_write">
@@ -90,6 +91,5 @@
     </form>
 </div>
 <!-- 하단 디자인 -->
-
 </body>
 </html>

@@ -19,17 +19,18 @@
 
     BoardDTO board = boardService.getBoardWithImages(boardIdx);
 %>
+
 <jsp:include page="include/header.jsp" flush="false">
     <jsp:param name="css_path" value="board_write.css"/>
     <jsp:param name="js_path" value="board_modify_view.js"/>
 </jsp:include>
 <jsp:include page="include/encodingFilter.jsp" flush="false"/>
 <body>
-<!-- 상단 디자인 -->
+
 <div class="contents1">
     <h1>게시판 - 등록</h1>
-    <form action="<c:url value="/action/modifyBoardAction.jsp?<%=searchConditionQueryString%>"/>" method="post" name="wfrm" enctype="multipart/form-data">
-        <input type="hidden" name="board_idx" value="<%=board.getBoardIdx()%>" />
+    <form action="action/modifyBoardAction.jsp<%= searchConditionQueryString.isEmpty() ? "" : "?" + searchConditionQueryString %>" method="post" name="wfrm" enctype="multipart/form-data">
+    <input type="hidden" name="board_idx" value="<%=board.getBoardIdx()%>" />
         <input type="hidden" name="category" value="<%=board.getCategoryIdx()%>" />
         <div class="contents_sub" style="margin-top: 50px;">
             <!--게시판-->
@@ -108,7 +109,7 @@
             <div class="btn_area">
                 <div class="align_left">
                     <input type="button" value="취소" class="btn_list btn_txt02" style="cursor: pointer;"
-                           onclick="location.href='boardLists.jsp?<%=searchConditionQueryString%>'">
+                           onclick="location.href='boardLists.jsp<%= searchConditionQueryString.isEmpty() ? "" : "?" + searchConditionQueryString %>'">
                 </div>
                 <div class="align_right">
                     <input id="wbtn" type="button" value="저장" class="btn_write btn_txt01" style="cursor: pointer;"/>

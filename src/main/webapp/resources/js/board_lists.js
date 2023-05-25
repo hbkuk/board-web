@@ -22,6 +22,11 @@ $(document).ready(function() {
             queryString += 'category_idx=' + category + '&';
         }
 
+        if (category === 'all') {
+            window.location.href = window.location.pathname;
+            window.location.reload();
+        }
+
         if (startDate && endDate && startDate > endDate) {
             alert('시작 날짜가 종료 날짜보다 클 수 없습니다.');
             return;

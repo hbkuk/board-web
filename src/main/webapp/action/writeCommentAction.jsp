@@ -27,7 +27,10 @@
     CommentDTO commentDTO = boardService.saveComment(comment);
 
 
-    // 해당 글로 이동
-    String redirectUrl = String.format("/boardView.jsp?board_idx=%d&%s", commentDTO.getBoardIdx(), searchConditionQueryString);
-    response.sendRedirect(redirectUrl);
+    // 저장 후 이동
+    if (searchConditionQueryString.isEmpty()) {
+        response.sendRedirect(String.format("/boardView.jsp?board_idx=%d", commentDTO.getBoardIdx()));
+    } else {
+        response.sendRedirect(String.format("/boardView.jsp?board_idx=%d&%s", commentDTO.getBoardIdx(), searchConditionQueryString));
+    }
 %>

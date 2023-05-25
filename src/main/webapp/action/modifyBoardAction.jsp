@@ -41,8 +41,11 @@
     BoardDTO boardDTO = boardService.updateBoardWithImages(board, newFiles, oldFiles);
 
     // 저장 후 이동
-    String redirectUrl = String.format("/boardView.jsp?board_idx=%d&%s", boardDTO.getBoardIdx(), searchConditionQueryString);
-    response.sendRedirect(redirectUrl);
+    if (searchConditionQueryString.isEmpty()) {
+        response.sendRedirect(String.format("/boardView.jsp?board_idx=%d", board.getBoardIdx()));
+    } else {
+        response.sendRedirect(String.format("/boardView.jsp?board_idx=%d&%s", board.getBoardIdx(), searchConditionQueryString));
+    }
 
 %>
 
