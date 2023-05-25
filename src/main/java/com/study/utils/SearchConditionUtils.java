@@ -13,11 +13,11 @@ public class SearchConditionUtils {
 
     private static final String KEYWORD_CONDITION_QUERY = "b.title LIKE '%%%s%%' OR b.writer LIKE '%%%s%%' OR b.content LIKE '%%%s%%'";
     private static final String CATEGORY_CONDITION_QUERY = "c.category_idx = %d";
-    private static final String START_DATE_CONDITION_QUERY = "b.regdate >= '%s'";
-    private static final String END_DATE_CONDITION_QUERY = "b.regdate <= '%s'";
+    private static final String START_DATE_CONDITION_QUERY = "DATE(b.regdate) >= '%s'";
+    private static final String END_DATE_CONDITION_QUERY = "DATE(b.regdate) <= '%s'";
 
     private static final String START_DATE_PARAMETER_KEY = "start_date";
-    private static final String END_DATE_PARAMETER_KEY = "end_date";
+    private static final String END_DATE_PARAMETER_KEY ="end_date";
     private static final String KEYWORD_PARAMETER_KEY = "keyword";
     private static final String CATEGORY_IDX_PARAMETER_KEY = "category_idx";
 
