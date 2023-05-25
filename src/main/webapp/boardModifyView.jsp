@@ -4,12 +4,15 @@
 <%@ page import="com.study.repository.comment.CommentDAO" %>
 <%@ page import="com.study.repository.file.FileDAO" %>
 <%@ page import="com.study.repository.category.CategoryDAO" %>
+<%@ page import="com.study.utils.SearchConditionUtils" %>
 <%@page isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%
+    String searchConditionQueryString = SearchConditionUtils.buildQueryString(request.getParameterMap()).toString();
+
     long boardIdx = Long.parseLong(request.getParameter("board_idx"));
 
     BoardService boardService = new BoardService(new BoardDAO(), new CommentDAO(), new FileDAO(), new CategoryDAO());
@@ -20,12 +23,12 @@
     <jsp:param name="css_path" value="board_write.css"/>
     <jsp:param name="js_path" value="board_modify_view.js"/>
 </jsp:include>
-<jsp:include page="encodingFilter.jsp" flush="false"/>
+<jsp:include page="include/encodingFilter.jsp" flush="false"/>
 <body>
 <!-- 상단 디자인 -->
 <div class="contents1">
     <h1>게시판 - 등록</h1>
-    <form action="<c:url value="/action/modifyBoardAction.jsp"/>" method="post" name="wfrm" enctype="multipart/form-data">
+    <form action="<c:url value="/action/modifyBoardAction.jsp?<%=searchConditionQueryString%>"/>" method="post" name="wfrm" enctype="multipart/form-data">
         <input type="hidden" name="board_idx" value="<%=board.getBoardIdx()%>" />
         <input type="hidden" name="category" value="<%=board.getCategoryIdx()%>" />
         <div class="contents_sub" style="margin-top: 50px;">
@@ -105,7 +108,7 @@
             <div class="btn_area">
                 <div class="align_left">
                     <input type="button" value="취소" class="btn_list btn_txt02" style="cursor: pointer;"
-                           onclick="location.href='boardLists.jsp'">
+                           onclick="location.href='boardLists.jsp?<%=searchConditionQueryString%>'">
                 </div>
                 <div class="align_right">
                     <input id="wbtn" type="button" value="저장" class="btn_write btn_txt01" style="cursor: pointer;"/>

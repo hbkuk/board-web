@@ -21,10 +21,10 @@ import java.util.stream.Collectors;
 @Slf4j
 public class BoardService {
 
-    private BoardDAO boardDAO;
-    private CommentDAO commentDAO;
-    private FileDAO fileDAO;
-    private CategoryDAO categoryDAO;
+    private final BoardDAO boardDAO;
+    private final CommentDAO commentDAO;
+    private final FileDAO fileDAO;
+    private final CategoryDAO categoryDAO;
 
     public BoardService(BoardDAO boardDAO, CommentDAO commentDAO, FileDAO fileDAO, CategoryDAO categoryDAO) {
         this.boardDAO = boardDAO;
@@ -34,10 +34,10 @@ public class BoardService {
     }
 
     /**
-     * 모든 게시물에 대한 정보와 해당 게시물에 업로드된 파일의 존재여부를 생성해 리턴합니다
+     * 검색 조건에 맞는 모든 게시물에 대한 정보와 해당 게시물에 업로드된 파일의 존재여부를 생성해 리턴합니다
      */
-    public List<BoardDTO> getBoardListDetails() {
-        return boardDAO.findAllWithImageCheck();
+    public List<BoardDTO> getBoardListDetails(StringBuilder queryBuilder) {
+        return boardDAO.findAllWithImageCheck(queryBuilder);
     }
 
     /**
@@ -166,7 +166,7 @@ public class BoardService {
     public CommentDTO saveComment(Comment comment) {
         BoardDTO boardDTO = boardDAO.findById(comment.getBoardIdx().getBoardIdx());
         isEmpty(boardDTO);
-        log.debug("New Commnet / request! Comment  : {} ", comment.toString());
+        log.debug("New Comment / request! Comment  : {} ", comment);
 
         return commentDAO.save(comment);
     }
@@ -208,7 +208,7 @@ public class BoardService {
     }
 
     /**
-     * 해당 객체가 null이라면 예외를 던집니다
+     * 해당 객체가 null 이라면 예외를 던집니다
      * @param boardDTO 게시물 정보
      */
     private void isEmpty(BoardDTO boardDTO) {

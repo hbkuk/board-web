@@ -4,6 +4,7 @@
 <%@ page import="com.study.repository.comment.CommentDAO" %>
 <%@ page import="com.study.repository.file.FileDAO" %>
 <%@ page import="com.study.repository.category.CategoryDAO" %>
+<%@ page import="com.study.utils.SearchConditionUtils" %>
 <%@page isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
@@ -11,6 +12,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
 <%
+    String searchConditionQueryString = SearchConditionUtils.buildQueryString(request.getParameterMap()).toString();
+
     long boardIdx = Long.parseLong(request.getParameter("board_idx"));
 
     // Get the instance of BoardService
@@ -24,22 +27,11 @@
     <jsp:param name="css_path" value="board.css"/>
     <jsp:param name="js_path" value="board_delete_view.js"/>
 </jsp:include>
-<jsp:include page="encodingFilter.jsp" flush="false"/>
-<script type="text/javascript">
-    window.onload = function() {
-        document.getElementById( 'dbtn' ).onclick = function() {
-            if( document.dfrm.password.value.trim() == '' ) {
-                alert( '비밀번호를 입력하셔야 합니다.' );
-                return false;
-            }
-            document.dfrm.submit();
-        };
-    };
-</script>
+<jsp:include page="include/encodingFilter.jsp" flush="false"/>
 <body>
 <!-- 상단 디자인 -->
 <div class="contents1">
-    <form action="action/deleteBoardAction.jsp" method="post" name="dfrm">
+    <form action="action/deleteBoardAction.jsp?<%=searchConditionQueryString%>" method="post" name="dfrm">
         <input type = "hidden" name = "board_idx" value="<%=boardDTO.getBoardIdx()%>" >
         <div class="contents_sub">
             <!--게시판-->
@@ -62,7 +54,7 @@
             <div class="btn_area">
                 <div class="align_left">
                     <input type="button" value="목록" class="btn_list btn_txt02" style="cursor: pointer;"
-                           onclick="location.href='boardLists.jsp'"/>
+                           onclick="location.href='boardLists.jsp?<%=searchConditionQueryString%>'"/>
                 </div>
                 <div class="align_right">
                     <input id="dbtn" type="button" value="삭제" class="btn_write btn_txt01" style="cursor: pointer;" />

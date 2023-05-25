@@ -5,12 +5,13 @@
 <%@ page import="com.study.repository.category.CategoryDAO" %>
 <%@ page import="com.study.dto.CategoryDTO" %>
 <%@ page import="java.util.List" %>
+<%@ page import="com.study.utils.SearchConditionUtils" %>
 <%@page isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%
-    String cpage = request.getParameter("cpage");
+    String searchConditionQueryString = SearchConditionUtils.buildQueryString(request.getParameterMap()).toString();
 
     BoardService boardService = new BoardService(new BoardDAO(), new CommentDAO(), new FileDAO(), new CategoryDAO());
 
@@ -20,12 +21,12 @@
     <jsp:param name="css_path" value="board_write.css"/>
     <jsp:param name="js_path" value="board_write_view.js"/>
 </jsp:include>
-<jsp:include page="encodingFilter.jsp" flush="false"/>
+<jsp:include page="include/encodingFilter.jsp" flush="false"/>
 <body>
 <!-- 상단 디자인 -->
 <div class="contents1">
     <h1>게시판 - 등록</h1>
-    <form action="action/writeBoardAction.jsp" method="post" name="wfrm" enctype="multipart/form-data">
+    <form action="action/writeBoardAction.jsp?<%=searchConditionQueryString%>" method="post" name="wfrm" enctype="multipart/form-data">
         <div class="contents_sub" style="margin-top: 50px;">
             <!--게시판-->
             <div class="board_write">
@@ -78,7 +79,7 @@
             <div class="btn_area">
                 <div class="align_left">
                     <input type="button" value="취소" class="btn_list btn_txt02" style="cursor: pointer;"
-                           onclick="location.href='boardLists.jsp'"/>
+                           onclick="location.href='boardLists.jsp?<%=searchConditionQueryString%>'"/>
                 </div>
                 <div class="align_right">
                     <input id="wbtn" type="button" value="저장" class="btn_write btn_txt01" style="cursor: pointer;"/>

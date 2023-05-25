@@ -31,8 +31,8 @@ $(document).ready(function() {
             queryString = queryString.slice(0, -1);
 
             window.location.href = $('#search').attr('action') + '?' + queryString;
-        } else {
-            alert('검색조건이 최소 하나 이상 필요합니다.');
         }
     });
+
+    document.getElementsByClassName('.currentDate').value = new Date().toISOString().substring(0, 10);
 });

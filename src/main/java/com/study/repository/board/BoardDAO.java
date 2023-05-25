@@ -20,9 +20,7 @@ public class BoardDAO {
             "(CASE WHEN EXISTS (SELECT 1 FROM tb_file f WHERE f.board_idx = b.board_idx) THEN 1 ELSE 0 END) AS has_file\n" +
             "FROM tb_board b\n" +
             "JOIN tb_category c ON b.category_idx = c.category_idx\n" +
-            "LEFT OUTER JOIN tb_file f ON b.board_idx = f.board_idx\n" +
-            "GROUP BY b.board_idx " +
-            "ORDER BY b.board_idx DESC";
+            "LEFT OUTER JOIN tb_file f ON b.board_idx = f.board_idx\n";
     private static final String SAVE = "INSERT INTO tb_board (category_idx, title, writer, content, password, hit, regdate) VALUES (?, ?, ?, ?, ?, ?, ?)";
     private static final String UPDATE = "UPDATE tb_board SET title = ?, writer = ?, content = ?, moddate = ? WHERE board_idx = ? and password = ?";
     private static final String INCREASE_HIT = "UPDATE tb_board SET hit = hit + 1 WHERE board_idx = ?";
@@ -82,14 +80,15 @@ public class BoardDAO {
         return boardDTO;
     }
 
-    public List<BoardDTO> findAllWithImageCheck() {
+    public List<BoardDTO> findAllWithImageCheck(StringBuilder queryBuilder) {
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
 
         try {
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3316/ebsoft", "ebsoft", "123456");
-            statement = connection.prepareStatement(FIND_ALL);
+            statement = connection.prepareStatement(queryConditionSetting(FIND_ALL, queryBuilder));
+            log.debug("Dynamic Query : {} ",  queryConditionSetting(FIND_ALL, queryBuilder));
             resultSet = statement.executeQuery();
             List<BoardDTO> boards = new ArrayList<>();
             while (resultSet.next()) {
@@ -128,6 +127,13 @@ public class BoardDAO {
                 e.printStackTrace();
             }
         }
+    }
+
+    private String queryConditionSetting(String findAll, StringBuilder queryBuilder) {
+        if( queryBuilder != null) {
+            return FIND_ALL + queryBuilder;
+        }
+        return findAll;
     }
 
     public BoardDTO save(Board board) {

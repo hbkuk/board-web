@@ -16,10 +16,12 @@
 <%@ page import="com.study.repository.comment.CommentDAO" %>
 <%@ page import="com.study.repository.file.FileDAO" %>
 <%@ page import="com.study.repository.category.CategoryDAO" %>
+<%@ page import="com.study.utils.SearchConditionUtils" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
-<jsp:include page="../encodingFilter.jsp" flush="false"/>
+<jsp:include page="../include/encodingFilter.jsp" flush="false"/>
 <%
+    String searchConditionQueryString = SearchConditionUtils.buildQueryString(request.getParameterMap()).toString();
 
     // 파일 업로드
     MultipartRequest multi = FileUtils.fileUpload((HttpServletRequest) request);
@@ -39,7 +41,7 @@
     BoardDTO boardDTO = boardService.updateBoardWithImages(board, newFiles, oldFiles);
 
     // 저장 후 이동
-    String redirectUrl = String.format("/boardView.jsp?board_idx=%d", boardDTO.getBoardIdx());
+    String redirectUrl = String.format("/boardView.jsp?board_idx=%d&%s", boardDTO.getBoardIdx(), searchConditionQueryString);
     response.sendRedirect(redirectUrl);
 
 %>

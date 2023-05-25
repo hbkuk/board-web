@@ -5,12 +5,15 @@
 <%@ page import="com.study.repository.comment.CommentDAO" %>
 <%@ page import="com.study.repository.file.FileDAO" %>
 <%@ page import="com.study.repository.category.CategoryDAO" %>
+<%@ page import="com.study.utils.SearchConditionUtils" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="x" uri="http://java.sun.com/jsp/jstl/xml" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <%
+    String searchConditionQueryString = SearchConditionUtils.buildQueryString(request.getParameterMap()).toString();
+
     long boardIdx = Long.parseLong(request.getParameter("board_idx"));
 
     BoardService boardService = new BoardService(new BoardDAO(), new CommentDAO(), new FileDAO(), new CategoryDAO());
@@ -21,7 +24,7 @@
     <jsp:param name="css_path" value="board_view.css"/>
     <jsp:param name="js_path" value="board_view.js"/>
 </jsp:include>
-<jsp:include page="encodingFilter.jsp" flush="false"/>
+<jsp:include page="include/encodingFilter.jsp" flush="false"/>
 <body>
 <div class="con_title">
     <h2>자유 게시판 - 목록</h2>
@@ -73,7 +76,7 @@
             </table>
             <table>
             <c:forEach items="<%=board.getComments()%>" var="comment">
-                <form action='action/deleteCommentAction.jsp' method='post' name="dcfrm" id='dcfrm${comment.commentIdx}'>
+                <form action='action/deleteCommentAction.jsp?<%=searchConditionQueryString%>' method='post' name="dcfrm" id='dcfrm${comment.commentIdx}'>
                     <input type='hidden' name='board_idx' value="<%=board.getBoardIdx()%>">
                     <input type='hidden' name='comment_idx' value="${comment.commentIdx}">
                     <tr>
@@ -92,7 +95,7 @@
                 </form>
             </c:forEach>
             </table>
-            <form action="action/writeCommentAction.jsp" method="post" name="cfrm">
+            <form action="action/writeCommentAction.jsp?<%=searchConditionQueryString%>" method="post" name="cfrm">
                 <input type="hidden" name="board_idx" value="<%=board.getBoardIdx() %>">
                 <table>
                     <tr>
@@ -116,11 +119,11 @@
         <div class="btn_area">
             <div style="text-align: center; margin: 0 auto;">
                 <input type="button" value="목록" class="btn_list btn_txt02" style="cursor: pointer;"
-                       onclick="location.href='boardLists.jsp'"/>
+                       onclick="location.href='boardLists.jsp?<%=searchConditionQueryString%>'"/>
                 <input type="button" value="수정" class="btn_list btn_txt02" style="cursor: pointer;"
-                       onclick="location.href='boardModifyView.jsp?board_idx=<%=board.getBoardIdx()%>'"/>
+                       onclick="location.href='boardModifyView.jsp?board_idx=<%=board.getBoardIdx()%>&<%=searchConditionQueryString%>'"/>
                 <input type="button" value="삭제" class="btn_write btn_txt01" style="cursor: pointer;"
-                       onclick="location.href='boardDeleteView.jsp?board_idx=<%=board.getBoardIdx()%>'"/>
+                       onclick="location.href='boardDeleteView.jsp?board_idx=<%=board.getBoardIdx()%>&<%=searchConditionQueryString%>'"/>
             </div>
         </div>
         <!--//게시판-->

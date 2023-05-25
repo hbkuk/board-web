@@ -4,10 +4,12 @@
 <%@ page import="com.study.repository.file.FileDAO" %>
 <%@ page import="com.study.repository.category.CategoryDAO" %>
 <%@ page import="com.study.dto.CommentDTO" %>
+<%@ page import="com.study.utils.SearchConditionUtils" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
-<jsp:include page="../encodingFilter.jsp" flush="false"/>
+<jsp:include page="../include/encodingFilter.jsp" flush="false"/>
 <%
+    String searchConditionQueryString = SearchConditionUtils.buildQueryString(request.getParameterMap()).toString();
 
     CommentDTO commentDTO = new CommentDTO();
     commentDTO.setCommentIdx(Long.parseLong(request.getParameter("comment_idx")));
@@ -18,6 +20,6 @@
     long boardIdx = boardService.deleteCommentByCommentIdx(commentDTO);
 
     // 저장 후 이동
-    String redirectUrl = String.format("/boardView.jsp?board_idx=%d", boardIdx);
+    String redirectUrl = String.format("/boardView.jsp?board_idx=%d&%s", boardIdx, searchConditionQueryString);
     response.sendRedirect(redirectUrl);
 %>
