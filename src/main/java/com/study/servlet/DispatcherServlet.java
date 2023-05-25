@@ -35,7 +35,8 @@ import java.util.List;
 @Slf4j
 @WebServlet(name = "dispatcher", urlPatterns = "/", loadOnStartup = 1)
 public class DispatcherServlet extends HttpServlet {
-    private BoardService boardService = new BoardService(new BoardDAO(), new CommentDAO(), new FileDAO(), new CategoryDAO());
+    private final BoardService boardService = new BoardService(BoardDAO.getInstance(), CommentDAO.getInstance(),
+            FileDAO.getInstance(), CategoryDAO.getInstance() );
 
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -93,8 +94,6 @@ public class DispatcherServlet extends HttpServlet {
                 new CommentContent(req.getParameter("comment_content")),
                 new BoardIdx(Long.parseLong(req.getParameter("board_idx"))));
 
-        BoardService boardService = new BoardService(new BoardDAO(), new CommentDAO(), new FileDAO(), new CategoryDAO());
-
         CommentDTO commentDTO = boardService.saveComment(comment);
 
 
@@ -113,7 +112,6 @@ public class DispatcherServlet extends HttpServlet {
         MultipartRequest multi = FileUtils.fileUpload(req);
 
         // DB 저장
-        BoardService boardService = new BoardService(new BoardDAO(), new CommentDAO(), new FileDAO(), new CategoryDAO());
         BoardDTO board = boardService.saveBoardWithImages(BuildUtils.buildWriteBoardFromRequest(multi), BuildUtils.buildFilesFromRequest(multi));
 
         // 저장 후 이동
@@ -141,7 +139,6 @@ public class DispatcherServlet extends HttpServlet {
             }
         }
 
-        BoardService boardService = new BoardService(new BoardDAO(), new CommentDAO(), new FileDAO(), new CategoryDAO());
         BoardDTO boardDTO = boardService.updateBoardWithImages(board, newFiles, oldFiles);
 
         // 저장 후 이동
@@ -160,7 +157,6 @@ public class DispatcherServlet extends HttpServlet {
         commentDTO.setBoardIdx(Long.parseLong(req.getParameter("board_idx")));
         commentDTO.setPassword(req.getParameter("password"));
 
-        BoardService boardService = new BoardService(new BoardDAO(), new CommentDAO(), new FileDAO(), new CategoryDAO());
         long boardIdx = boardService.deleteCommentByCommentIdx(commentDTO);
 
         // 저장 후 이동

@@ -2,6 +2,7 @@ package com.study.repository.file;
 
 import com.study.dto.FileDTO;
 import com.study.model.file.File;
+import com.study.repository.board.BoardDAO;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.*;
@@ -10,6 +11,13 @@ import java.util.List;
 
 @Slf4j
 public class FileDAO {
+    private static FileDAO boardDAO = new FileDAO();
+
+    public static FileDAO getInstance() {
+        return this.boardDAO;
+    }
+
+    private FileDAO() {}
 
     private static final String FIND_SAVED_FILE_NAME = "SELECT saved_name FROM tb_file WHERE file_idx = ?";
     private static final String FIND_FILES = "SELECT * FROM tb_file WHERE board_idx = ?";
@@ -17,7 +25,7 @@ public class FileDAO {
     private static final String SAVE = "INSERT INTO tb_file (saved_name, original_name, size, board_idx) VALUES (?, ?, ?, ?)";
     private static final String DELETE = "DELETE FROM tb_file WHERE file_idx = ?";
 
-    public FileDAO() {
+    public void driverFind() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
@@ -31,6 +39,7 @@ public class FileDAO {
         ResultSet resultSet = null;
 
         try {
+            driverFind();
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3316/ebsoft", "ebsoft", "123456");
             statement = connection.prepareStatement(FIND_SAVED_FILE_NAME);
             statement.setLong(1, fileIdx);
@@ -67,6 +76,7 @@ public class FileDAO {
         ResultSet resultSet = null;
 
         try {
+            driverFind();
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3316/ebsoft", "ebsoft", "123456");
             statement = connection.prepareStatement(FIND_FILES);
             statement.setLong(1, boardIdx);
@@ -108,6 +118,7 @@ public class FileDAO {
         ResultSet resultSet = null;
 
         try {
+            driverFind();
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3316/ebsoft", "ebsoft", "123456");
             statement = connection.prepareStatement(FIND_FILE_INDEXS);
             statement.setLong(1, boardIdx);
@@ -147,6 +158,7 @@ public class FileDAO {
         log.debug("File Save -> Save File Name : {} ", file.getSaveFileName());
 
         try {
+            driverFind();
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3316/ebsoft", "ebsoft", "123456");
             preparedStatement = connection.prepareStatement(SAVE);
             preparedStatement.setString(1, file.getSaveFileName());
@@ -184,6 +196,7 @@ public class FileDAO {
         PreparedStatement statement = null;
 
         try {
+            driverFind();
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3316/ebsoft", "ebsoft", "123456");
             statement = connection.prepareStatement(DELETE);
             statement.setLong(1, image_idx);

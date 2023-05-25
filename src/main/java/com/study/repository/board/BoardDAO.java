@@ -14,6 +14,13 @@ import java.util.List;
  */
 @Slf4j
 public class BoardDAO {
+    private static BoardDAO boardDAO = new BoardDAO();
+
+    public static BoardDAO getInstance() {
+        return this.boardDAO;
+    }
+
+    private BoardDAO() {}
 
     private static final String FIND_BY_ID = "SELECT b.board_idx, c.category_idx, c.category, b.title, b.writer, b.content, b.password, b.hit, b.regdate, b.moddate FROM tb_board b JOIN tb_category c ON b.category_idx = c.category_idx WHERE b.board_idx = ?";
     private static final String FIND_ALL = "SELECT b.board_idx, c.category, b.title, b.writer, b.content, b.password, b.hit, b.regdate, b.moddate,\n" +
@@ -26,7 +33,7 @@ public class BoardDAO {
     private static final String INCREASE_HIT = "UPDATE tb_board SET hit = hit + 1 WHERE board_idx = ?";
     private static final String DELETE = "DELETE FROM tb_board WHERE board_idx = ? and password = ?";
 
-    public BoardDAO() {
+    public void driverFind() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
@@ -41,6 +48,7 @@ public class BoardDAO {
 
         BoardDTO boardDTO = null;
         try {
+            driverFind();
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3316/ebsoft", "ebsoft", "123456");
             statement = connection.prepareStatement(FIND_BY_ID);
             statement.setLong(1, id);
@@ -86,6 +94,7 @@ public class BoardDAO {
         ResultSet resultSet = null;
 
         try {
+            driverFind();
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3316/ebsoft", "ebsoft", "123456");
             statement = connection.prepareStatement(queryConditionSetting(FIND_ALL, queryBuilder));
             log.debug("Dynamic Query : {} ",  queryConditionSetting(FIND_ALL, queryBuilder));
@@ -137,12 +146,14 @@ public class BoardDAO {
     }
 
     public BoardDTO save(Board board) {
+        driverFind();
         log.debug(" save() 메서드 호출 -> board : {}", board.toString());
         Connection connection = null;
         PreparedStatement statement = null;
 
         BoardDTO boardDTO = new BoardDTO();
         try {
+            driverFind();
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3316/ebsoft", "ebsoft", "123456");
             statement = connection.prepareStatement(SAVE,Statement.RETURN_GENERATED_KEYS );
             statement.setString(1, String.valueOf(board.getCategory()));
@@ -182,6 +193,7 @@ public class BoardDAO {
 
         BoardDTO boardDTO = null;
         try {
+            driverFind();
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3316/ebsoft", "ebsoft", "123456");
             statement = connection.prepareStatement(UPDATE);
             statement.setString(1, board.getTitle().getTitle());
@@ -224,6 +236,7 @@ public class BoardDAO {
 
         BoardDTO boardDTO = new BoardDTO();
         try {
+            driverFind();
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3316/ebsoft", "ebsoft", "123456");
             statement = connection.prepareStatement(INCREASE_HIT);
             statement.setLong(1, boardIdx);
@@ -255,6 +268,7 @@ public class BoardDAO {
         PreparedStatement statement = null;
 
         try {
+            driverFind();
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3316/ebsoft", "ebsoft", "123456");
             statement = connection.prepareStatement(DELETE);
             statement.setLong(1, id);

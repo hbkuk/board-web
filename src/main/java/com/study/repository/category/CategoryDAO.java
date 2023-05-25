@@ -1,6 +1,7 @@
 package com.study.repository.category;
 
 import com.study.dto.CategoryDTO;
+import com.study.repository.file.FileDAO;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.*;
@@ -9,10 +10,17 @@ import java.util.List;
 
 @Slf4j
 public class CategoryDAO {
+    private static CategoryDAO categoryDAO = new CategoryDAO();
+
+    public static CategoryDAO getInstance() {
+        return this.categoryDAO;
+    }
+
+    private CategoryDAO() {}
 
     private static final String FIND_ALL = "SELECT * FROM tb_category";
 
-    public CategoryDAO() {
+    public void driverFind() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
@@ -27,6 +35,7 @@ public class CategoryDAO {
 
         List<CategoryDTO> categorys = new ArrayList<>();
         try {
+            driverFind();
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3316/ebsoft", "ebsoft", "123456");
             statement = connection.prepareStatement(FIND_ALL);
             resultSet = statement.executeQuery();

@@ -14,6 +14,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CommentDAO {
+    private static CommentDAO commentDAO = new CommentDAO();
+
+    public static CommentDAO getInstance() {
+        return this.CommentDAO;
+    }
+
+    private CommentDAO() {};
+
 
     private static final String FIND = "SELECT * FROM tb_comment WHERE comment_idx = ?";
     private static final String FIND_ALL = "SELECT * FROM tb_comment WHERE board_idx = ?";
@@ -21,7 +29,7 @@ public class CommentDAO {
     private static final String DELETE_ALL = "DELETE FROM tb_comment WHERE board_idx = ?";
     private static final String DELETE = "DELETE FROM tb_comment WHERE comment_idx = ?";
 
-    public CommentDAO() {
+    public void driverFind() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
@@ -36,6 +44,7 @@ public class CommentDAO {
 
         CommentDTO commentDTO = null;
         try {
+            driverFind();
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3316/ebsoft", "ebsoft", "123456");
             statement = connection.prepareStatement(FIND);
             statement.setLong(1, commentIdx);
@@ -77,6 +86,7 @@ public class CommentDAO {
         ResultSet resultSet = null;
 
         try {
+            driverFind();
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3316/ebsoft", "ebsoft", "123456");
             statement = connection.prepareStatement(FIND_ALL);
             statement.setLong(1, boardIdx);
@@ -120,6 +130,7 @@ public class CommentDAO {
 
         CommentDTO commentDTO = new CommentDTO();
         try {
+            driverFind();
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3316/ebsoft", "ebsoft", "123456");
             statement = connection.prepareStatement(SAVE);
             statement.setString(1, comment.getWriter().getWriter());
@@ -152,6 +163,7 @@ public class CommentDAO {
         PreparedStatement statement = null;
 
         try {
+            driverFind();
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3316/ebsoft", "ebsoft", "123456");
             statement = connection.prepareStatement(DELETE_ALL);
             statement.setLong(1, boardIdx);
@@ -177,6 +189,7 @@ public class CommentDAO {
         PreparedStatement statement = null;
 
         try {
+            driverFind();
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3316/ebsoft", "ebsoft", "123456");
             statement = connection.prepareStatement(DELETE);
             statement.setLong(1, commentDTO.getCommentIdx());
