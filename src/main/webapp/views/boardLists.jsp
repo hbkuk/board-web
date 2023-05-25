@@ -53,7 +53,6 @@
     <jsp:param name="css_path" value="board.css"/>
     <jsp:param name="js_path" value="board_lists.js"/>
 </jsp:include>
-<jsp:include page="/include/encodingFilter.jsp" flush="false"/>
 <body>
 <div class="con_title">
     <h1>자유 게시판 - 목록</h1>

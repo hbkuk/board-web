@@ -9,7 +9,6 @@
 <%@ page import="com.study.repository.category.CategoryDAO" %>
 <%@ page import="com.study.service.BoardService" %>
 
-<jsp:include page="/include/encodingFilter.jsp" flush="false"/>
 <%
     String root = request.getSession().getServletContext().getRealPath("/");
     String savePath = root + "download";

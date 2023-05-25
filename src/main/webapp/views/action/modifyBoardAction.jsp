@@ -19,7 +19,6 @@
 <%@ page import="com.study.utils.SearchConditionUtils" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
-<jsp:include page="../../../include/encodingFilter.jsp" flush="false"/>
 <%
     String searchConditionQueryString = SearchConditionUtils.buildQueryString(request.getParameterMap()).toString();
 

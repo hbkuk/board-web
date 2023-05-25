@@ -27,7 +27,6 @@
     <jsp:param name="css_path" value="board.css"/>
     <jsp:param name="js_path" value="board_delete_view.js"/>
 </jsp:include>
-<jsp:include page="/include/encodingFilter.jsp" flush="false"/>
 <body>
 <div class="contents1">
     <form action="action/deleteBoardAction.jsp<%= searchConditionQueryString.isEmpty() ? "" : "?" + searchConditionQueryString %>" method="post" name="dfrm">

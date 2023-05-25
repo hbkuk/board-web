@@ -18,7 +18,6 @@
     <jsp:param name="css_path" value="board_view.css"/>
     <jsp:param name="js_path" value="board_view.js"/>
 </jsp:include>
-<jsp:include page="/include/encodingFilter.jsp" flush="false"/>
 <body>
 <div class="con_title">
     <h2>자유 게시판 - 목록</h2>
