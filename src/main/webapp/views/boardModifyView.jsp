@@ -87,7 +87,7 @@
                                 </div>
                             </c:forEach>
                             <c:forEach begin="<%=board.getFiles().size() + 1%>" end="3" var="index">
-                                <input type="file" multiple="multiple" name="upload" class="board_view_input" /><br/><br/>
+                                <input type="file" multiple="multiple" name="upload${index}" class="board_view_input" /><br/><br/>
                             </c:forEach>
                         </td>
                     </tr>

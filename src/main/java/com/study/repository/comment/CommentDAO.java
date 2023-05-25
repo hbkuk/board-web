@@ -17,7 +17,7 @@ public class CommentDAO {
     private static CommentDAO commentDAO = new CommentDAO();
 
     public static CommentDAO getInstance() {
-        return this.CommentDAO;
+        return commentDAO;
     }
 
     private CommentDAO() {};

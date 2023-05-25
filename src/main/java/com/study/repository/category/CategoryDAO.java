@@ -1,7 +1,6 @@
 package com.study.repository.category;
 
 import com.study.dto.CategoryDTO;
-import com.study.repository.file.FileDAO;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.*;
@@ -13,7 +12,7 @@ public class CategoryDAO {
     private static CategoryDAO categoryDAO = new CategoryDAO();
 
     public static CategoryDAO getInstance() {
-        return this.categoryDAO;
+        return categoryDAO;
     }
 
     private CategoryDAO() {}

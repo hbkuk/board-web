@@ -3,27 +3,15 @@
 <%@ page import="java.io.InputStream" %>
 <%@ page import="java.io.OutputStream" %>
 <%@ page import="java.io.FileNotFoundException" %>
-<%@ page import="com.study.repository.board.BoardDAO" %>
-<%@ page import="com.study.repository.comment.CommentDAO" %>
-<%@ page import="com.study.repository.file.FileDAO" %>
-<%@ page import="com.study.repository.category.CategoryDAO" %>
-<%@ page import="com.study.service.BoardService" %>
 
 <%
-    String root = request.getSession().getServletContext().getRealPath("/");
-    String savePath = root + "download";
-
-    // TODO: BoardService, 하나의 인스턴스만 사용하도록 리팩토링할 것.
-    BoardService boardService = new BoardService(new BoardDAO(), new CommentDAO(), new FileDAO(), new CategoryDAO());
-    Long fileIdx = Long.parseLong(request.getParameter("file_idx"));
-
-    String savedFileName = boardService.getSavedFileName(fileIdx);
+    String savePath = request.getAttribute("savePath").toString();
 
     // 서버에 실제 저장된 파일명
-    String filename = savedFileName;
+    String filename = request.getAttribute("savedFileName").toString();
 
     // 실제 내보낼 파일명
-    String orgfilename = savedFileName;
+    String orgfilename = request.getAttribute("savedFileName").toString();
 
     InputStream in = null;
     OutputStream os = null;

@@ -2,7 +2,6 @@ package com.study.repository.file;
 
 import com.study.dto.FileDTO;
 import com.study.model.file.File;
-import com.study.repository.board.BoardDAO;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.*;
@@ -14,7 +13,7 @@ public class FileDAO {
     private static FileDAO boardDAO = new FileDAO();
 
     public static FileDAO getInstance() {
-        return this.boardDAO;
+        return boardDAO;
     }
 
     private FileDAO() {}

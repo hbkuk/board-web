@@ -17,7 +17,7 @@ public class BoardDAO {
     private static BoardDAO boardDAO = new BoardDAO();
 
     public static BoardDAO getInstance() {
-        return this.boardDAO;
+        return boardDAO;
     }
 
     private BoardDAO() {}
