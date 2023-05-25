@@ -15,11 +15,11 @@
     List<CategoryDTO> categorys = (List<CategoryDTO>) request.getAttribute("cateogorys");
 %>
 
-<jsp:include page="../include/header.jsp" flush="false">
+<jsp:include page="/include/header.jsp" flush="false">
     <jsp:param name="css_path" value="board_write.css"/>
     <jsp:param name="js_path" value="board_write_view.js"/>
 </jsp:include>
-<jsp:include page="../include/encodingFilter.jsp" flush="false"/>
+<jsp:include page="/include/encodingFilter.jsp" flush="false"/>
 
 <body>
 <div class="contents1">
