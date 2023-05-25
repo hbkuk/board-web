@@ -44,136 +44,176 @@ public class DispatcherServlet extends HttpServlet {
         log.debug("Request Method: {}", req.getMethod());
 
         if (requestUri.equals("/boards")) {
-            req.setAttribute("searchConditionQueryString", SearchConditionUtils.buildQueryString(req.getParameterMap()).toString());
-            req.setAttribute("boardLists", boardService.getBoardListDetails(SearchConditionUtils.buildQueryCondition(req.getParameterMap())));
-            req.setAttribute("categorys", boardService.getAllCategory());
-            req.getRequestDispatcher("/views/boardLists.jsp").forward(req, resp);
+            showBoardsService(req, resp);
         }
 
         if (requestUri.equals("/board")) {
-            req.setAttribute("searchConditionQueryString", SearchConditionUtils.buildQueryString(req.getParameterMap()).toString());
-            req.setAttribute("board", boardService.getBoardWithDetails(Long.parseLong(req.getParameter("board_idx"))));
-            req.getRequestDispatcher("/views/boardView.jsp").forward(req, resp);
+            showBoardService(req, resp);
         }
 
         if (requestUri.equals("/board/write") && req.getMethod().equals("GET")) {
-            req.setAttribute("searchConditionQueryString", SearchConditionUtils.buildQueryString(req.getParameterMap()).toString());
-            req.setAttribute("categorys", boardService.getAllCategory());
-            req.getRequestDispatcher("/views/boardWriteView.jsp").forward(req, resp);
+            writeBoardFormService(req, resp);
         }
 
         if (requestUri.equals("/board/modify")) {
-            req.setAttribute("searchConditionQueryString", SearchConditionUtils.buildQueryString(req.getParameterMap()).toString());
-            req.setAttribute("board", boardService.getBoardWithImages(Long.parseLong(req.getParameter("board_idx"))));
-            req.getRequestDispatcher("/views/boardModifyView.jsp").forward(req, resp);
+            modifyBoardFormService(req, resp);
         }
 
         if (requestUri.equals("/board/delete") && req.getMethod().equals("GET") ) {
-            req.setAttribute("searchConditionQueryString", SearchConditionUtils.buildQueryString(req.getParameterMap()).toString());
-            req.setAttribute("board", boardService.getBoardWithDetails(Long.parseLong(req.getParameter("board_idx"))));
-            req.getRequestDispatcher("/views/boardDeleteView.jsp").forward(req, resp);
+            deleteBoardFormService(req, resp);
         }
 
         if (requestUri.equals("/board/delete") && req.getMethod().equals("POST")) {
-            String searchConditionQueryString = SearchConditionUtils.buildQueryString(req.getParameterMap()).toString();
-
-            BoardDTO boardDTO = new BoardDTO();
-            boardDTO.setBoardIdx(Long.parseLong(req.getParameter("board_idx")));
-            boardDTO.setPassword(req.getParameter("password"));
-            boardService.deleteBoardWithFilesAndComment(boardDTO);
-
-            if (searchConditionQueryString.isEmpty()) {
-                resp.sendRedirect("/boards");
-            } else {
-                resp.sendRedirect(String.format("/boards?%s", searchConditionQueryString));
-            }
+            deleteBoardService(req, resp);
         }
 
         if (requestUri.equals("/comment/delete") && req.getMethod().equals("POST")) {
-            String searchConditionQueryString = SearchConditionUtils.buildQueryString(req.getParameterMap()).toString();
-
-            CommentDTO commentDTO = new CommentDTO();
-            commentDTO.setCommentIdx(Long.parseLong(req.getParameter("comment_idx")));
-            commentDTO.setBoardIdx(Long.parseLong(req.getParameter("board_idx")));
-            commentDTO.setPassword(req.getParameter("password"));
-
-            BoardService boardService = new BoardService(new BoardDAO(), new CommentDAO(), new FileDAO(), new CategoryDAO());
-            long boardIdx = boardService.deleteCommentByCommentIdx(commentDTO);
-
-            // 저장 후 이동
-            if (searchConditionQueryString.isEmpty()) {
-                resp.sendRedirect(String.format("/board?board_idx=%d", boardIdx));
-            } else {
-                resp.sendRedirect(String.format("/board?board_idx=%d&%s", boardIdx, searchConditionQueryString));
-            }
+            deleteCommentService(req, resp);
         }
 
         if (requestUri.equals("/board/modify") && req.getMethod().equals("POST")) {
-            String searchConditionQueryString = SearchConditionUtils.buildQueryString(req.getParameterMap()).toString();
-
-            // 파일 업로드
-            MultipartRequest multi = FileUtils.fileUpload(req);
-
-            Board board = BuildUtils.buildModifyBoardFromRequest(multi);
-
-            List<File> newFiles = BuildUtils.buildFilesFromRequest(multi);
-
-            List<Long> oldFiles = new ArrayList<>();
-            if(multi.getParameter("file_idx") != null) {
-                for (String item : multi.getParameterValues("file_idx")) {
-                    oldFiles.add(Long.parseLong(item));
-                }
-            }
-
-            BoardService boardService = new BoardService(new BoardDAO(), new CommentDAO(), new FileDAO(), new CategoryDAO());
-            BoardDTO boardDTO = boardService.updateBoardWithImages(board, newFiles, oldFiles);
-
-            // 저장 후 이동
-            if (searchConditionQueryString.isEmpty()) {
-                resp.sendRedirect(String.format("/board?board_idx=%d", board.getBoardIdx()));
-            } else {
-                resp.sendRedirect(String.format("/board?board_idx=%d&%s", board.getBoardIdx(), searchConditionQueryString));
-            }
+            modifyBoardService(req, resp);
         }
 
         if (requestUri.equals("/board/write") && req.getMethod().equals("POST")) {
-            String searchConditionQueryString = SearchConditionUtils.buildQueryString(req.getParameterMap()).toString();
-
-            // 파일 업로드
-            MultipartRequest multi = FileUtils.fileUpload(req);
-
-            // DB 저장
-            BoardService boardService = new BoardService(new BoardDAO(), new CommentDAO(), new FileDAO(), new CategoryDAO());
-            BoardDTO board = boardService.saveBoardWithImages(BuildUtils.buildWriteBoardFromRequest(multi), BuildUtils.buildFilesFromRequest(multi));
-
-            // 저장 후 이동
-            if (searchConditionQueryString.isEmpty()) {
-                resp.sendRedirect(String.format("/board?board_idx=%d", board.getBoardIdx()));
-            } else {
-                resp.sendRedirect(String.format("/board?board_idx=%d&%s", board.getBoardIdx(), searchConditionQueryString));
-            }
+            writeBoardService(req, resp);
         }
 
         if (requestUri.equals("/comment/write") && req.getMethod().equals("POST")) {
-            String searchConditionQueryString = SearchConditionUtils.buildQueryString(req.getParameterMap()).toString();
+            writeCommentService(req, resp);
+        }
+    }
 
-            Comment comment = new Comment(
-                    new CommentWriter(req.getParameter("comment_writer")),
-                    new Password(req.getParameter("comment_password")),
-                    new CommentContent(req.getParameter("comment_content")),
-                    new BoardIdx(Long.parseLong(req.getParameter("board_idx"))));
+    private void writeCommentService(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String searchConditionQueryString = SearchConditionUtils.buildQueryString(req.getParameterMap()).toString();
 
-            BoardService boardService = new BoardService(new BoardDAO(), new CommentDAO(), new FileDAO(), new CategoryDAO());
+        Comment comment = new Comment(
+                new CommentWriter(req.getParameter("comment_writer")),
+                new Password(req.getParameter("comment_password")),
+                new CommentContent(req.getParameter("comment_content")),
+                new BoardIdx(Long.parseLong(req.getParameter("board_idx"))));
 
-            CommentDTO commentDTO = boardService.saveComment(comment);
+        BoardService boardService = new BoardService(new BoardDAO(), new CommentDAO(), new FileDAO(), new CategoryDAO());
+
+        CommentDTO commentDTO = boardService.saveComment(comment);
 
 
-            // 저장 후 이동
-            if (searchConditionQueryString.isEmpty()) {
-                resp.sendRedirect(String.format("/board?board_idx=%d", commentDTO.getBoardIdx()));
-            } else {
-                resp.sendRedirect(String.format("/board?board_idx=%d&%s", commentDTO.getBoardIdx(), searchConditionQueryString));
+        // 저장 후 이동
+        if (searchConditionQueryString.isEmpty()) {
+            resp.sendRedirect(String.format("/board?board_idx=%d", commentDTO.getBoardIdx()));
+        } else {
+            resp.sendRedirect(String.format("/board?board_idx=%d&%s", commentDTO.getBoardIdx(), searchConditionQueryString));
+        }
+    }
+
+    private void writeBoardService(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String searchConditionQueryString = SearchConditionUtils.buildQueryString(req.getParameterMap()).toString();
+
+        // 파일 업로드
+        MultipartRequest multi = FileUtils.fileUpload(req);
+
+        // DB 저장
+        BoardService boardService = new BoardService(new BoardDAO(), new CommentDAO(), new FileDAO(), new CategoryDAO());
+        BoardDTO board = boardService.saveBoardWithImages(BuildUtils.buildWriteBoardFromRequest(multi), BuildUtils.buildFilesFromRequest(multi));
+
+        // 저장 후 이동
+        if (searchConditionQueryString.isEmpty()) {
+            resp.sendRedirect(String.format("/board?board_idx=%d", board.getBoardIdx()));
+        } else {
+            resp.sendRedirect(String.format("/board?board_idx=%d&%s", board.getBoardIdx(), searchConditionQueryString));
+        }
+    }
+
+    private void modifyBoardService(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String searchConditionQueryString = SearchConditionUtils.buildQueryString(req.getParameterMap()).toString();
+
+        // 파일 업로드
+        MultipartRequest multi = FileUtils.fileUpload(req);
+
+        Board board = BuildUtils.buildModifyBoardFromRequest(multi);
+
+        List<File> newFiles = BuildUtils.buildFilesFromRequest(multi);
+
+        List<Long> oldFiles = new ArrayList<>();
+        if(multi.getParameter("file_idx") != null) {
+            for (String item : multi.getParameterValues("file_idx")) {
+                oldFiles.add(Long.parseLong(item));
             }
         }
+
+        BoardService boardService = new BoardService(new BoardDAO(), new CommentDAO(), new FileDAO(), new CategoryDAO());
+        BoardDTO boardDTO = boardService.updateBoardWithImages(board, newFiles, oldFiles);
+
+        // 저장 후 이동
+        if (searchConditionQueryString.isEmpty()) {
+            resp.sendRedirect(String.format("/board?board_idx=%d", board.getBoardIdx()));
+        } else {
+            resp.sendRedirect(String.format("/board?board_idx=%d&%s", board.getBoardIdx(), searchConditionQueryString));
+        }
+    }
+
+    private void deleteCommentService(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String searchConditionQueryString = SearchConditionUtils.buildQueryString(req.getParameterMap()).toString();
+
+        CommentDTO commentDTO = new CommentDTO();
+        commentDTO.setCommentIdx(Long.parseLong(req.getParameter("comment_idx")));
+        commentDTO.setBoardIdx(Long.parseLong(req.getParameter("board_idx")));
+        commentDTO.setPassword(req.getParameter("password"));
+
+        BoardService boardService = new BoardService(new BoardDAO(), new CommentDAO(), new FileDAO(), new CategoryDAO());
+        long boardIdx = boardService.deleteCommentByCommentIdx(commentDTO);
+
+        // 저장 후 이동
+        if (searchConditionQueryString.isEmpty()) {
+            resp.sendRedirect(String.format("/board?board_idx=%d", boardIdx));
+        } else {
+            resp.sendRedirect(String.format("/board?board_idx=%d&%s", boardIdx, searchConditionQueryString));
+        }
+    }
+
+    private void deleteBoardService(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String searchConditionQueryString = SearchConditionUtils.buildQueryString(req.getParameterMap()).toString();
+
+        BoardDTO boardDTO = new BoardDTO();
+        boardDTO.setBoardIdx(Long.parseLong(req.getParameter("board_idx")));
+        boardDTO.setPassword(req.getParameter("password"));
+        boardService.deleteBoardWithFilesAndComment(boardDTO);
+
+        if (searchConditionQueryString.isEmpty()) {
+            resp.sendRedirect("/boards");
+        } else {
+            resp.sendRedirect(String.format("/boards?%s", searchConditionQueryString));
+        }
+    }
+
+    private void deleteBoardFormService(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setAttribute("searchConditionQueryString", SearchConditionUtils.buildQueryString(req.getParameterMap()).toString());
+        req.setAttribute("board", boardService.getBoardWithDetails(Long.parseLong(req.getParameter("board_idx"))));
+        req.getRequestDispatcher("/views/boardDeleteView.jsp").forward(req, resp);
+    }
+
+    private void modifyBoardFormService(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setAttribute("searchConditionQueryString", SearchConditionUtils.buildQueryString(req.getParameterMap()).toString());
+        req.setAttribute("board", boardService.getBoardWithImages(Long.parseLong(req.getParameter("board_idx"))));
+        req.getRequestDispatcher("/views/boardModifyView.jsp").forward(req, resp);
+    }
+
+    private void writeBoardFormService(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setAttribute("searchConditionQueryString", SearchConditionUtils.buildQueryString(req.getParameterMap()).toString());
+        req.setAttribute("categorys", boardService.getAllCategory());
+        req.getRequestDispatcher("/views/boardWriteView.jsp").forward(req, resp);
+    }
+
+    private void showBoardService(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setAttribute("searchConditionQueryString", SearchConditionUtils.buildQueryString(req.getParameterMap()).toString());
+        req.setAttribute("board", boardService.getBoardWithDetails(Long.parseLong(req.getParameter("board_idx"))));
+        req.getRequestDispatcher("/views/boardView.jsp").forward(req, resp);
+    }
+
+    private void showBoardsService(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setAttribute("searchConditionQueryString", SearchConditionUtils.buildQueryString(req.getParameterMap()).toString());
+        req.setAttribute("boardLists", boardService.getBoardListDetails(SearchConditionUtils.buildQueryCondition(req.getParameterMap())));
+        req.setAttribute("categorys", boardService.getAllCategory());
+        req.getRequestDispatcher("/views/boardLists.jsp").forward(req, resp);
     }
 }
