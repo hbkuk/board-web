@@ -5,8 +5,8 @@ import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 
 /**
  * 게시글 작성 또는 수정시
@@ -62,5 +62,65 @@ public class FileUtils {
         java.io.File file = new java.io.File(
                 FileUtils.UPLOAD_PATH, fileName);
         return file.length();
+    }
+
+    /**
+     * 웹 브라우저로부터 요청된 파일이름을 디렉토리 내에서 읽고, 웹 브라우저에 응답합니다.
+     * 
+     * @param request 요청 정보를 가지고 있는 객체
+     * @param response 응답 정보를 가지고 있는 객체
+     * @param savedFileName 디렉토리에 저장된 파일 이름
+     * @param originalFileName 클라이언트가 알고 있는 파일 이름
+     */
+    public static void serveDownloadFile(HttpServletRequest request, HttpServletResponse response, String savedFileName, String originalFileName) throws IOException {
+        InputStream in = null;
+        OutputStream os = null;
+        File file = null;
+        boolean skip = false;
+        String client = "";
+
+        try {
+            try {
+                file = new File(UPLOAD_PATH, savedFileName);
+                in = new FileInputStream(file);
+            } catch (FileNotFoundException fe) {
+                skip = true;
+            }
+
+            client = request.getHeader("User-Agent");
+
+            response.reset();
+            response.setContentType("application/octet-stream");
+            response.setHeader("Content-Description", "File Download");
+
+            if (!skip) {
+                if (client.indexOf("MSIE") != -1) {
+                    response.setHeader("Content-Disposition", "attachment; filename=" + new String(originalFileName.getBytes("KSC5601"), "ISO8859_1"));
+                } else {
+                    originalFileName = new String(originalFileName.getBytes("utf-8"), "iso-8859-1");
+                    response.setHeader("Content-Disposition", "attachment; filename=\"" + originalFileName + "\"");
+                    response.setHeader("Content-Type", "application/octet-stream; charset=utf-8");
+                }
+
+                response.setHeader("Content-Length", String.valueOf(file.length()));
+
+                os = response.getOutputStream();
+                byte[] buffer = new byte[4096];
+                int bytesRead;
+
+                while ((bytesRead = in.read(buffer)) != -1) {
+                    os.write(buffer, 0, bytesRead);
+                }
+            } else {
+                response.setContentType("text/html;charset=UTF-8");
+            }
+            in.close();
+            os.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            in.close();
+            os.close();
+        }
     }
 }
