@@ -58,7 +58,7 @@ public class ModifyBoardService extends Service implements Serializable {
 
         // 저장 디렉토리에서 파일 삭제
         List<String> fileNamesToDelete = indexesToDelete.stream()
-                .map(fileIdx -> FileDAO.getInstance().findSavedFileNameById(fileIdx))
+                .map(fileIdx -> FileDAO.getInstance().findFileNameById(fileIdx).getSaveFileName())
                 .collect(Collectors.toList());
 
         fileNamesToDelete.stream()

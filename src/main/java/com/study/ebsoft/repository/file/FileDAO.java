@@ -18,7 +18,7 @@ public class FileDAO {
 
     private FileDAO() {}
 
-    private static final String FIND_SAVED_FILE_NAME = "SELECT saved_name FROM tb_file WHERE file_idx = ?";
+    private static final String FIND_SAVED_FILE_NAME = "SELECT saved_name, original_name  FROM tb_file WHERE file_idx = ?";
     private static final String FIND_FILES = "SELECT * FROM tb_file WHERE board_idx = ?";
     private static final String FIND_FILE_INDEXS = "SELECT file_idx FROM tb_file WHERE board_idx = ?";
     private static final String SAVE = "INSERT INTO tb_file (saved_name, original_name, size, board_idx) VALUES (?, ?, ?, ?)";
@@ -32,10 +32,11 @@ public class FileDAO {
         }
     }
 
-    public String findSavedFileNameById(Long fileIdx) {
+    public FileDTO findFileNameById(Long fileIdx) {
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
+        FileDTO fileDTO = null;
 
         try {
             driverFind();
@@ -43,9 +44,14 @@ public class FileDAO {
             statement = connection.prepareStatement(FIND_SAVED_FILE_NAME);
             statement.setLong(1, fileIdx);
             resultSet = statement.executeQuery();
+
             if (resultSet.next()) {
                 log.debug("resultSet.getString(saved_name) : {}", resultSet.getString("saved_name"));
-                return resultSet.getString("saved_name");
+                log.debug("resultSet.getString(original_name) : {}", resultSet.getString("original_name"));
+                fileDTO = new FileDTO();
+                fileDTO.setSaveFileName(resultSet.getString("saved_name"));
+                fileDTO.setOriginalFileName(resultSet.getString("original_name"));
+                return fileDTO;
             }
             return null;
         } catch (SQLException e) {
