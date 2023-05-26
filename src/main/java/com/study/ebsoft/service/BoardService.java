@@ -45,7 +45,7 @@ public class BoardService {
      * @param boardIdx 게시물 번호
      * @return 게시물 번호에 해당하는 게시물이 있다면 BoardDTO, 그렇지 않다면 null
      */
-    public BoardDTO findBoardWithDetails(long boardIdx) {
+    public BoardDTO findBoardWithDetails(long boardIdx) throws NoSuchElementException {
         if( boardDAO.increaseHitCount(boardIdx) == null ) {
             throw new NoSuchElementException("해당 글을 찾을 수 없습니다.");
         }
@@ -62,7 +62,7 @@ public class BoardService {
      * @param boardIdx 게시물 번호
      * @return 게시물 번호에 해당하는 게시물이 있다면 BoardDTO, 그렇지 않다면 null
      */
-    public BoardDTO findBoardWithImages(long boardIdx) {
+    public BoardDTO findBoardWithImages(long boardIdx) throws NoSuchElementException {
         log.debug("getBoardWithImages() 메서드 호출시 BoardIdx: {}", boardIdx);
 
         BoardDTO boardDTO = boardDAO.findById(boardIdx);
@@ -101,7 +101,7 @@ public class BoardService {
      * @param previouslyUploadedIndexes 이전에 업로드 된 파일의 번호
      * @return 게시물 수정이되었다면 게시물 번호가 담긴 BoardDTO, 그렇지 않다면 null
      */
-    public BoardDTO updateBoardWithImages(Board updateBoard, List<File> newUploadFiles, List<Long> previouslyUploadedIndexes) {
+    public BoardDTO updateBoardWithImages(Board updateBoard, List<File> newUploadFiles, List<Long> previouslyUploadedIndexes) throws NoSuchElementException {
         log.debug(" updateBoardWithImages() 메서드 호출 -> updateBoard : {} , newUploadFiles size : {}, previouslyUploadedIndexes size : {}",
                 updateBoard.toString(), newUploadFiles.size(), previouslyUploadedIndexes.size());
 
@@ -169,7 +169,7 @@ public class BoardService {
      * @param comment 댓글 정보
      * @return 댓글이 저장되었다면 게시물 번호만 담긴 CommentDTO, 그렇지 않다면 null
      */
-    public CommentDTO saveComment(Comment comment) {
+    public CommentDTO saveComment(Comment comment) throws NoSuchElementException {
         BoardDTO boardDTO = boardDAO.findById(comment.getBoardIdx().getBoardIdx());
         if( boardDTO == null ) {
             throw new NoSuchElementException("해당 글을 찾을 수 없습니다.");
@@ -185,7 +185,7 @@ public class BoardService {
      * @param deleteComment
      * @return
      */
-    public Long deleteCommentByCommentIdx(CommentDTO deleteComment) {
+    public Long deleteCommentByCommentIdx(CommentDTO deleteComment) throws IllegalArgumentException {
         CommentDTO commentDTO = commentDAO.findByCommentIdx(deleteComment.getCommentIdx());
 
         if( !commentDTO.getPassword().equals(deleteComment.getPassword())) {
