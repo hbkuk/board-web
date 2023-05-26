@@ -1,6 +1,6 @@
-package com.study.ebsoft.service;
+package com.study.ebsoft.controller;
 
-import com.study.core.mvc.Service;
+import com.study.core.mvc.Controller;
 import com.study.ebsoft.dto.FileDTO;
 import com.study.ebsoft.repository.file.FileDAO;
 import com.study.ebsoft.utils.FileUtils;
@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 
 @Slf4j
-public class DownloadService extends Service implements Serializable {
+public class DownloadController extends Controller implements Serializable {
 
     public void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         FileDTO fileDTO = FileDAO.getInstance().findFileNameById(Long.parseLong(req.getParameter("file_idx")));

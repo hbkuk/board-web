@@ -1,6 +1,6 @@
-package com.study.ebsoft.service;
+package com.study.ebsoft.controller;
 
-import com.study.core.mvc.Service;
+import com.study.core.mvc.Controller;
 import com.study.ebsoft.dto.BoardDTO;
 import com.study.ebsoft.dto.CommentDTO;
 import com.study.ebsoft.model.board.Password;
@@ -20,7 +20,7 @@ import java.io.Serializable;
 import java.util.NoSuchElementException;
 
 @Slf4j
-public class WriteCommentService extends Service implements Serializable {
+public class WriteCommentController extends Controller implements Serializable {
 
     public void process(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String searchConditionQueryString = SearchConditionUtils.buildQueryString(req.getParameterMap()).toString();

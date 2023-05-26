@@ -1,6 +1,6 @@
-package com.study.ebsoft.service;
+package com.study.ebsoft.controller;
 
-import com.study.core.mvc.Service;
+import com.study.core.mvc.Controller;
 import com.study.ebsoft.dto.BoardDTO;
 import com.study.ebsoft.repository.board.BoardDAO;
 import com.study.ebsoft.repository.comment.CommentDAO;
@@ -15,7 +15,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class DeleteBoardService extends Service implements Serializable {
+public class DeleteBoardController extends Controller implements Serializable {
 
     public void process(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         BoardDTO deleteBoardDTO = new BoardDTO();

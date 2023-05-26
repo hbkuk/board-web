@@ -1,6 +1,6 @@
-package com.study.ebsoft.service;
+package com.study.ebsoft.controller;
 
-import com.study.core.mvc.Service;
+import com.study.core.mvc.Controller;
 import com.study.ebsoft.dto.BoardDTO;
 import com.study.ebsoft.repository.board.BoardDAO;
 import com.study.ebsoft.repository.comment.CommentDAO;
@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.NoSuchElementException;
 
-public class ShowBoardService extends Service implements Serializable {
+public class ShowBoardController extends Controller implements Serializable {
 
     public void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         BoardDTO boardDTO = BoardDAO.getInstance().increaseHitCount(Long.parseLong(req.getParameter("board_idx")));

@@ -1,9 +1,7 @@
-package com.study.ebsoft.service;
+package com.study.ebsoft.controller;
 
-import com.study.core.mvc.Service;
-import com.study.ebsoft.dto.BoardDTO;
+import com.study.core.mvc.Controller;
 import com.study.ebsoft.dto.CategoryDTO;
-import com.study.ebsoft.repository.board.BoardDAO;
 import com.study.ebsoft.utils.SearchConditionUtils;
 import com.study.ebsoft.repository.category.CategoryDAO;
 
@@ -14,17 +12,13 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 
-public class ShowBoardsService extends Service implements Serializable {
+public class WriteBoardFormController extends Controller implements Serializable {
 
-    @Override
     public void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<BoardDTO> boars = BoardDAO.getInstance().findAllWithImageCheck(SearchConditionUtils.buildQueryCondition(req.getParameterMap()));
         List<CategoryDTO> categorys = CategoryDAO.getInstance().findAll();
 
         req.setAttribute("searchConditionQueryString", SearchConditionUtils.buildQueryString(req.getParameterMap()).toString());
-        req.setAttribute("boardLists", boars);
         req.setAttribute("categorys", categorys);
-
-        req.getRequestDispatcher("/views/boardLists.jsp").forward(req, resp);
+        req.getRequestDispatcher("/views/boardWriteView.jsp").forward(req, resp);
     }
 }

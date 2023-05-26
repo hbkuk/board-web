@@ -1,7 +1,7 @@
-package com.study.ebsoft.service;
+package com.study.ebsoft.controller;
 
 import com.oreilly.servlet.MultipartRequest;
-import com.study.core.mvc.Service;
+import com.study.core.mvc.Controller;
 import com.study.ebsoft.dto.BoardDTO;
 import com.study.ebsoft.model.board.Board;
 import com.study.ebsoft.model.file.File;
@@ -19,7 +19,7 @@ import java.io.Serializable;
 import java.util.List;
 
 @Slf4j
-public class WriteBoardService extends Service implements Serializable {
+public class WriteBoardController extends Controller implements Serializable {
 
     public void process(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String searchConditionQueryString = SearchConditionUtils.buildQueryString(req.getParameterMap()).toString();

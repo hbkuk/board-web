@@ -1,7 +1,6 @@
 package com.study.core.mvc;
 
-import com.study.ebsoft.service.*;
-import com.study.service.*;
+import com.study.ebsoft.controller.*;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.ServletException;
@@ -19,23 +18,23 @@ import java.util.Map;
 @Slf4j
 @WebServlet(name = "dispatcher", urlPatterns = "/", loadOnStartup = 1)
 public class DispatcherServlet extends HttpServlet {
-    private Map<String, Service> serviceMap;
+    private Map<String, Controller> requestMap;
 
     @Override
     public void init() {
-        serviceMap = new HashMap<>();
+        requestMap = new HashMap<>();
 
-        serviceMap.put("/boards", new ShowBoardsService());
-        serviceMap.put("/board", new ShowBoardService());
-        serviceMap.put("/board/write/form", new WriteBoardFormService());
-        serviceMap.put("/board/modify/form", new ModifyBoardFormService());
-        serviceMap.put("/board/delete/form", new DeleteBoardFormService());
-        serviceMap.put("/board/delete", new DeleteBoardService());
-        serviceMap.put("/comment/delete", new CommentDeleteService());
-        serviceMap.put("/board/modify", new ModifyBoardService());
-        serviceMap.put("/board/write", new WriteBoardService());
-        serviceMap.put("/comment/write", new WriteCommentService());
-        serviceMap.put("/download", new DownloadService());
+        requestMap.put("/boards", new ShowBoardsController());
+        requestMap.put("/board", new ShowBoardController());
+        requestMap.put("/board/write/form", new WriteBoardFormController());
+        requestMap.put("/board/modify/form", new ModifyBoardFormController());
+        requestMap.put("/board/delete/form", new DeleteBoardFormController());
+        requestMap.put("/board/delete", new DeleteBoardController());
+        requestMap.put("/comment/delete", new CommentDeleteController());
+        requestMap.put("/board/modify", new ModifyBoardController());
+        requestMap.put("/board/write", new WriteBoardController());
+        requestMap.put("/comment/write", new WriteCommentController());
+        requestMap.put("/download", new DownloadController());
     }
 
     @Override
@@ -45,9 +44,9 @@ public class DispatcherServlet extends HttpServlet {
         log.debug("Request URI: {}", requestUri);
         log.debug("Request Method: {}", method);
 
-        Service service = serviceMap.get(requestUri);
-        if (service != null) {
-            service.process(req, resp);
+        Controller controller = requestMap.get(requestUri);
+        if (controller != null) {
+            controller.process(req, resp);
         } else {
             log.error("Throw Exception!!!");
             throw new RuntimeException();
