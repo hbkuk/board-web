@@ -1,4 +1,4 @@
-package com.study.core.web.filter;
+package com.study.core.filter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
