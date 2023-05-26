@@ -88,7 +88,7 @@ public class BoardDAO {
         return boardDTO;
     }
 
-    public List<BoardDTO> findAllWithImageCheck(StringBuilder queryBuilder) {
+    public List<BoardDTO> findAllWithImageCheck(String queryBuilder) {
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
@@ -138,7 +138,7 @@ public class BoardDAO {
         }
     }
 
-    private String queryConditionSetting(String findAll, StringBuilder queryBuilder) {
+    private String queryConditionSetting(String findAll, String queryBuilder) {
         if( queryBuilder != null) {
             return FIND_ALL + queryBuilder;
         }

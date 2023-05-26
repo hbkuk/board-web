@@ -23,7 +23,7 @@ public class QueryUtilsTest {
         void notting_query_string() {
             Map<String, String[]> parameters = new HashMap<>();
 
-            StringBuilder queryBuilder = SearchConditionUtils.buildQueryCondition(parameters);
+            String queryBuilder = SearchConditionUtils.buildQueryCondition(parameters);
             assertThat(queryBuilder).isNull();
         }
 
@@ -33,9 +33,9 @@ public class QueryUtilsTest {
             Map<String, String[]> parameters = new HashMap<>();
             parameters.put("start_date", new String[]{"2023-05-11"});
 
-            StringBuilder queryBuilder = SearchConditionUtils.buildQueryCondition(parameters);
+            String queryBuilder = SearchConditionUtils.buildQueryCondition(parameters);
 
-            assertThat(queryBuilder.toString()).isEqualTo(" WHERE b.regdate >= '2023-05-11'");
+            assertThat(queryBuilder.toString()).isEqualTo(" WHERE DATE(b.regdate) >= '2023-05-11'");
         }
 
         @Test
@@ -44,9 +44,9 @@ public class QueryUtilsTest {
             Map<String, String[]> parameters = new HashMap<>();
             parameters.put("end_date", new String[]{"2023-05-11"});
 
-            StringBuilder queryBuilder = SearchConditionUtils.buildQueryCondition(parameters);
+            String queryBuilder = SearchConditionUtils.buildQueryCondition(parameters);
 
-            assertThat(queryBuilder.toString()).isEqualTo(" WHERE b.regdate <= '2023-05-11'");
+            assertThat(queryBuilder.toString()).isEqualTo(" WHERE DATE(b.regdate) <= '2023-05-11'");
         }
 
 
@@ -56,7 +56,7 @@ public class QueryUtilsTest {
             Map<String, String[]> parameters = new LinkedHashMap<>();
             parameters.put("keyword", new String[]{"소프트웨어 장인"});
 
-            StringBuilder queryBuilder = SearchConditionUtils.buildQueryCondition(parameters);
+            String queryBuilder = SearchConditionUtils.buildQueryCondition(parameters);
 
             assertThat(queryBuilder.toString()).isEqualTo(" WHERE b.title LIKE '%소프트웨어 장인%' OR b.writer LIKE '%소프트웨어 장인%' OR b.content LIKE '%소프트웨어 장인%'");
         }
@@ -67,7 +67,7 @@ public class QueryUtilsTest {
             Map<String, String[]> parameters = new LinkedHashMap<>();
             parameters.put("category_idx", new String[]{"1"});
 
-            StringBuilder queryBuilder = SearchConditionUtils.buildQueryCondition(parameters);
+            String queryBuilder = SearchConditionUtils.buildQueryCondition(parameters);
 
             assertThat(queryBuilder.toString()).isEqualTo(" WHERE c.category_idx = 1");
         }
@@ -79,9 +79,9 @@ public class QueryUtilsTest {
             parameters.put("start_date", new String[]{"2023-05-11"});
             parameters.put("end_date", new String[]{"2023-05-20"});
 
-            StringBuilder queryBuilder = SearchConditionUtils.buildQueryCondition(parameters);
+            String queryBuilder = SearchConditionUtils.buildQueryCondition(parameters);
 
-            assertThat(queryBuilder.toString()).isEqualTo(" WHERE b.regdate >= '2023-05-11' AND b.regdate <= '2023-05-20'");
+            assertThat(queryBuilder.toString()).isEqualTo(" WHERE DATE(b.regdate) >= '2023-05-11' AND DATE(b.regdate) <= '2023-05-20'");
         }
 
         @Test
@@ -91,9 +91,9 @@ public class QueryUtilsTest {
             parameters.put("end_date", new String[]{"2023-05-20"});
             parameters.put("start_date", new String[]{"2023-05-11"});
 
-            StringBuilder queryBuilder = SearchConditionUtils.buildQueryCondition(parameters);
+            String queryBuilder = SearchConditionUtils.buildQueryCondition(parameters);
 
-            assertThat(queryBuilder.toString()).isEqualTo(" WHERE b.regdate <= '2023-05-20' AND b.regdate >= '2023-05-11'");
+            assertThat(queryBuilder.toString()).isEqualTo(" WHERE DATE(b.regdate) <= '2023-05-20' AND DATE(b.regdate) >= '2023-05-11'");
         }
 
 
@@ -104,9 +104,9 @@ public class QueryUtilsTest {
             parameters.put("end_date", new String[]{"2023-05-20"});
             parameters.put("keyword", new String[]{"소프트웨어 장인"});
 
-            StringBuilder queryBuilder = SearchConditionUtils.buildQueryCondition(parameters);
+            String queryBuilder = SearchConditionUtils.buildQueryCondition(parameters);
 
-            assertThat(queryBuilder.toString()).isEqualTo(" WHERE b.regdate <= '2023-05-20' AND b.title LIKE '%소프트웨어 장인%' OR b.writer LIKE '%소프트웨어 장인%' OR b.content LIKE '%소프트웨어 장인%'");
+            assertThat(queryBuilder.toString()).isEqualTo(" WHERE DATE(b.regdate) <= '2023-05-20' AND b.title LIKE '%소프트웨어 장인%' OR b.writer LIKE '%소프트웨어 장인%' OR b.content LIKE '%소프트웨어 장인%'");
         }
 
         @Test
@@ -132,7 +132,7 @@ public class QueryUtilsTest {
         void notting_query_string() {
             Map<String, String[]> parameters = new HashMap<>();
 
-            StringBuilder queryString = SearchConditionUtils.buildQueryString(parameters);
+            String queryString = SearchConditionUtils.buildQueryString(parameters);
             assertThat(queryString.toString()).isEqualTo("");
         }
 
@@ -142,7 +142,7 @@ public class QueryUtilsTest {
             Map<String, String[]> parameters = new HashMap<>();
             parameters.put("start_date", new String[]{"2023-05-11"});
 
-            StringBuilder queryBuilder = SearchConditionUtils.buildQueryString(parameters);
+            String queryBuilder = SearchConditionUtils.buildQueryString(parameters);
 
             assertThat(queryBuilder.toString()).isEqualTo("start_date=2023-05-11");
         }
@@ -153,7 +153,7 @@ public class QueryUtilsTest {
             Map<String, String[]> parameters = new HashMap<>();
             parameters.put("end_date", new String[]{"2023-05-11"});
 
-            StringBuilder queryBuilder = SearchConditionUtils.buildQueryString(parameters);
+            String queryBuilder = SearchConditionUtils.buildQueryString(parameters);
 
             assertThat(queryBuilder.toString()).isEqualTo("end_date=2023-05-11");
         }
@@ -164,7 +164,7 @@ public class QueryUtilsTest {
             Map<String, String[]> parameters = new LinkedHashMap<>();
             parameters.put("keyword", new String[]{"소프트웨어 장인"});
 
-            StringBuilder queryBuilder = SearchConditionUtils.buildQueryString(parameters);
+            String queryBuilder = SearchConditionUtils.buildQueryString(parameters);
 
             assertThat(queryBuilder.toString()).isEqualTo("keyword=소프트웨어 장인");
         }
@@ -175,7 +175,7 @@ public class QueryUtilsTest {
             Map<String, String[]> parameters = new LinkedHashMap<>();
             parameters.put("category_idx", new String[]{"1"});
 
-            StringBuilder queryBuilder = SearchConditionUtils.buildQueryString(parameters);
+            String queryBuilder = SearchConditionUtils.buildQueryString(parameters);
 
             assertThat(queryBuilder.toString()).isEqualTo("category_idx=1");
         }
@@ -188,7 +188,7 @@ public class QueryUtilsTest {
         parameters.put("start_date", new String[]{"2023-05-11"});
         parameters.put("end_date", new String[]{"2023-05-20"});
 
-        StringBuilder queryBuilder = SearchConditionUtils.buildQueryString(parameters);
+        String queryBuilder = SearchConditionUtils.buildQueryString(parameters);
 
         assertThat(queryBuilder.toString()).isEqualTo("start_date=2023-05-11&end_date=2023-05-20");
     }
@@ -200,7 +200,7 @@ public class QueryUtilsTest {
         parameters.put("end_date", new String[]{"2023-05-20"});
         parameters.put("keyword", new String[]{"소프트웨어 장인"});
 
-        StringBuilder queryBuilder = SearchConditionUtils.buildQueryString(parameters);
+        String queryBuilder = SearchConditionUtils.buildQueryString(parameters);
 
         assertThat(queryBuilder.toString()).isEqualTo("end_date=2023-05-20&keyword=소프트웨어 장인");
     }
