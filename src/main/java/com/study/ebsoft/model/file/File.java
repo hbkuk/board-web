@@ -9,27 +9,27 @@ import java.util.stream.Stream;
 @Getter
 public class File {
     private final FileIdx fileIdx;
-    private final String saveFileName;
+    private final String savedFileName;
     private final FileOriginalName originalName;
     private final FileSize fileSize;
     private final BoardIdx boardIdx;
 
-    public File(FileIdx fileIdx, String saveFileName, FileOriginalName originalName,
+    public File(FileIdx fileIdx, String savedFileName, FileOriginalName originalName,
                 FileSize fileSize, BoardIdx boardIdx) {
         this.fileIdx = fileIdx;
-        this.saveFileName = saveFileName;
+        this.savedFileName = savedFileName;
         this.originalName = originalName;
         this.fileSize = fileSize;
         this.boardIdx = boardIdx;
     }
 
-    public File(String saveFileName, FileOriginalName originalName, FileSize fileSize) {
-        this(new FileIdx(0), saveFileName, originalName, fileSize, new BoardIdx(0));
+    public File(String savedFileName, FileOriginalName originalName, FileSize fileSize) {
+        this(new FileIdx(0), savedFileName, originalName, fileSize, new BoardIdx(0));
     }
 
     public File(Builder builder) {
         this.fileIdx = builder.FileIdx;
-        this.saveFileName = builder.saveFileName;
+        this.savedFileName = builder.saveFileName;
         this.originalName = builder.originalFileName;
         this.fileSize = builder.fileSize;
         this.boardIdx = builder.boardIdx;

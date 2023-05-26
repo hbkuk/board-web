@@ -49,7 +49,7 @@ public class FileDAO {
                 log.debug("resultSet.getString(saved_name) : {}", resultSet.getString("saved_name"));
                 log.debug("resultSet.getString(original_name) : {}", resultSet.getString("original_name"));
                 fileDTO = new FileDTO();
-                fileDTO.setSaveFileName(resultSet.getString("saved_name"));
+                fileDTO.setSavedFileName(resultSet.getString("saved_name"));
                 fileDTO.setOriginalFileName(resultSet.getString("original_name"));
                 return fileDTO;
             }
@@ -90,7 +90,7 @@ public class FileDAO {
             while (resultSet.next()) {
                 FileDTO fileDTO = new FileDTO();
                 fileDTO.setFileIdx(resultSet.getLong("file_idx"));
-                fileDTO.setSaveFileName(resultSet.getString("saved_name"));
+                fileDTO.setSavedFileName(resultSet.getString("saved_name"));
                 fileDTO.setOriginalFileName(resultSet.getString("original_name"));
                 fileDTO.setFileSize(resultSet.getInt("size"));
                 fileDTO.setBoardIdx(resultSet.getLong("board_idx"));
@@ -160,13 +160,13 @@ public class FileDAO {
         PreparedStatement preparedStatement = null;
 
         FileDTO fileDTO = null;
-        log.debug("File Save -> Save File Name : {} ", file.getSaveFileName());
+        log.debug("File Save -> Save File Name : {} ", file.getSavedFileName());
 
         try {
             driverFind();
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3316/ebsoft", "ebsoft", "123456");
             preparedStatement = connection.prepareStatement(SAVE);
-            preparedStatement.setString(1, file.getSaveFileName());
+            preparedStatement.setString(1, file.getSavedFileName());
             preparedStatement.setString(2, file.getOriginalName().getFileName());
             preparedStatement.setInt(3, file.getFileSize().getImageSize());
             preparedStatement.setLong(4, boardIdx);
