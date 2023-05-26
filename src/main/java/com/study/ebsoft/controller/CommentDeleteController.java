@@ -2,7 +2,7 @@ package com.study.ebsoft.controller;
 
 import com.study.core.mvc.Controller;
 import com.study.ebsoft.dto.CommentDTO;
-import com.study.ebsoft.repository.comment.CommentDAO;
+import com.study.ebsoft.service.BoardService;
 import com.study.ebsoft.utils.SearchConditionUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,6 +12,12 @@ import java.io.Serializable;
 
 public class CommentDeleteController extends Controller implements Serializable {
 
+    private BoardService boardService;
+
+    public CommentDeleteController(BoardService boardService) {
+        this.boardService = boardService;
+    }
+
     public void process(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String searchConditionQueryString = SearchConditionUtils.buildQueryString(req.getParameterMap()).toString();
 
@@ -20,14 +26,7 @@ public class CommentDeleteController extends Controller implements Serializable 
         deleteComment.setBoardIdx(Long.parseLong(req.getParameter("board_idx")));
         deleteComment.setPassword(req.getParameter("password"));
 
-        CommentDTO commentDTO = CommentDAO.getInstance().findByCommentIdx(deleteComment.getCommentIdx());
-
-        if (!commentDTO.getPassword().equals(deleteComment.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 다릅니다.");
-        }
-        CommentDAO.getInstance().deleteCommentByCommentIdx(deleteComment);
-
-        long boardIdx = deleteComment.getBoardIdx();
+        long boardIdx = boardService.deleteCommentByCommentIdx(deleteComment);
 
         // 저장 후 이동
         if (searchConditionQueryString.isEmpty()) {

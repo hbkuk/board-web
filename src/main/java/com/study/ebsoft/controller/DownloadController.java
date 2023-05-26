@@ -9,7 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.IOException;
+import java.io.Serializable;
 
 @Slf4j
 public class DownloadController extends Controller implements Serializable {
@@ -18,7 +19,7 @@ public class DownloadController extends Controller implements Serializable {
         FileDTO fileDTO = FileDAO.getInstance().findFileNameById(Long.parseLong(req.getParameter("file_idx")));
 
         try {
-            FileUtils.serveDownloadFile(req, resp, fileDTO.getSaveFileName(), fileDTO.getOriginalFileName());
+            FileUtils.serveDownloadFile(req, resp, fileDTO.getSavedFileName(), fileDTO.getOriginalFileName());
         } catch (Exception e) {
             // TODO: 에러 페이지로 send_redirect 할것.
             throw new RuntimeException(e);

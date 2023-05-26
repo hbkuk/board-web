@@ -1,6 +1,11 @@
 package com.study.core.mvc;
 
 import com.study.ebsoft.controller.*;
+import com.study.ebsoft.repository.board.BoardDAO;
+import com.study.ebsoft.repository.category.CategoryDAO;
+import com.study.ebsoft.repository.comment.CommentDAO;
+import com.study.ebsoft.repository.file.FileDAO;
+import com.study.ebsoft.service.BoardService;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.ServletException;
@@ -19,21 +24,23 @@ import java.util.Map;
 @WebServlet(name = "dispatcher", urlPatterns = "/", loadOnStartup = 1)
 public class DispatcherServlet extends HttpServlet {
     private Map<String, Controller> requestMap;
+    private BoardService boardService = new BoardService(
+            BoardDAO.getInstance(), CommentDAO.getInstance(), CategoryDAO.getInstance(), FileDAO.getInstance());
 
     @Override
     public void init() {
         requestMap = new HashMap<>();
 
-        requestMap.put("/boards", new ShowBoardsController());
-        requestMap.put("/board", new ShowBoardController());
-        requestMap.put("/board/write/form", new WriteBoardFormController());
-        requestMap.put("/board/modify/form", new ModifyBoardFormController());
-        requestMap.put("/board/delete/form", new DeleteBoardFormController());
-        requestMap.put("/board/delete", new DeleteBoardController());
-        requestMap.put("/comment/delete", new CommentDeleteController());
-        requestMap.put("/board/modify", new ModifyBoardController());
-        requestMap.put("/board/write", new WriteBoardController());
-        requestMap.put("/comment/write", new WriteCommentController());
+        requestMap.put("/boards", new ShowBoardsController(boardService));
+        requestMap.put("/board", new ShowBoardController(boardService));
+        requestMap.put("/board/write/form", new WriteBoardFormController(boardService));
+        requestMap.put("/board/modify/form", new ModifyBoardFormController(boardService));
+        requestMap.put("/board/delete/form", new DeleteBoardFormController(boardService));
+        requestMap.put("/board/delete", new DeleteBoardController(boardService));
+        requestMap.put("/comment/delete", new CommentDeleteController(boardService));
+        requestMap.put("/board/modify", new ModifyBoardController(boardService));
+        requestMap.put("/board/write", new WriteBoardController(boardService));
+        requestMap.put("/comment/write", new WriteCommentController(boardService));
         requestMap.put("/download", new DownloadController());
     }
 
@@ -49,7 +56,6 @@ public class DispatcherServlet extends HttpServlet {
             controller.process(req, resp);
         } else {
             log.error("Throw Exception!!!");
-            throw new RuntimeException();
         }
     }
 }
