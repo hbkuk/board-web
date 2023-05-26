@@ -1,5 +1,6 @@
 package com.study.model.file;
 
+import com.study.ebsoft.model.file.FileIdx;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;

@@ -1,5 +1,6 @@
 package com.study.model.board;
 
+import com.study.ebsoft.model.board.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

@@ -1,4 +1,4 @@
-<%@ page import="com.study.dto.CategoryDTO" %>
+<%@ page import="com.study.ebsoft.dto.CategoryDTO" %>
 <%@ page import="java.util.List" %>
 <%@page isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>

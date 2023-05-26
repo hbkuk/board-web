@@ -1,7 +1,10 @@
 package com.study.model.comment;
 
-import com.study.model.board.BoardIdx;
-import com.study.model.board.Password;
+import com.study.ebsoft.model.board.BoardIdx;
+import com.study.ebsoft.model.board.Password;
+import com.study.ebsoft.model.comment.Comment;
+import com.study.ebsoft.model.comment.CommentContent;
+import com.study.ebsoft.model.comment.CommentWriter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

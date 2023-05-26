@@ -1,6 +1,9 @@
 package com.study.model.file;
 
-import com.study.model.board.BoardIdx;
+import com.study.ebsoft.model.board.BoardIdx;
+import com.study.ebsoft.model.file.File;
+import com.study.ebsoft.model.file.FileOriginalName;
+import com.study.ebsoft.model.file.FileSize;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

@@ -1,6 +1,6 @@
-<%@ page import="com.study.dto.BoardDTO" %>
+<%@ page import="com.study.ebsoft.dto.BoardDTO" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.study.dto.CategoryDTO" %>
+<%@ page import="com.study.ebsoft.dto.CategoryDTO" %>
 <%@ page import="java.time.LocalDate" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
 <%@page isELIgnored="false" %>

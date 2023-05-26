@@ -1,5 +1,6 @@
 package com.study.model.comment;
 
+import com.study.ebsoft.model.comment.CommentWriter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

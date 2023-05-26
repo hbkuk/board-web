@@ -1,14 +1,14 @@
 package com.study.service;
 
-import com.study.dto.BoardDTO;
-import com.study.model.board.*;
-import com.study.model.file.File;
-import com.study.model.file.FileOriginalName;
-import com.study.model.file.FileSize;
-import com.study.repository.board.BoardDAO;
-import com.study.repository.category.CategoryDAO;
-import com.study.repository.comment.CommentDAO;
-import com.study.repository.file.FileDAO;
+import com.study.ebsoft.dto.BoardDTO;
+import com.study.ebsoft.model.board.*;
+import com.study.ebsoft.model.file.File;
+import com.study.ebsoft.model.file.FileOriginalName;
+import com.study.ebsoft.model.file.FileSize;
+import com.study.ebsoft.repository.board.BoardDAO;
+import com.study.ebsoft.repository.category.CategoryDAO;
+import com.study.ebsoft.repository.comment.CommentDAO;
+import com.study.ebsoft.repository.file.FileDAO;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InOrder;
