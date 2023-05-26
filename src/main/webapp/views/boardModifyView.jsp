@@ -19,7 +19,7 @@
     <h1>게시판 - 등록</h1>
     <form action="/board/modify<%= searchConditionQueryString.isEmpty() ? "" : "?" + searchConditionQueryString %>" method="post" name="wfrm" enctype="multipart/form-data">
     <input type="hidden" name="board_idx" value="<%=board.getBoardIdx()%>" />
-        <input type="hidden" name="category" value="<%=board.getCategoryIdx()%>" />
+        <input type="hidden" name="category_idx" value="<%=board.getCategoryIdx()%>" />
         <div class="contents_sub" style="margin-top: 50px;">
             <!--게시판-->
             <div class="board_write">
