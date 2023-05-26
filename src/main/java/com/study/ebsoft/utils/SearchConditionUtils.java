@@ -2,11 +2,13 @@ package com.study.ebsoft.utils;
 
 import lombok.extern.slf4j.Slf4j;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 /**
- * 웹 브라우저가 전송한 파라미터 맵에서 검색조건(Search Condition) 파라미터를 추출해서
+ * 웹 브라우저가 전송한 파리미터에서 검색조건(Search Condition) 파라미터를 추출해서
  * SQL 쿼리(Query) 또는 쿼리 스트링(Query String) 으로 반환하는 유틸 클래스
  */
 @Slf4j
@@ -32,6 +34,9 @@ public class SearchConditionUtils {
     private static final String[] SEARCH_CONDITIONS =
             {START_DATE_PARAMETER_KEY, END_DATE_PARAMETER_KEY,
                     KEYWORD_PARAMETER_KEY, CATEGORY_IDX_PARAMETER_KEY};
+    
+    private static final int DEFAULT_MINUS_YEARS = 1;
+    private static final String DATE_FORMAT = "yyyy-MM-dd";
 
     /**
      * 파라미터 맵에서 쿼리 스트링(Query String)을 생성하여 문자열을 반환합니다.
@@ -83,7 +88,6 @@ public class SearchConditionUtils {
 
         queryBuilder.append(" WHERE ");
         for (String key : parameterMap.keySet()) {
-
             if (isKeyWord(key)) {
                 queryBuilder.append(
                         String.format(KEYWORD_CONDITION_QUERY,
@@ -191,5 +195,65 @@ public class SearchConditionUtils {
         if (startDate.isAfter(endDate)) {
             throw new IllegalArgumentException("시작 날짜보다 종료 날짜가 클 수 없습니다.");
         }
+    }
+
+    /**
+     * 요청 파라미터에 시작 날짜가 있는 경우 그 값을, 아니라면 현재 날짜를 {yyyy-mm-dd} 형태의 문자열로 반환한다.
+     *
+     * @param request 요청 정보를 담고있는 객체
+     * @return 시작 날짜가 있는 경우 그 값을, 아니라면 현재 날짜를 반환
+     */
+    public static String hasParamStartDate(HttpServletRequest request) {
+        LocalDate defaultStartDate = LocalDate.now().minusYears(DEFAULT_MINUS_YEARS);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
+        String startDate = defaultStartDate.format(formatter);
+
+        if (request.getParameter(START_DATE_PARAMETER_KEY) != null) {
+            startDate = request.getParameter(START_DATE_PARAMETER_KEY);
+        }
+        return startDate;
+    }
+
+    /**
+     * 요청 파라미터에 종료 날짜가 있는 경우 그 값을, 아니라면 현재 날짜를 {yyyy-mm-dd} 형태의 문자열로 반환한다.
+     *
+     * @param request 요청 정보를 담고있는 객체
+     * @return 종료 날짜가 있는 경우 그 값을, 아니라면 현재 날짜를 반환
+     */
+    public static String hasParamEndDate(HttpServletRequest request) {
+        LocalDate defaultStartDate =  LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
+        String end_date = defaultStartDate.format(formatter);
+
+        if (request.getParameter(END_DATE_PARAMETER_KEY) != null) {
+            end_date = request.getParameter(END_DATE_PARAMETER_KEY);
+        }
+        return end_date;
+    }
+
+    /**
+     * 요청 파라미터에 검색 키워드가 있는 경우 그 값을, 아니라면 빈 문자열("")을 반환한다.
+     * 
+     * @param request 요청 정보를 담고있는 객체
+     * @return 검색 키워드가 있는 경우 그 값을, 아니라면 빈 문자열("")을 반환
+     */
+    public static String hasParamKeyword(HttpServletRequest request) {
+        if (request.getParameter(KEYWORD_PARAMETER_KEY) != null) {
+            return request.getParameter(KEYWORD_PARAMETER_KEY);
+        }
+        return "";
+    }
+
+    /**
+     * 요청 파라미터에 카테고리 번호가 있는 경우 그 값을, 아니라면 기본 번호(0)을 반환한다.
+     *
+     * @param request 요청 정보를 담고있는 객체
+     * @return 카테고리 번호가 있는 경우 그 값을, 아니라면 기본 번호(0)을 반환
+     */
+    public static int hasParamCategoryIdx(HttpServletRequest request) {
+        if (request.getParameter(CATEGORY_IDX_PARAMETER_KEY) != null) {
+            return Integer.parseInt(request.getParameter(CATEGORY_IDX_PARAMETER_KEY));
+        }
+        return 0;
     }
 }
