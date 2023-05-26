@@ -1,5 +1,6 @@
 window.onload = function () {
     document.getElementById("wbtn").onclick = function () {
+
         if (document.wfrm.writer.value.trim() === '') {
             alert("글쓴이를 입력하셔야 합니다.");
             return false;

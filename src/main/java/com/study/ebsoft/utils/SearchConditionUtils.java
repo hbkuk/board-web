@@ -203,7 +203,7 @@ public class SearchConditionUtils {
      * @param request 요청 정보를 담고있는 객체
      * @return 시작 날짜가 있는 경우 그 값을, 아니라면 현재 날짜를 반환
      */
-    public static String hasParamStartDate(HttpServletRequest request) {
+    public static String getParamStartDate(HttpServletRequest request) {
         LocalDate defaultStartDate = LocalDate.now().minusYears(DEFAULT_MINUS_YEARS);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
         String startDate = defaultStartDate.format(formatter);
@@ -220,7 +220,7 @@ public class SearchConditionUtils {
      * @param request 요청 정보를 담고있는 객체
      * @return 종료 날짜가 있는 경우 그 값을, 아니라면 현재 날짜를 반환
      */
-    public static String hasParamEndDate(HttpServletRequest request) {
+    public static String getParamEndDate(HttpServletRequest request) {
         LocalDate defaultStartDate =  LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
         String end_date = defaultStartDate.format(formatter);
@@ -237,7 +237,7 @@ public class SearchConditionUtils {
      * @param request 요청 정보를 담고있는 객체
      * @return 검색 키워드가 있는 경우 그 값을, 아니라면 빈 문자열("")을 반환
      */
-    public static String hasParamKeyword(HttpServletRequest request) {
+    public static String getParamKeyword(HttpServletRequest request) {
         if (request.getParameter(KEYWORD_PARAMETER_KEY) != null) {
             return request.getParameter(KEYWORD_PARAMETER_KEY);
         }
@@ -250,7 +250,7 @@ public class SearchConditionUtils {
      * @param request 요청 정보를 담고있는 객체
      * @return 카테고리 번호가 있는 경우 그 값을, 아니라면 기본 번호(0)을 반환
      */
-    public static int hasParamCategoryIdx(HttpServletRequest request) {
+    public static int getParamCategoryIdx(HttpServletRequest request) {
         if (request.getParameter(CATEGORY_IDX_PARAMETER_KEY) != null) {
             return Integer.parseInt(request.getParameter(CATEGORY_IDX_PARAMETER_KEY));
         }

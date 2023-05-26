@@ -26,8 +26,8 @@
                     <tr>
                         <th class="top">카테고리</th>
                         <td class="top" colspan="3">
-                            <select id="category" name="category">
-                                <option value="전체">카테고리 선택</option>
+                            <select id="category" name="category_idx">
+                                <option value="all">카테고리 선택</option>
                                 <c:forEach items="<%=categorys%>" var="category">
                                     <option value="${category.categoryIdx}">${category.category}</option>
                                 </c:forEach>

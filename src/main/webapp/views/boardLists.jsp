@@ -30,15 +30,15 @@
         <form id="search" action="/boards" method='get'>
             <table style="border: 1px solid #ccc; padding: 10px;">
                 <tr style="text-align: center;">
-                    <c:set var="paramStartDate" value="<%=SearchConditionUtils.hasParamStartDate((HttpServletRequest) request)%>"/>
-                    <c:set var="paramEndDate" value="<%=SearchConditionUtils.hasParamEndDate((HttpServletRequest) request)%>"/>
+                    <c:set var="paramStartDate" value="<%=SearchConditionUtils.getParamStartDate((HttpServletRequest) request)%>"/>
+                    <c:set var="paramEndDate" value="<%=SearchConditionUtils.getParamEndDate((HttpServletRequest) request)%>"/>
                     <td width="30%">등록일 | <input class="currentDate" type="date" name="start_date"
                                                  value="${paramStartDate}" placeholder="시작 날짜"> ~ <input
                             class="currentDate" type="date" name="end_date" value="${paramEndDate}" placeholder="끝 날짜">
                     </td>
                     <td><select id="category">
                         <option value="all">전체 카테고리</option>
-                        <c:set var="paramCategoryIdx" value="<%=SearchConditionUtils.hasParamCategoryIdx((HttpServletRequest) request)%>"/>
+                        <c:set var="paramCategoryIdx" value="<%=SearchConditionUtils.getParamCategoryIdx((HttpServletRequest) request)%>"/>
                         <c:set var="categorys" value="<%=categorys%>"/>
                         <c:forEach items="${categorys}" var="category">
                             <c:choose>
@@ -51,7 +51,7 @@
                             </c:choose>
                         </c:forEach>
                     </select> |
-                        <c:set var="paramKeyword" value="<%=SearchConditionUtils.hasParamKeyword((HttpServletRequest) request)%>"/>
+                        <c:set var="paramKeyword" value="<%=SearchConditionUtils.getParamKeyword((HttpServletRequest) request)%>"/>
                         <input type="text" name="keyword" value="${paramKeyword}"
                                placeholder="검색어를 입력해 주세요. (제목+작성자+내용)" style="width: 500px;"> |
                         <button id="submitButton">Search</button>
