@@ -41,7 +41,7 @@ public class SearchConditionUtils {
     /**
      * 파라미터 맵에서 쿼리 스트링(Query String)을 생성하여 문자열을 반환합니다.
      *
-     * @param parameterMap 쿼리 스트링에 사용되는 매개변수 맵입니다.
+     * @param parameterMap 쿼리 스트링에 사용되는 파라미터 맵입니다.
      */
     public static String buildQueryString(Map<String, String[]> parameterMap) {
         StringBuilder queryBuilder = new StringBuilder();
@@ -73,7 +73,7 @@ public class SearchConditionUtils {
     /**
      * 파라미터 맵에서 쿼리(Query)를 생성하여 문자열을 반환합니다.
      *
-     * @param parameterMap 쿼리 생성에 사용되는 매개변수 맵입니다.
+     * @param parameterMap 쿼리 생성에 사용되는 파라미터 맵입니다.
      */
     public static String buildQueryCondition(Map<String, String[]> parameterMap) {
         StringBuilder queryBuilder = new StringBuilder();
@@ -87,27 +87,27 @@ public class SearchConditionUtils {
         }
 
         queryBuilder.append(" WHERE ");
-        for (String key : parameterMap.keySet()) {
-            if (isKeyWord(key)) {
+        for (String paramName : parameterMap.keySet()) {
+            if (isKeyWord(paramName)) {
                 queryBuilder.append(
                         String.format(KEYWORD_CONDITION_QUERY,
-                                parameterMap.get(key)[0], parameterMap.get(key)[0], parameterMap.get(key)[0]));
+                                parameterMap.get(paramName)[0], parameterMap.get(paramName)[0], parameterMap.get(paramName)[0]));
                 queryBuilder.append(" AND ");
             }
 
-            if (isCategory(key)) {
+            if (isCategory(paramName)) {
                 queryBuilder.append(
-                        String.format(CATEGORY_CONDITION_QUERY, Integer.parseInt(parameterMap.get(key)[0])));
+                        String.format(CATEGORY_CONDITION_QUERY, Integer.parseInt(parameterMap.get(paramName)[0])));
                 queryBuilder.append(" AND ");
             }
 
-            if (isStartDate(key)) {
-                queryBuilder.append(String.format(START_DATE_CONDITION_QUERY, parameterMap.get(key)[0]));
+            if (isStartDate(paramName)) {
+                queryBuilder.append(String.format(START_DATE_CONDITION_QUERY, parameterMap.get(paramName)[0]));
                 queryBuilder.append(" AND ");
             }
 
-            if (isEndDate(key)) {
-                queryBuilder.append(String.format(END_DATE_CONDITION_QUERY, parameterMap.get(key)[0]));
+            if (isEndDate(paramName)) {
+                queryBuilder.append(String.format(END_DATE_CONDITION_QUERY, parameterMap.get(paramName)[0]));
                 queryBuilder.append(" AND ");
             }
             log.debug("Query Builder Append" + queryBuilder);
@@ -120,7 +120,7 @@ public class SearchConditionUtils {
     /**
      * 파라미터 맵이 적어도 하나의 검색 조건을 가지고 있다면 true를 반환하고, 그렇지 않은 경우 false를 반환합니다.
      *
-     * @param parameterMap 쿼리 생성에 사용되는 매개변수 맵입니다.
+     * @param parameterMap 쿼리 생성에 사용되는 파라미터 맵입니다.
      * @return 검색 조건을 가지고 있다면 true를 반환하고, 그렇지 않은 경우 false를 반환합니다.
      */
     private static boolean hasLeastOneSearchCondition(Map<String, String[]> parameterMap) {
@@ -137,41 +137,41 @@ public class SearchConditionUtils {
     /**
      * 주어진 키가 키워드를 나타내는 문자열인 경우 true를 반환하고, 그렇지 않은 경우 false를 반환합니다.
      *
-     * @param key 매개변수의 키
+     * @param paramName 매개변수의 이름
      * @return 키가 키워드 문자열인 경우 true, 그렇지 않은 경우 false를 반환합니다.
      */
-    private static boolean isKeyWord(String key) {
-        return key.equals(KEYWORD_PARAMETER_KEY);
+    private static boolean isKeyWord(String paramName) {
+        return paramName.equals(KEYWORD_PARAMETER_KEY);
     }
 
     /**
      * 주어진 키가 카테고리를 나타내는 문자열인 경우 true를 반환하고, 그렇지 않은 경우 false를 반환합니다.
      *
-     * @param key 매개변수의 키
+     * @param paramName 매개변수의 이름
      * @return 키가 검색 문자열인 경우 true, 그렇지 않은 경우 false를 반환합니다.
      */
-    private static boolean isCategory(String key) {
-        return key.equals(CATEGORY_IDX_PARAMETER_KEY);
+    private static boolean isCategory(String paramName) {
+        return paramName.equals(CATEGORY_IDX_PARAMETER_KEY);
     }
 
     /**
      * 주어진 키가 시작 날짜 나타내는 문자열인 경우 true를 반환하고, 그렇지 않은 경우 false를 반환합니다.
      *
-     * @param key 매개변수의 키
+     * @param paramName 매개변수의 이름
      * @return 키가 시작 날짜 문자열인 경우 true, 그렇지 않은 경우 false를 반환합니다.
      */
-    private static boolean isStartDate(String key) {
-        return key.equals(START_DATE_PARAMETER_KEY);
+    private static boolean isStartDate(String paramName) {
+        return paramName.equals(START_DATE_PARAMETER_KEY);
     }
 
     /**
-     * 주어진 키가 종료 날짜 나타내는 문자열인 경우 true를 반환하고, 그렇지 않은 경우 false를 반환합니다.
+     * 매개변수의 이름이 종료 날짜 나타내는 문자열인 경우 true를 반환하고, 그렇지 않은 경우 false를 반환합니다.
      *
-     * @param key 매개변수의 키
+     * @param paramName 매개변수의 이름
      * @return 키가 종료 날짜 문자열인 경우 true, 그렇지 않은 경우 false를 반환합니다.
      */
-    private static boolean isEndDate(String key) {
-        return key.equals(END_DATE_PARAMETER_KEY);
+    private static boolean isEndDate(String paramName) {
+        return paramName.equals(END_DATE_PARAMETER_KEY);
     }
 
     /**
@@ -187,7 +187,7 @@ public class SearchConditionUtils {
     /**
      * 시작일이 종료일보다 큰 경우, 예외를 발생시킵니다.
      *
-     * @param parameterMap 쿼리 생성에 사용되는 매개변수 맵입니다.
+     * @param parameterMap 쿼리 생성에 사용되는 파라미터 맵입니다.
      */
     private static void isDateRange(Map<String, String[]> parameterMap) {
         LocalDate startDate = LocalDate.parse(parameterMap.get(START_DATE_PARAMETER_KEY)[0]);
