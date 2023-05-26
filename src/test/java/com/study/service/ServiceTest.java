@@ -1,6 +1,7 @@
 package com.study.service;
 
 import com.study.ebsoft.dto.BoardDTO;
+import com.study.ebsoft.dto.FileDTO;
 import com.study.ebsoft.model.board.*;
 import com.study.ebsoft.model.file.File;
 import com.study.ebsoft.model.file.FileOriginalName;
@@ -9,6 +10,7 @@ import com.study.ebsoft.repository.board.BoardDAO;
 import com.study.ebsoft.repository.category.CategoryDAO;
 import com.study.ebsoft.repository.comment.CommentDAO;
 import com.study.ebsoft.repository.file.FileDAO;
+import com.study.ebsoft.service.BoardService;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InOrder;
@@ -24,7 +26,6 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.mockito.Mockito.*;
 
-@Disabled
 @ExtendWith(MockitoExtension.class)
 public class ServiceTest {
 
@@ -37,6 +38,13 @@ public class ServiceTest {
     @Mock
     private CategoryDAO categoryDAO;
 
+    private BoardService boardService;
+
+    @BeforeEach
+    void sertup() {
+        boardService = new BoardService(boardDAO, commentDAO, categoryDAO, fileDAO);
+    }
+
         @Nested
         @DisplayName("게시글이 가져올때")
         class getBoard {
@@ -48,7 +56,7 @@ public class ServiceTest {
                 when(boardDAO.increaseHitCount(1)).thenReturn(null);
 
                 assertThatExceptionOfType(NoSuchElementException.class)
-                        .isThrownBy(() -> {boardService.getBoardWithDetails(1);})
+                        .isThrownBy(() -> {boardService.findBoardWithDetails(1);})
                         .withMessageMatching("해당 글을 찾을 수 없습니다.");
             }
 
@@ -62,7 +70,7 @@ public class ServiceTest {
                 when(boardDAO.findById(boardIdx)).thenReturn(boardDTO);
 
                 // when
-                boardService.getBoardWithDetails(boardIdx);
+                boardService.findBoardWithDetails(boardIdx);
 
                 // then
                 InOrder inOrder = inOrder(boardDAO, commentDAO, fileDAO);
@@ -168,7 +176,7 @@ public class ServiceTest {
                     when(boardDAO.findById(boardIdx)).thenReturn(boardDTO);
 
                     // when
-                    boardService.getBoardWithImages(boardIdx);
+                    boardService.findBoardWithImages(boardIdx);
 
                     // then
                     InOrder inOrder = inOrder(boardDAO, fileDAO);
@@ -184,7 +192,7 @@ public class ServiceTest {
                     when(boardDAO.findById(1L)).thenReturn(null);
 
                     assertThatExceptionOfType(NoSuchElementException.class)
-                            .isThrownBy(() -> {boardService.getBoardWithImages(1L);})
+                            .isThrownBy(() -> {boardService.findBoardWithImages(1L);})
                             .withMessageMatching("해당 글을 찾을 수 없습니다.");
                 }
             }
@@ -292,11 +300,20 @@ public class ServiceTest {
                     List<Long> fileIndexesToDelete = new ArrayList<>(dbFileIndexes);
                     fileIndexesToDelete.removeAll(previouslyUploadedIndexes);
 
+                    FileDTO fileA = new FileDTO();
+                    fileA.setSavedFileName("image1.jpg");
+
+                    FileDTO fileB = new FileDTO();
+                    fileB.setSavedFileName("image2.jpg");
+
+                    FileDTO fileC = new FileDTO();
+                    fileC.setSavedFileName("image3.jpg");
+
                     when(boardDAO.update(updateBoard)).thenReturn(updateReturnBoardDTO);
                     when(fileDAO.findFileIndexesByBoardId(boardIdx)).thenReturn(dbFileIndexes);
-                    when(fileDAO.findSavedFileNameById(10L)).thenReturn("image1.jpg");
-                    when(fileDAO.findSavedFileNameById(11L)).thenReturn("image2.jpg");
-                    when(fileDAO.findSavedFileNameById(12L)).thenReturn("image3.jpg");
+                    when(fileDAO.findFileNameById(10L)).thenReturn(fileA);
+                    when(fileDAO.findFileNameById(11L)).thenReturn(fileB);
+                    when(fileDAO.findFileNameById(12L)).thenReturn(fileC);
 
                     // when
                     boardService.updateBoardWithImages(updateBoard, newUploadFiles, previouslyUploadedIndexes);
@@ -373,13 +390,22 @@ public class ServiceTest {
             actureBoardDTO.setBoardIdx(boardIdx);
             actureBoardDTO.setPassword("qudrnr132!");
 
+            FileDTO fileA = new FileDTO();
+            fileA.setSavedFileName("image1.jpg");
+
+            FileDTO fileB = new FileDTO();
+            fileB.setSavedFileName("image2.jpg");
+
+            FileDTO fileC = new FileDTO();
+            fileC.setSavedFileName("image3.jpg");
+
             List<Long> dbFileIndexes = Arrays.asList(10L, 11L, 12L);
 
             when(boardDAO.findById(boardIdx)).thenReturn(actureBoardDTO);
             when(fileDAO.findFileIndexesByBoardId(deleteBoardDTO.getBoardIdx())).thenReturn(dbFileIndexes);
-            when(fileDAO.findSavedFileNameById(10L)).thenReturn("image1.jpg");
-            when(fileDAO.findSavedFileNameById(11L)).thenReturn("image2.jpg");
-            when(fileDAO.findSavedFileNameById(12L)).thenReturn("image3.jpg");
+            when(fileDAO.findFileNameById(10L)).thenReturn(fileA);
+            when(fileDAO.findFileNameById(11L)).thenReturn(fileB);
+            when(fileDAO.findFileNameById(12L)).thenReturn(fileC);
 
             // when
             boardService.deleteBoardWithFilesAndComment(deleteBoardDTO);
