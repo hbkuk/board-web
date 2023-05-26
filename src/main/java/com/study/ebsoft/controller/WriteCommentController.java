@@ -1,5 +1,6 @@
 package com.study.ebsoft.controller;
 
+import com.study.core.mvc.AbstractController;
 import com.study.core.mvc.Controller;
 import com.study.ebsoft.dto.CommentDTO;
 import com.study.ebsoft.model.board.BoardIdx;
@@ -14,10 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.Serializable;
 
 @Slf4j
-public class WriteCommentController extends Controller implements Serializable {
+public class WriteCommentController extends AbstractController implements Controller {
 
     private BoardService boardService;
 
@@ -25,7 +25,7 @@ public class WriteCommentController extends Controller implements Serializable {
         this.boardService = boardService;
     }
 
-    public void process(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    public void doPost(HttpServletRequest req, HttpServletResponse resp) {
         String searchConditionQueryString = SearchConditionUtils.buildQueryString(req.getParameterMap()).toString();
 
         Comment comment = new Comment(
@@ -37,10 +37,14 @@ public class WriteCommentController extends Controller implements Serializable {
         CommentDTO commentDTO = boardService.saveComment(comment);
 
         // 저장 후 이동
-        if (searchConditionQueryString.isEmpty()) {
-            resp.sendRedirect(String.format("/board?board_idx=%d", commentDTO.getBoardIdx()));
-        } else {
-            resp.sendRedirect(String.format("/board?board_idx=%d&%s", commentDTO.getBoardIdx(), searchConditionQueryString));
+        try {
+            if (searchConditionQueryString.isEmpty()) {
+                resp.sendRedirect(String.format("/board?board_idx=%d", commentDTO.getBoardIdx()));
+            } else {
+                resp.sendRedirect(String.format("/board?board_idx=%d&%s", commentDTO.getBoardIdx(), searchConditionQueryString));
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }

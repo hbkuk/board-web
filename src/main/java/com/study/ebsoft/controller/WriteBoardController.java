@@ -1,6 +1,7 @@
 package com.study.ebsoft.controller;
 
 import com.oreilly.servlet.MultipartRequest;
+import com.study.core.mvc.AbstractController;
 import com.study.core.mvc.Controller;
 import com.study.ebsoft.dto.BoardDTO;
 import com.study.ebsoft.model.board.Board;
@@ -14,11 +15,10 @@ import lombok.extern.slf4j.Slf4j;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.List;
 
 @Slf4j
-public class WriteBoardController extends Controller implements Serializable {
+public class WriteBoardController extends AbstractController implements Controller {
 
     private BoardService boardService;
 
@@ -26,7 +26,7 @@ public class WriteBoardController extends Controller implements Serializable {
         this.boardService = boardService;
     }
 
-    public void process(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    public void doPost(HttpServletRequest req, HttpServletResponse resp) {
         String searchConditionQueryString = SearchConditionUtils.buildQueryString(req.getParameterMap()).toString();
 
         // 파일 업로드
@@ -39,10 +39,14 @@ public class WriteBoardController extends Controller implements Serializable {
         BoardDTO boardDTO = boardService.saveBoardWithImages(board,files);
 
         // 저장 후 이동
-        if (searchConditionQueryString.isEmpty()) {
-            resp.sendRedirect(String.format("/board?board_idx=%d", boardDTO.getBoardIdx()));
-        } else {
-            resp.sendRedirect(String.format("/board?board_idx=%d&%s", boardDTO.getBoardIdx(), searchConditionQueryString));
+        try {
+            if (searchConditionQueryString.isEmpty()) {
+                resp.sendRedirect(String.format("/board?board_idx=%d", boardDTO.getBoardIdx()));
+            } else {
+                resp.sendRedirect(String.format("/board?board_idx=%d&%s", boardDTO.getBoardIdx(), searchConditionQueryString));
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }
