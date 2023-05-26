@@ -88,7 +88,7 @@ public class BoardDAO {
         return boardDTO;
     }
 
-    public List<BoardDTO> findAllWithImageCheck(String queryBuilder) {
+    public List<BoardDTO> findAllWithFileCheck(String queryBuilder) {
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
