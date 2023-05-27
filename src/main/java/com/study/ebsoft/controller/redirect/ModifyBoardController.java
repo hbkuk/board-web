@@ -1,4 +1,4 @@
-package com.study.ebsoft.controller;
+package com.study.ebsoft.controller.redirect;
 
 import com.oreilly.servlet.MultipartRequest;
 import com.study.core.mvc.AbstractController;
@@ -12,11 +12,13 @@ import com.study.ebsoft.utils.FileUtils;
 import com.study.ebsoft.utils.SearchConditionUtils;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Slf4j
 public class ModifyBoardController extends AbstractController implements Controller {
@@ -27,7 +29,7 @@ public class ModifyBoardController extends AbstractController implements Control
         this.boardService = boardService;
     }
 
-    public void doPost(HttpServletRequest req, HttpServletResponse resp) {
+    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         String searchConditionQueryString = SearchConditionUtils.buildQueryString(req.getParameterMap()).toString();
 
         // 파일 업로드
@@ -45,17 +47,18 @@ public class ModifyBoardController extends AbstractController implements Control
             }
         }
 
-        BoardDTO updateReturnBoardDTO = boardService.updateBoardWithImages(
-                                        updateBoard, newUploadFiles, previouslyUploadedIndexes);
-
+        BoardDTO updateReturnBoardDTO = null;
         try {
-            if (searchConditionQueryString.isEmpty()) {
-                resp.sendRedirect(String.format("/board?board_idx=%d", updateReturnBoardDTO.getBoardIdx()));
-            } else {
-                resp.sendRedirect(String.format("/board?board_idx=%d&%s", updateReturnBoardDTO.getBoardIdx(), searchConditionQueryString));
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            updateReturnBoardDTO = boardService.updateBoardWithImages(updateBoard, newUploadFiles, previouslyUploadedIndexes);
+        } catch (NoSuchElementException e) {
+            req.setAttribute("error_message", e.getMessage());
+            req.getRequestDispatcher("/views/error/error404.jsp").forward(req, resp);
+        }
+
+        if (searchConditionQueryString.isEmpty()) {
+            resp.sendRedirect(String.format("/board?board_idx=%d", updateReturnBoardDTO.getBoardIdx()));
+        } else {
+            resp.sendRedirect(String.format("/board?board_idx=%d&%s", updateReturnBoardDTO.getBoardIdx(), searchConditionQueryString));
         }
     }
 }

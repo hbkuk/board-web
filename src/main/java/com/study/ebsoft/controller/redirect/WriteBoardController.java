@@ -1,4 +1,4 @@
-package com.study.ebsoft.controller;
+package com.study.ebsoft.controller.redirect;
 
 import com.oreilly.servlet.MultipartRequest;
 import com.study.core.mvc.AbstractController;
@@ -12,6 +12,7 @@ import com.study.ebsoft.utils.FileUtils;
 import com.study.ebsoft.utils.SearchConditionUtils;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -26,27 +27,31 @@ public class WriteBoardController extends AbstractController implements Controll
         this.boardService = boardService;
     }
 
-    public void doPost(HttpServletRequest req, HttpServletResponse resp) {
+    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         String searchConditionQueryString = SearchConditionUtils.buildQueryString(req.getParameterMap()).toString();
 
         // 파일 업로드
         MultipartRequest multi = FileUtils.fileUpload(req);
 
-        Board board = BuildUtils.buildWriteBoardFromRequest(multi);
-        List<File> files = BuildUtils.buildFilesFromRequest(multi);
-
-        // DB 저장
-        BoardDTO boardDTO = boardService.saveBoardWithImages(board,files);
-
-        // 저장 후 이동
+        Board board = null;
+        List<File> files = null;
         try {
+            board = BuildUtils.buildWriteBoardFromRequest(multi);
+            files = BuildUtils.buildFilesFromRequest(multi);
+        } catch (IllegalArgumentException e) {
+            req.setAttribute("error_message", e.getMessage());
             if (searchConditionQueryString.isEmpty()) {
-                resp.sendRedirect(String.format("/board?board_idx=%d", boardDTO.getBoardIdx()));
+                resp.sendRedirect(String.format("/board?board_idx=%d", board.getBoardIdx().getBoardIdx()));
             } else {
-                resp.sendRedirect(String.format("/board?board_idx=%d&%s", boardDTO.getBoardIdx(), searchConditionQueryString));
+                resp.sendRedirect(String.format("/board?board_idx=%d&%s", board.getBoardIdx().getBoardIdx()));
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        }
+
+        BoardDTO boardDTO = boardService.saveBoardWithImages(board,files);
+        if (searchConditionQueryString.isEmpty()) {
+            resp.sendRedirect(String.format("/board?board_idx=%d", boardDTO.getBoardIdx()));
+        } else {
+            resp.sendRedirect(String.format("/board?board_idx=%d&%s", boardDTO.getBoardIdx(), searchConditionQueryString));
         }
     }
 }
