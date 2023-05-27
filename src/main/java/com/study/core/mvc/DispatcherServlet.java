@@ -1,6 +1,7 @@
 package com.study.core.mvc;
 
-import com.study.ebsoft.controller.*;
+import com.study.ebsoft.controller.forward.*;
+import com.study.ebsoft.controller.redirect.*;
 import com.study.ebsoft.repository.board.BoardDAO;
 import com.study.ebsoft.repository.category.CategoryDAO;
 import com.study.ebsoft.repository.comment.CommentDAO;
@@ -8,12 +9,10 @@ import com.study.ebsoft.repository.file.FileDAO;
 import com.study.ebsoft.service.BoardService;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,17 +44,23 @@ public class DispatcherServlet extends HttpServlet {
     }
 
     @Override
-    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void service(HttpServletRequest req, HttpServletResponse resp) {
         String requestUri = req.getRequestURI();
         String method = req.getMethod();
         log.debug("Request URI: {}", requestUri);
         log.debug("Request Method: {}", method);
 
         Controller controller = requestMap.get(requestUri);
-        if (controller != null) {
-            controller.process(req, resp);
-        } else {
-            log.error("Throw Exception!!!");
+        try {
+            if (controller != null) {
+                controller.process(req, resp);
+            } else {
+                // TODO -> REDIRECT -> 404 NOT FOUND??
+                log.error("an exception occurred");
+            }
+        } catch (Throwable e) {
+            log.debug("error log : {} ", e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 }
