@@ -17,7 +17,6 @@ public class ContextLoaderListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        // Configure your MySQL data source
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
         dataSource.setUrl("jdbc:mysql://localhost:3316/ebsoft");
@@ -32,7 +31,6 @@ public class ContextLoaderListener implements ServletContextListener {
         try {
             populator.populate(dataSource.getConnection());
         } catch (Exception e) {
-            // Handle the exception appropriately
             logger.error("An error occurred while executing database scripts.", e);
         }
 
