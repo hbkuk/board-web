@@ -1,7 +1,6 @@
 package com.study.ebsoft.controller.redirect;
 
 import com.oreilly.servlet.MultipartRequest;
-import com.study.core.mvc.AbstractController;
 import com.study.core.mvc.Controller;
 import com.study.ebsoft.dto.BoardDTO;
 import com.study.ebsoft.model.board.Board;
@@ -21,7 +20,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @Slf4j
-public class ModifyBoardController extends AbstractController implements Controller {
+public class ModifyBoardController implements Controller {
 
     private BoardService boardService;
 
@@ -29,8 +28,8 @@ public class ModifyBoardController extends AbstractController implements Control
         this.boardService = boardService;
     }
 
-    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        String searchConditionQueryString = SearchConditionUtils.buildQueryString(req.getParameterMap()).toString();
+    public void process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+        String searchConditionQueryString = SearchConditionUtils.buildQueryString(req.getParameterMap());
 
         // 파일 업로드
         MultipartRequest multi = FileUtils.fileUpload(req);

@@ -1,6 +1,5 @@
 package com.study.ebsoft.controller.redirect;
 
-import com.study.core.mvc.AbstractController;
 import com.study.core.mvc.Controller;
 import com.study.ebsoft.dto.BoardDTO;
 import com.study.ebsoft.service.BoardService;
@@ -10,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class DeleteBoardController extends AbstractController implements Controller {
+public class DeleteBoardController implements Controller {
 
     private BoardService boardService;
 
@@ -18,8 +17,8 @@ public class DeleteBoardController extends AbstractController implements Control
         this.boardService = boardService;
     }
 
-    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String searchConditionQueryString = SearchConditionUtils.buildQueryString(req.getParameterMap()).toString();
+    public void process(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String searchConditionQueryString = SearchConditionUtils.buildQueryString(req.getParameterMap());
 
         BoardDTO deleteBoardDTO = new BoardDTO();
         deleteBoardDTO.setBoardIdx(Long.parseLong(req.getParameter("board_idx")));
@@ -29,7 +28,7 @@ public class DeleteBoardController extends AbstractController implements Control
             boardService.deleteBoardWithFilesAndComment(deleteBoardDTO);
         } catch (IllegalArgumentException e) {
             req.setAttribute("error_message", e.getMessage());
-            req.setAttribute("searchConditionQueryString", SearchConditionUtils.buildQueryString(req.getParameterMap()).toString());
+            req.setAttribute("searchConditionQueryString", SearchConditionUtils.buildQueryString(req.getParameterMap()));
             //req.getRequestDispatcher(String.format("/board?board_idx=%d", deleteComment.getBoardIdx())).forward(req, resp);
         }
 

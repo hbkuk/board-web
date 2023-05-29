@@ -1,6 +1,5 @@
 package com.study.ebsoft.controller.forward;
 
-import com.study.core.mvc.AbstractController;
 import com.study.core.mvc.Controller;
 import com.study.ebsoft.dto.FileDTO;
 import com.study.ebsoft.repository.file.FileDAO;
@@ -12,9 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Slf4j
-public class DownloadController extends AbstractController implements Controller {
+public class DownloadController implements Controller {
 
-    public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    public void process(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         FileDTO fileDTO = FileDAO.getInstance().findFileNameById(Long.parseLong(req.getParameter("file_idx")));
 
         FileUtils.serveDownloadFile(req, resp, fileDTO.getSavedFileName(), fileDTO.getOriginalFileName());

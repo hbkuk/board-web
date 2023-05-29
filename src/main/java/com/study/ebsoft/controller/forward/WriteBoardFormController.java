@@ -1,6 +1,5 @@
 package com.study.ebsoft.controller.forward;
 
-import com.study.core.mvc.AbstractController;
 import com.study.core.mvc.Controller;
 import com.study.ebsoft.service.BoardService;
 import com.study.ebsoft.utils.SearchConditionUtils;
@@ -13,7 +12,7 @@ import java.io.IOException;
 /**
  * 게시글 작성 View 담당
  */
-public class WriteBoardFormController extends AbstractController implements Controller {
+public class WriteBoardFormController implements Controller {
 
     private BoardService boardService;
 
@@ -25,8 +24,8 @@ public class WriteBoardFormController extends AbstractController implements Cont
     /**
      * 게시글 작성에 필요한 정보와 View를 응답합니다.
      */
-    public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setAttribute("searchConditionQueryString", SearchConditionUtils.buildQueryString(req.getParameterMap()).toString());
+    public void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setAttribute("searchConditionQueryString", SearchConditionUtils.buildQueryString(req.getParameterMap()));
         req.setAttribute("categorys", boardService.findAllCategorys());
 
         req.getRequestDispatcher("/views/boardWriteView.jsp").forward(req, resp);

@@ -1,6 +1,6 @@
 package com.study.ebsoft.controller.forward;
 
-import com.study.core.mvc.AbstractController;
+import com.study.core.mvc.Controller;
 import com.study.ebsoft.dto.BoardDTO;
 import com.study.ebsoft.service.BoardService;
 import com.study.ebsoft.utils.SearchConditionUtils;
@@ -14,7 +14,7 @@ import java.util.NoSuchElementException;
 /**
  * 게시글 번호에 해당하는 게시글 삭제 View 담당
  */
-public class DeleteBoardFormController extends AbstractController {
+public class DeleteBoardFormController implements Controller {
 
     private BoardService boardService;
 
@@ -27,8 +27,7 @@ public class DeleteBoardFormController extends AbstractController {
      *
      * @catch 게시글 번호에 해당하는 게시물이 없는 경우 (NoSuchElementException) 에러페이지를 응답합니다
      */
-    @Override
-    public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         BoardDTO boardDTO = null;
 
         try {

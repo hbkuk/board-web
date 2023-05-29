@@ -1,6 +1,5 @@
 package com.study.ebsoft.controller.redirect;
 
-import com.study.core.mvc.AbstractController;
 import com.study.core.mvc.Controller;
 import com.study.ebsoft.dto.CommentDTO;
 import com.study.ebsoft.model.board.BoardIdx;
@@ -19,7 +18,7 @@ import java.io.IOException;
 import java.util.NoSuchElementException;
 
 @Slf4j
-public class WriteCommentController extends AbstractController implements Controller {
+public class WriteCommentController implements Controller {
 
     private BoardService boardService;
 
@@ -27,8 +26,8 @@ public class WriteCommentController extends AbstractController implements Contro
         this.boardService = boardService;
     }
 
-    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        String searchConditionQueryString = SearchConditionUtils.buildQueryString(req.getParameterMap()).toString();
+    public void process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+        String searchConditionQueryString = SearchConditionUtils.buildQueryString(req.getParameterMap());
 
         Comment comment = null;
         try {
