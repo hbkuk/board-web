@@ -2,6 +2,7 @@ package com.study.ebsoft.controller.redirect;
 
 import com.oreilly.servlet.MultipartRequest;
 import com.study.core.mvc.Controller;
+import com.study.core.mvc.View;
 import com.study.ebsoft.dto.BoardDTO;
 import com.study.ebsoft.model.board.Board;
 import com.study.ebsoft.model.file.File;
@@ -26,7 +27,7 @@ public class WriteBoardController implements Controller {
         this.boardService = boardService;
     }
 
-    public void process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+    public View process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         String searchConditionQueryString = SearchConditionUtils.buildQueryString(req.getParameterMap());
 
         // 파일 업로드
@@ -41,16 +42,15 @@ public class WriteBoardController implements Controller {
             log.error("error : {}", e.getMessage());
             req.setAttribute("error", e.getMessage());
 
-            req.getRequestDispatcher("/board/write/form").forward(req, resp);
-            return;
+            return new View("/board/write/form");
         }
 
         BoardDTO boardDTO = boardService.saveBoardWithImages(board,files);
 
         if (searchConditionQueryString.isEmpty()) {
-            resp.sendRedirect(String.format("/board?board_idx=%d", boardDTO.getBoardIdx()));
+            return new View("redirect:" + String.format("/board?board_idx=%d", boardDTO.getBoardIdx()));
         } else {
-            resp.sendRedirect(String.format("/board?board_idx=%d&%s", boardDTO.getBoardIdx(), searchConditionQueryString));
+            return new View("redirect:" + String.format("/board?board_idx=%d&%s", boardDTO.getBoardIdx(), searchConditionQueryString));
         }
     }
 }

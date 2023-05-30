@@ -55,12 +55,16 @@ public class DispatcherServlet extends HttpServlet {
         try {
             try {
                 if (controller != null) {
-                    controller.process(req, resp);
+                    View view = controller.process(req, resp);
+                    view.render(req, resp);
+
+                    log.error("View Name : {}", view.getViewName());
                 } else {
-                    log.error("an exception occurred");
+                    log.error("Not found Page...");
                     resp.sendRedirect("/views/error/error404.jsp");
                 }
             } catch (NoSuchElementException e) {
+                log.error("NoSuchElementException --> Not found...");
                 resp.sendRedirect("/views/error/error404.jsp");
             }
         } catch (Throwable e) {

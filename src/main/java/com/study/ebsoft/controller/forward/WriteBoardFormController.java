@@ -1,6 +1,7 @@
 package com.study.ebsoft.controller.forward;
 
 import com.study.core.mvc.Controller;
+import com.study.core.mvc.View;
 import com.study.ebsoft.service.BoardService;
 import com.study.ebsoft.utils.SearchConditionUtils;
 
@@ -23,11 +24,13 @@ public class WriteBoardFormController implements Controller {
 
     /**
      * 게시글 작성에 필요한 정보와 View를 응답합니다.
+     *
+     * @return
      */
-    public void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public View process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setAttribute("searchConditionQueryString", SearchConditionUtils.buildQueryString(req.getParameterMap()));
         req.setAttribute("categories", boardService.findAllCategorys());
 
-        req.getRequestDispatcher("/views/boardWriteView.jsp").forward(req, resp);
+        return new View("/views/boardWriteView.jsp");
     }
 }

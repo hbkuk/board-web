@@ -1,6 +1,7 @@
 package com.study.ebsoft.controller.redirect;
 
 import com.study.core.mvc.Controller;
+import com.study.core.mvc.View;
 import com.study.ebsoft.dto.CommentDTO;
 import com.study.ebsoft.service.BoardService;
 import com.study.ebsoft.utils.SearchConditionUtils;
@@ -20,7 +21,7 @@ public class CommentDeleteController implements Controller {
         this.boardService = boardService;
     }
 
-    public void process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+    public View process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         String searchConditionQueryString = SearchConditionUtils.buildQueryString(req.getParameterMap());
 
         CommentDTO deleteComment = new CommentDTO();
@@ -34,14 +35,13 @@ public class CommentDeleteController implements Controller {
             log.error("error : {}", e.getMessage());
             req.setAttribute("error", e.getMessage());
 
-            req.getRequestDispatcher(String.format("/board?board_idx=%d", deleteComment.getBoardIdx())).forward(req, resp);
-            return;
+            return new View(String.format("/board?board_idx=%d", deleteComment.getBoardIdx()));
         }
 
         if (searchConditionQueryString.isEmpty()) {
-            resp.sendRedirect(String.format("/board?board_idx=%d", deleteComment.getBoardIdx()));
+            return new View("redirect:" + String.format("/board?board_idx=%d", deleteComment.getBoardIdx()));
         } else {
-            resp.sendRedirect(String.format("/board?board_idx=%d&%s", deleteComment.getBoardIdx(), searchConditionQueryString));
+            return new View("redirect:" + String.format("/board?board_idx=%d&%s", deleteComment.getBoardIdx(), searchConditionQueryString));
         }
     }
 }

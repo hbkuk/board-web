@@ -1,6 +1,7 @@
 package com.study.ebsoft.controller.redirect;
 
 import com.study.core.mvc.Controller;
+import com.study.core.mvc.View;
 import com.study.ebsoft.dto.CommentDTO;
 import com.study.ebsoft.model.board.BoardIdx;
 import com.study.ebsoft.model.board.Password;
@@ -25,7 +26,7 @@ public class WriteCommentController implements Controller {
         this.boardService = boardService;
     }
 
-    public void process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+    public View process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         String searchConditionQueryString = SearchConditionUtils.buildQueryString(req.getParameterMap());
 
         Comment comment = null;
@@ -39,16 +40,15 @@ public class WriteCommentController implements Controller {
             log.error("error : {}", e.getMessage());
             req.setAttribute("error", e.getMessage());
 
-            req.getRequestDispatcher(String.format("/board?board_idx=%d", Long.parseLong(req.getParameter("board_idx")))).forward(req, resp);
-            return;
+            return new View(String.format("/board?board_idx=%d", Long.parseLong(req.getParameter("board_idx"))));
         }
 
         CommentDTO commentDTO = boardService.saveComment(comment);
 
         if (searchConditionQueryString.isEmpty()) {
-            resp.sendRedirect(String.format("/board?board_idx=%d", commentDTO.getBoardIdx()));
+            return new View("redirect:" + String.format("/board?board_idx=%d", commentDTO.getBoardIdx()));
         } else {
-            resp.sendRedirect(String.format("/board?board_idx=%d&%s", commentDTO.getBoardIdx(), searchConditionQueryString));
+            return new View("redirect:" + String.format("/board?board_idx=%d&%s", commentDTO.getBoardIdx(), searchConditionQueryString));
         }
     }
 }

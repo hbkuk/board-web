@@ -1,6 +1,7 @@
 package com.study.ebsoft.controller.forward;
 
 import com.study.core.mvc.Controller;
+import com.study.core.mvc.View;
 import com.study.ebsoft.service.BoardService;
 import com.study.ebsoft.utils.SearchConditionUtils;
 
@@ -22,12 +23,14 @@ public class ShowBoardsController implements Controller {
 
     /**
      * 검색조건(searchConditionQueryString)에 맞는 전체 게시물 리스트와 View를 응답합니다.
+     *
+     * @return
      */
-    public void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public View process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setAttribute("searchConditionQueryString", SearchConditionUtils.buildQueryString(req.getParameterMap()));
         req.setAttribute("boards", boardService.findAllBoardsWithFileCheck(SearchConditionUtils.buildQueryCondition(req.getParameterMap())));
         req.setAttribute("categories", boardService.findAllCategorys());
 
-        req.getRequestDispatcher("/views/boardLists.jsp").forward(req, resp);
+        return new View("/views/boardLists.jsp");
     }
 }

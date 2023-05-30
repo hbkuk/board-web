@@ -2,6 +2,7 @@ package com.study.ebsoft.controller.redirect;
 
 import com.oreilly.servlet.MultipartRequest;
 import com.study.core.mvc.Controller;
+import com.study.core.mvc.View;
 import com.study.ebsoft.dto.BoardDTO;
 import com.study.ebsoft.model.board.Board;
 import com.study.ebsoft.model.file.File;
@@ -27,7 +28,7 @@ public class ModifyBoardController implements Controller {
         this.boardService = boardService;
     }
 
-    public void process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+    public View process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         String searchConditionQueryString = SearchConditionUtils.buildQueryString(req.getParameterMap());
 
         // 파일 업로드
@@ -42,8 +43,7 @@ public class ModifyBoardController implements Controller {
             log.error("error : {}", e.getMessage());
             req.setAttribute("error", e.getMessage());
 
-            req.getRequestDispatcher(String.format("/boards/modify/form?board_idx=%d", Long.parseLong(multi.getParameter("board_idx")))).forward(req, resp);
-            return;
+            return new View(String.format("/boards/modify/form?board_idx=%d", Long.parseLong(multi.getParameter("board_idx"))));
         }
 
         List<Long> previouslyUploadedIndexes = new ArrayList<Long>();
@@ -60,14 +60,13 @@ public class ModifyBoardController implements Controller {
             log.error("error : {}", e.getMessage());
             req.setAttribute("error", e.getMessage());
 
-            req.getRequestDispatcher(String.format("/board/modify/form?board_idx=%d", updateBoard.getBoardIdx().getBoardIdx())).forward(req, resp);
-            return;
+            return new View(String.format("/boards/modify/form?board_idx=%d", Long.parseLong(multi.getParameter("board_idx"))));
         }
 
         if (searchConditionQueryString.isEmpty()) {
-            resp.sendRedirect(String.format("/board?board_idx=%d", updateReturnBoardDTO.getBoardIdx()));
+            return new View("redirect:" + String.format("/board?board_idx=%d", updateReturnBoardDTO.getBoardIdx()));
         } else {
-            resp.sendRedirect(String.format("/board?board_idx=%d&%s", updateReturnBoardDTO.getBoardIdx(), searchConditionQueryString));
+            return new View("redirect:" + String.format("/board?board_idx=%d&%s", updateReturnBoardDTO.getBoardIdx(), searchConditionQueryString));
         }
     }
 }
