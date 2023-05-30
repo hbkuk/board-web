@@ -31,7 +31,7 @@ public class BuildUtils {
      */
     public static Board buildWriteBoardFromRequest(MultipartRequest request) {
         return new Board.Builder()
-                .categoryIdx(Integer.parseInt(request.getParameter(CATEGORY_IDX_PARAMETER_NAME)))
+                .categoryIdx(new CategoryIdx(Integer.parseInt(request.getParameter(CATEGORY_IDX_PARAMETER_NAME))))
                 .title(new Title(request.getParameter(TITLE_PARAMETER_NAME)))
                 .writer(new BoardWriter(request.getParameter(WRITER_PARAMETER_NAME)))
                 .content(new BoardContent(request.getParameter(CONTENT_PARAMETER_NAME)))
@@ -48,7 +48,7 @@ public class BuildUtils {
     public static Board buildModifyBoardFromRequest(MultipartRequest request) {
         return new Board.Builder()
                 .boardIdx(new BoardIdx(Long.parseLong(request.getParameter(BOARD_IDX_PARAMETER_NAME))))
-                .categoryIdx(Integer.parseInt(request.getParameter(CATEGORY_IDX_PARAMETER_NAME)))
+                .categoryIdx(new CategoryIdx(Integer.parseInt(request.getParameter(CATEGORY_IDX_PARAMETER_NAME))))
                 .title(new Title(request.getParameter(TITLE_PARAMETER_NAME)))
                 .writer(new BoardWriter(request.getParameter(WRITER_PARAMETER_NAME)))
                 .content(new BoardContent(request.getParameter(CONTENT_PARAMETER_NAME)))

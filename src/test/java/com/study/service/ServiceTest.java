@@ -94,7 +94,7 @@ public class ServiceTest {
                 long expectedBoardIdx = 1L;
 
                 Board board = new Board.Builder()
-                        .categoryIdx(1)
+                        .categoryIdx(new CategoryIdx(1))
                         .title(new Title("Title 1"))
                         .writer(new BoardWriter("테스터"))
                         .content(new BoardContent("Content 1"))
@@ -128,7 +128,7 @@ public class ServiceTest {
                 long expectedBoardIdx = 1L;
 
                 Board board = new Board.Builder()
-                        .categoryIdx(1)
+                        .categoryIdx(new CategoryIdx(1))
                         .title(new Title("Title 1"))
                         .writer(new BoardWriter("테스터"))
                         .content(new BoardContent("Content 1"))
@@ -209,12 +209,14 @@ public class ServiceTest {
 
                     Board updateBoard = new Board.Builder()
                             .boardIdx(new BoardIdx(boardIdx))
-                            .categoryIdx(1)
+                            .categoryIdx(new CategoryIdx(1))
                             .title(new Title("Title 1"))
                             .writer(new BoardWriter("테스터"))
                             .content(new BoardContent("Content 1"))
                             .password(new Password("rkskekfkakqkt!1"))
                             .build();
+
+                    BoardDTO findBoardDTO = new BoardDTO();
 
                     BoardDTO updateReturnBoardDTO = new BoardDTO();
                     updateReturnBoardDTO.setBoardIdx(boardIdx);
@@ -225,6 +227,7 @@ public class ServiceTest {
 
                     List<Long> getDbFileIndexes = new ArrayList<>();
 
+                    when(boardDAO.findById(boardIdx)).thenReturn(findBoardDTO);
                     when(boardDAO.update(updateBoard)).thenReturn(updateReturnBoardDTO);
                     when(fileDAO.findFileIndexesByBoardId(boardIdx)).thenReturn(getDbFileIndexes);
 
@@ -243,12 +246,14 @@ public class ServiceTest {
 
                     Board updateBoard = new Board.Builder()
                             .boardIdx(new BoardIdx(boardIdx))
-                            .categoryIdx(1)
+                            .categoryIdx(new CategoryIdx(1))
                             .title(new Title("Title 1"))
                             .writer(new BoardWriter("테스터"))
                             .content(new BoardContent("Content 1"))
                             .password(new Password("rkskekfkakqkt!1"))
                             .build();
+
+                    BoardDTO findBoardDTO = new BoardDTO();
 
                     BoardDTO updateReturnBoardDTO = new BoardDTO();
                     updateReturnBoardDTO.setBoardIdx(boardIdx);
@@ -259,6 +264,7 @@ public class ServiceTest {
 
                     List<Long> dbFileIndexes = Arrays.asList(10L, 11L, 12L);
 
+                    when(boardDAO.findById(boardIdx)).thenReturn(findBoardDTO);
                     when(boardDAO.update(updateBoard)).thenReturn(updateReturnBoardDTO);
                     when(fileDAO.findFileIndexesByBoardId(boardIdx)).thenReturn(dbFileIndexes);
 
@@ -281,12 +287,14 @@ public class ServiceTest {
 
                     Board updateBoard = new Board.Builder()
                             .boardIdx(new BoardIdx(boardIdx))
-                            .categoryIdx(1)
+                            .categoryIdx(new CategoryIdx(1))
                             .title(new Title("Title 1"))
                             .writer(new BoardWriter("테스터"))
                             .content(new BoardContent("Content 1"))
                             .password(new Password("rkskekfkakqkt!1"))
                             .build();
+
+                    BoardDTO findBoardDTO = new BoardDTO();
 
                     BoardDTO updateReturnBoardDTO = new BoardDTO();
                     updateReturnBoardDTO.setBoardIdx(boardIdx);
@@ -309,6 +317,7 @@ public class ServiceTest {
                     FileDTO fileC = new FileDTO();
                     fileC.setSavedFileName("image3.jpg");
 
+                    when(boardDAO.findById(boardIdx)).thenReturn(findBoardDTO);
                     when(boardDAO.update(updateBoard)).thenReturn(updateReturnBoardDTO);
                     when(fileDAO.findFileIndexesByBoardId(boardIdx)).thenReturn(dbFileIndexes);
                     when(fileDAO.findFileNameById(10L)).thenReturn(fileA);
@@ -333,12 +342,14 @@ public class ServiceTest {
 
                     Board updateBoard = new Board.Builder()
                             .boardIdx(new BoardIdx(boardIdx))
-                            .categoryIdx(1)
+                            .categoryIdx(new CategoryIdx(1))
                             .title(new Title("Title 1"))
                             .writer(new BoardWriter("테스터"))
                             .content(new BoardContent("Content 1"))
                             .password(new Password("rkskekfkakqkt!1"))
                             .build();
+
+                    BoardDTO findBoardDTO = new BoardDTO();
 
                     BoardDTO updateReturnBoardDTO = new BoardDTO();
                     updateReturnBoardDTO.setBoardIdx(boardIdx);
@@ -355,6 +366,7 @@ public class ServiceTest {
 
                     List<Long> dbFileIndexes = Arrays.asList(10L, 11L);
 
+                    when(boardDAO.findById(boardIdx)).thenReturn(findBoardDTO);
                     when(boardDAO.update(updateBoard)).thenReturn(updateReturnBoardDTO);
                     when(fileDAO.findFileIndexesByBoardId(boardIdx)).thenReturn(dbFileIndexes);
 
