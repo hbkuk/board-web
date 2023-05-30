@@ -1,7 +1,6 @@
 package com.study.ebsoft.context;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -11,9 +10,9 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
+@Slf4j
 @WebListener
 public class ContextLoaderListener implements ServletContextListener {
-    private static final Logger logger = LoggerFactory.getLogger(ContextLoaderListener.class);
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
@@ -31,10 +30,10 @@ public class ContextLoaderListener implements ServletContextListener {
         try {
             populator.populate(dataSource.getConnection());
         } catch (Exception e) {
-            logger.error("An error occurred while executing database scripts.", e);
+            log.error("An error occurred while executing database scripts.", e);
         }
 
-        logger.info("Completed Load ServletContext!");
+        log.info("Completed Load ServletContext!");
     }
 
     @Override
