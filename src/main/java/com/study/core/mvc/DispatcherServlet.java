@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 /**
  * 클라이언트로부터 모든 요청을 수신하는 서블릿 컨테이너
@@ -52,11 +53,15 @@ public class DispatcherServlet extends HttpServlet {
 
         Controller controller = requestMap.get(requestUri);
         try {
-            if (controller != null) {
-                controller.process(req, resp);
-            } else {
-                // TODO -> REDIRECT -> 404 NOT FOUND??
-                log.error("an exception occurred");
+            try {
+                if (controller != null) {
+                    controller.process(req, resp);
+                } else {
+                    log.error("an exception occurred");
+                    resp.sendRedirect("/views/error/error404.jsp");
+                }
+            } catch (NoSuchElementException e) {
+                resp.sendRedirect("/views/error/error404.jsp");
             }
         } catch (Throwable e) {
             log.debug("error log : {} ", e.getMessage());
