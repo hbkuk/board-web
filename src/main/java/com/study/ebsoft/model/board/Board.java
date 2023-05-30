@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 @Getter
 public class Board {
     private final BoardIdx boardIdx;
-    private final int category;
+    private final int categoryIdx;
     private final Title title;
     private final BoardWriter writer;
     private final BoardContent content;
@@ -18,10 +18,10 @@ public class Board {
     private final RegDate regDate;
     private final ModDate modDate;
 
-    public Board(BoardIdx boardIdx, int category, Title title, BoardWriter writer,
+    public Board(BoardIdx boardIdx, int categoryIdx, Title title, BoardWriter writer,
                  BoardContent content, Password password, Hit hit, RegDate regDate, ModDate modDate) {
         this.boardIdx = boardIdx;
-        this.category = category;
+        this.categoryIdx = categoryIdx;
         this.title = title;
         this.writer = writer;
         this.content = content;
@@ -31,14 +31,14 @@ public class Board {
         this.modDate = modDate;
     }
 
-    public Board(int category, Title title, BoardWriter writer,
+    public Board(int categoryIdx, Title title, BoardWriter writer,
                  BoardContent content, Password password) {
-        this(new BoardIdx(0), category, title, writer, content, password, new Hit(0), new RegDate(LocalDateTime.now()), null);
+        this(new BoardIdx(0), categoryIdx, title, writer, content, password, new Hit(0), new RegDate(LocalDateTime.now()), null);
     }
 
     public Board(Builder builder) {
         this.boardIdx = builder.boardIdx;
-        this.category = builder.category;
+        this.categoryIdx = builder.categoryIdx;
         this.title = builder.title;
         this.writer = builder.writer;
         this.content = builder.content;
@@ -51,7 +51,7 @@ public class Board {
     public static class Builder {
 
         private BoardIdx boardIdx;
-        private int category;
+        private int categoryIdx;
         private Title title;
         private BoardWriter writer;
         private BoardContent content;
@@ -63,8 +63,8 @@ public class Board {
         public Builder() {
         }
 
-        public Builder category(int category) {
-            this.category = category;
+        public Builder categoryIdx(int category) {
+            this.categoryIdx = category;
             return this;
         }
 
@@ -109,7 +109,7 @@ public class Board {
         }
 
         public Board build() {
-            if ( category == 0 || !Stream.of(title, writer, content, password).allMatch(Objects::nonNull)) {
+            if ( categoryIdx == 0 || !Stream.of(title, writer, content, password).allMatch(Objects::nonNull)) {
                 throw new IllegalArgumentException("필수값이 입력되지 않았습니다.");
             }
             return new Board(this);
