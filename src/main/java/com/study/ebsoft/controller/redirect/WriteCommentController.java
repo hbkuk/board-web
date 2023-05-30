@@ -15,7 +15,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.NoSuchElementException;
 
 @Slf4j
 public class WriteCommentController implements Controller {
@@ -37,23 +36,15 @@ public class WriteCommentController implements Controller {
                     new CommentContent(req.getParameter("comment_content")),
                     new BoardIdx(Long.parseLong(req.getParameter("board_idx"))));
         } catch (IllegalArgumentException e) {
-            req.setAttribute("error_message", e.getMessage());
-            if (searchConditionQueryString.isEmpty()) {
-                resp.sendRedirect(String.format("/board?board_idx=%d", Long.parseLong(req.getParameter("board_idx"))));
-            } else {
-                resp.sendRedirect(String.format("/board?board_idx=%d&%s", Long.parseLong(req.getParameter("board_idx")), searchConditionQueryString));
-            }
+            log.error("error : {}", e.getMessage());
+            req.setAttribute("error", e.getMessage());
+
+            req.getRequestDispatcher(String.format("/board?board_idx=%d", Long.parseLong(req.getParameter("board_idx")))).forward(req, resp);
+            return;
         }
 
-        CommentDTO commentDTO = null;
-        try {
-            commentDTO = boardService.saveComment(comment);
-        } catch (NoSuchElementException e) {
-            req.setAttribute("error_message", e.getMessage());
-            req.getRequestDispatcher("/views/error/error404.jsp").forward(req, resp);
-        }
+        CommentDTO commentDTO = boardService.saveComment(comment);
 
-        // 저장 후 이동
         if (searchConditionQueryString.isEmpty()) {
             resp.sendRedirect(String.format("/board?board_idx=%d", commentDTO.getBoardIdx()));
         } else {

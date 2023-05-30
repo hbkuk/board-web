@@ -38,15 +38,15 @@ public class WriteBoardController implements Controller {
             board = BuildUtils.buildWriteBoardFromRequest(multi);
             files = BuildUtils.buildFilesFromRequest(multi);
         } catch (IllegalArgumentException e) {
-            req.setAttribute("error_message", e.getMessage());
-            if (searchConditionQueryString.isEmpty()) {
-                resp.sendRedirect(String.format("/board?board_idx=%d", board.getBoardIdx().getBoardIdx()));
-            } else {
-                resp.sendRedirect(String.format("/board?board_idx=%d&%s", board.getBoardIdx().getBoardIdx()));
-            }
+            log.error("error : {}", e.getMessage());
+            req.setAttribute("error", e.getMessage());
+
+            req.getRequestDispatcher("/board/write/form").forward(req, resp);
+            return;
         }
 
         BoardDTO boardDTO = boardService.saveBoardWithImages(board,files);
+
         if (searchConditionQueryString.isEmpty()) {
             resp.sendRedirect(String.format("/board?board_idx=%d", boardDTO.getBoardIdx()));
         } else {

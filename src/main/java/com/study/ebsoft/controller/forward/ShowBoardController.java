@@ -27,15 +27,8 @@ public class ShowBoardController implements Controller {
      *
      * @catch 게시글 번호에 해당하는 게시물이 없는 경우 (NoSuchElementException) 에러페이지를 응답합니다
      */
-    public void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        BoardDTO boardDTO = null;
-
-        try {
-            boardDTO = boardService.findBoardWithDetails((Long.parseLong(req.getParameter("board_idx"))));
-        } catch (NoSuchElementException e) {
-            req.setAttribute("error_message", e.getMessage());
-            req.getRequestDispatcher("/views/error/error404.jsp").forward(req, resp);
-        }
+    public void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, NoSuchElementException {
+        BoardDTO boardDTO = boardService.findBoardWithDetails((Long.parseLong(req.getParameter("board_idx"))));
 
         req.setAttribute("searchConditionQueryString", SearchConditionUtils.buildQueryString(req.getParameterMap()));
         req.setAttribute("board", boardDTO);

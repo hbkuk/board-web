@@ -4,12 +4,14 @@ import com.study.core.mvc.Controller;
 import com.study.ebsoft.dto.CommentDTO;
 import com.study.ebsoft.service.BoardService;
 import com.study.ebsoft.utils.SearchConditionUtils;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@Slf4j
 public class CommentDeleteController implements Controller {
 
     private BoardService boardService;
@@ -29,9 +31,11 @@ public class CommentDeleteController implements Controller {
         try {
             boardService.deleteCommentByCommentIdx(deleteComment);
         } catch (IllegalArgumentException e) {
-            req.setAttribute("error_message", e.getMessage());
-            req.setAttribute("searchConditionQueryString", SearchConditionUtils.buildQueryString(req.getParameterMap()));
-            req.getRequestDispatcher("/views/boardLists.jsp").forward(req, resp);
+            log.error("error : {}", e.getMessage());
+            req.setAttribute("error", e.getMessage());
+
+            req.getRequestDispatcher(String.format("/board?board_idx=%d", deleteComment.getBoardIdx())).forward(req, resp);
+            return;
         }
 
         if (searchConditionQueryString.isEmpty()) {

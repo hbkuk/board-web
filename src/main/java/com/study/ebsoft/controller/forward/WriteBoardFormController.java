@@ -26,7 +26,7 @@ public class WriteBoardFormController implements Controller {
      */
     public void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setAttribute("searchConditionQueryString", SearchConditionUtils.buildQueryString(req.getParameterMap()));
-        req.setAttribute("categorys", boardService.findAllCategorys());
+        req.setAttribute("categories", boardService.findAllCategorys());
 
         req.getRequestDispatcher("/views/boardWriteView.jsp").forward(req, resp);
     }

@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Slf4j
 public class ModifyBoardController implements Controller {
@@ -34,10 +33,18 @@ public class ModifyBoardController implements Controller {
         // 파일 업로드
         MultipartRequest multi = FileUtils.fileUpload(req);
 
-        Board updateBoard = BuildUtils.buildModifyBoardFromRequest(multi);
+        Board updateBoard = null;
+        List<File> newUploadFiles = null;
+        try {
+            updateBoard = BuildUtils.buildModifyBoardFromRequest(multi);
+            newUploadFiles = BuildUtils.buildFilesFromRequest(multi);
+        } catch (IllegalArgumentException e) {
+            log.error("error : {}", e.getMessage());
+            req.setAttribute("error", e.getMessage());
 
-        List<File> newUploadFiles = BuildUtils.buildFilesFromRequest(multi);
-        log.debug("새로 업로드 된 파일의 개수 : {} ", newUploadFiles.size());
+            req.getRequestDispatcher(String.format("/boards/modify/form?board_idx=%d", Long.parseLong(multi.getParameter("board_idx")))).forward(req, resp);
+            return;
+        }
 
         List<Long> previouslyUploadedIndexes = new ArrayList<Long>();
         if (multi.getParameter("file_idx") != null) {
@@ -49,9 +56,12 @@ public class ModifyBoardController implements Controller {
         BoardDTO updateReturnBoardDTO = null;
         try {
             updateReturnBoardDTO = boardService.updateBoardWithImages(updateBoard, newUploadFiles, previouslyUploadedIndexes);
-        } catch (NoSuchElementException e) {
-            req.setAttribute("error_message", e.getMessage());
-            req.getRequestDispatcher("/views/error/error404.jsp").forward(req, resp);
+        } catch (IllegalArgumentException e) {
+            log.error("error : {}", e.getMessage());
+            req.setAttribute("error", e.getMessage());
+
+            req.getRequestDispatcher(String.format("/board/modify/form?board_idx=%d", updateBoard.getBoardIdx().getBoardIdx())).forward(req, resp);
+            return;
         }
 
         if (searchConditionQueryString.isEmpty()) {
