@@ -33,9 +33,11 @@ CREATE TABLE `tb_file` (
 );
 
 CREATE TABLE `tb_category` (
-                               `category_idx`	INT	NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                               `category`	varchar(100)	NOT NULL
+                               `category_idx` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                               `category_code` VARCHAR(50) NOT NULL UNIQUE,
+                               `category` VARCHAR(100) NOT NULL
 );
+
 
 
 ALTER TABLE `tb_board` ADD CONSTRAINT `FK_tb_category_TO_tb_board_1` FOREIGN KEY (
@@ -59,17 +61,18 @@ ALTER TABLE `tb_file` ADD CONSTRAINT `FK_tb_board_TO_tb_file_1` FOREIGN KEY (
                            `board_idx`
         );
 
-INSERT INTO tb_category (category) VALUES
-                                       ('HTML'),
-                                       ('CSS'),
-                                       ('JAVASCRIPT'),
-                                       ('SPRING'),
-                                       ('JPA'),
-                                       ('PYTHON'),
-                                       ('JAVA'),
-                                       ('REACT'),
-                                       ('ANGULAR'),
-                                       ('DATABASE');
+INSERT INTO tb_category (category_code, category) VALUES
+                                                      ('EB001', 'HTML'),
+                                                      ('EB002', 'CSS'),
+                                                      ('EB003', 'JAVASCRIPT'),
+                                                      ('EB004', 'SPRING'),
+                                                      ('EB005', 'JPA'),
+                                                      ('EB006', 'PYTHON'),
+                                                      ('EB007', 'JAVA'),
+                                                      ('EB008', 'REACT'),
+                                                      ('EB009', 'ANGULAR'),
+                                                      ('EB010', 'DATABASE');
+
 
 INSERT INTO tb_board (category_idx, title, writer, content, password, hit, regdate, moddate) VALUES
                                                                                                  (1, 'Title 1', '테스터1', 'Content 1', 'password1!', 10, '2023-05-18 10:00:00', null),
