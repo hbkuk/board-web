@@ -11,7 +11,7 @@ window.onload = function () {
             return false;
         }
 
-        if (document.cfrm.commnet_content.value.trim() === '') {
+        if (document.cfrm.comment_content.value.trim() === '') {
             alert("내용을 입력하셔야 합니다.");
             return false;
         }
