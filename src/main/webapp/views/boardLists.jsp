@@ -1,10 +1,8 @@
+<%@page isELIgnored="false" %>
 <%@ page import="com.study.ebsoft.dto.BoardDTO" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.study.ebsoft.dto.CategoryDTO" %>
 <%@ page import="com.study.ebsoft.utils.SearchConditionUtils" %>
-<%@ page import="java.time.LocalDate" %>
-<%@ page import="java.time.format.DateTimeFormatter" %>
-<%@page isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -13,9 +11,9 @@
 <%
     String searchConditionQueryString = request.getAttribute("searchConditionQueryString").toString();
 
-    List<BoardDTO> boardList = (List<BoardDTO>) request.getAttribute("boardLists");
+    List<BoardDTO> boardList = (List<BoardDTO>) request.getAttribute("boards");
 
-    List<CategoryDTO> categorys = (List<CategoryDTO>) request.getAttribute("categorys");
+    List<CategoryDTO> categorys = (List<CategoryDTO>) request.getAttribute("categories");
 %>
 <jsp:include page="/include/header.jsp" flush="false">
     <jsp:param name="css_path" value="board.css"/>
