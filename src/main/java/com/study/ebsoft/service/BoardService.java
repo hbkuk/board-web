@@ -101,13 +101,18 @@ public class BoardService {
      * @param previouslyUploadedIndexes 이전에 업로드 된 파일의 번호
      * @return 게시물 수정이되었다면 게시물 번호가 담긴 BoardDTO, 그렇지 않다면 null
      */
-    public BoardDTO updateBoardWithImages(Board updateBoard, List<File> newUploadFiles, List<Long> previouslyUploadedIndexes) throws NoSuchElementException {
+    public BoardDTO updateBoardWithImages(Board updateBoard, List<File> newUploadFiles, List<Long> previouslyUploadedIndexes) {
         log.debug(" updateBoardWithImages() 메서드 호출 -> updateBoard : {} , newUploadFiles size : {}, previouslyUploadedIndexes size : {}",
                 updateBoard.toString(), newUploadFiles.size(), previouslyUploadedIndexes.size());
 
+        BoardDTO findBoardDTO = boardDAO.findById(updateBoard.getBoardIdx().getBoardIdx());
+        if( findBoardDTO == null ) {
+            throw new NoSuchElementException("해당 글을 찾을 수 없습니다.");
+        }
+
         BoardDTO updateReturnBoardDTO = boardDAO.update(updateBoard);
         if( updateReturnBoardDTO == null ) {
-            throw new NoSuchElementException("해당 글을 찾을 수 없습니다.");
+            throw new IllegalArgumentException("비밀번호가 다릅니다.");
         }
 
         // DB 확인
@@ -185,7 +190,7 @@ public class BoardService {
      * @param deleteComment
      * @return
      */
-    public Long deleteCommentByCommentIdx(CommentDTO deleteComment) throws IllegalArgumentException {
+    public Long deleteCommentByCommentIdx(CommentDTO deleteComment) {
         CommentDTO commentDTO = commentDAO.findByCommentIdx(deleteComment.getCommentIdx());
 
         if( !commentDTO.getPassword().equals(deleteComment.getPassword())) {
