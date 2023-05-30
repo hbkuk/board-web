@@ -11,7 +11,7 @@ import java.util.List;
 
 
 /**
- *  정적 리소스(css, js 등) 요청을 처리하기 위한 필터입니다.
+ *  정적 리소스(css, js 등) 요청을 처리하기 위한 서블릿 필터
  */
 @Slf4j
 @WebFilter("/*")
@@ -29,18 +29,19 @@ public class ResourceFilter implements Filter {
     private RequestDispatcher defaultRequestDispatcher;
 
     /**
-     * 필터를 초기화합니다.
+     * 필터를 초기화하고 필터 구성에서 "default"로 이름 지정된 디스패처를 검색하여 설정합니다
+     * 필터 초기화 시 웹 컨테이너에 의해 자동으로 호출됩니다
      *
-     * @param filterConfig 필터 구성 객체
+     * @param filterConfig 필터 구성을 포함한 FilterConfig 객체입니다.
+     * @throws ServletException 필터 초기화 중에 오류가 발생한 경우에 예외가 발생합니다.
      */
-    @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         this.defaultRequestDispatcher = filterConfig.getServletContext().getNamedDispatcher("default");
     }
 
     /**
      * 요청과 응답을 처리하여 리소스 요청인 경우 다른 서블릿이나 리소스로 전달하고,
-     * 그렇지 않은 경우 필터 체인을 따라 다음 필터로 전달합니다.
+     * 그렇지 않은 경우 필터 체인을 따라 다음 필터로 전달합니다
      *
      * @param request  서블릿 요청 객체
      * @param response 서블릿 응답 객체
@@ -60,7 +61,7 @@ public class ResourceFilter implements Filter {
     }
 
     /**
-     * 주어진 URL이 리소스 URL인지 여부를 확인합니다.
+     * 주어진 URL이 리소스 URL인 경우 true, 그렇지 않은 경우 false를 리턴합니다
      *
      * @param url 확인할 URL
      * @return URL이 리소스 URL인 경우 true, 그렇지 않은 경우 false
