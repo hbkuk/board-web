@@ -65,7 +65,7 @@
             <table>
             <c:forEach items="<%=board.getComments()%>" var="comment">
                 <form action="/comment/delete<%= searchConditionQueryString.isEmpty() ? "" : "?" + searchConditionQueryString %>" method="post" name="dcfrm" id="dcfrm${comment.commentIdx}">
-                <input type='hidden' name='board_idx' value="<%=board.getBoardIdx()%>">
+                    <input type='hidden' name='board_idx' value="<%=board.getBoardIdx()%>">
                     <input type='hidden' name='comment_idx' value="${comment.commentIdx}">
                     <tr>
                         <td class='coment_re'>
@@ -81,6 +81,9 @@
                         </td>
                     </tr>
                 </form>
+                <c:if test="${not empty error}">
+                    <p>Error Message: ${error}</p>
+                </c:if>
             </c:forEach>
             </table>
             <form action="/comment/write<%= searchConditionQueryString.isEmpty() ? "" : "?" + searchConditionQueryString %>" method="post" name="cfrm">

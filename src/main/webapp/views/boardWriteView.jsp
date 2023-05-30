@@ -6,7 +6,7 @@
          pageEncoding="UTF-8" %>
 <%
     String searchConditionQueryString = request.getAttribute("searchConditionQueryString").toString();
-    List<CategoryDTO> categorys = (List<CategoryDTO>) request.getAttribute("categorys");
+    List<CategoryDTO> categories = (List<CategoryDTO>) request.getAttribute("categories");
 %>
 
 <jsp:include page="/include/header.jsp" flush="false">
@@ -28,7 +28,7 @@
                         <td class="top" colspan="3">
                             <select id="category" name="category_idx">
                                 <option value="all">카테고리 선택</option>
-                                <c:forEach items="<%=categorys%>" var="category">
+                                <c:forEach items="<%=categories%>" var="category">
                                     <option value="${category.categoryIdx}">${category.category}</option>
                                 </c:forEach>
                             </select>

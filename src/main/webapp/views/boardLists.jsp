@@ -13,7 +13,7 @@
 
     List<BoardDTO> boardList = (List<BoardDTO>) request.getAttribute("boards");
 
-    List<CategoryDTO> categorys = (List<CategoryDTO>) request.getAttribute("categories");
+    List<CategoryDTO> categories = (List<CategoryDTO>) request.getAttribute("categories");
 %>
 <jsp:include page="/include/header.jsp" flush="false">
     <jsp:param name="css_path" value="board.css"/>
@@ -37,7 +37,7 @@
                     <td><select id="category">
                         <option value="all">전체 카테고리</option>
                         <c:set var="paramCategoryIdx" value="<%=SearchConditionUtils.getParamCategoryIdx((HttpServletRequest) request)%>"/>
-                        <c:set var="categorys" value="<%=categorys%>"/>
+                        <c:set var="categorys" value="<%=categories%>"/>
                         <c:forEach items="${categorys}" var="category">
                             <c:choose>
                                 <c:when test="${paramCategoryIdx == category.categoryIdx}">
