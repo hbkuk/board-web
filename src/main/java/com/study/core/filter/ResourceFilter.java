@@ -23,6 +23,7 @@ public class ResourceFilter implements Filter {
         resourcePrefixes.add("/resources/fonts");
         resourcePrefixes.add("/resources/images");
         resourcePrefixes.add("/favicon.ico");
+        resourcePrefixes.add("/upload");
     }
 
     private RequestDispatcher defaultRequestDispatcher;
