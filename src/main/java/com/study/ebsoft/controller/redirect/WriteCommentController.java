@@ -17,6 +17,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * 댓글 작성 담당
+ */
 @Slf4j
 public class WriteCommentController implements Controller {
 
@@ -26,6 +29,9 @@ public class WriteCommentController implements Controller {
         this.boardService = boardService;
     }
 
+    /**
+     * 댓글을 작성합니다
+     */
     public View process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         String searchConditionQueryString = SearchConditionUtils.buildQueryString(req.getParameterMap());
 

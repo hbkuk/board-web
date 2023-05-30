@@ -27,6 +27,9 @@ public class DispatcherServlet extends HttpServlet {
     private BoardService boardService = new BoardService(
             BoardDAO.getInstance(), CommentDAO.getInstance(), CategoryDAO.getInstance(), FileDAO.getInstance());
 
+    /**
+     * 서블릿 컨테이너로부터 초기화를 진행하고, 클라이언트로부터 요청에 대한 처리를 위한 매핑을 설정합니다
+     */
     @Override
     public void init() {
         requestMap = new HashMap<>();
@@ -44,6 +47,13 @@ public class DispatcherServlet extends HttpServlet {
         requestMap.put("/download", new DownloadController());
     }
 
+    /**
+     * 서블릿 컨테이너로부터 호출되며, 요청 URI와 HTTP Method를 확인하여 해당 컨트롤러를 호출합니다
+     * 만약 요청에 대한 매핑이 없는 경우 404 에러 페이지로 리다이렉트합니다
+     *
+     * @param req  클라이언트로부터의 HttpServletRequest 객체입니다.
+     * @param resp 클라이언트로부터의 HttpServletResponse 객체입니다.
+     */
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) {
         String requestUri = req.getRequestURI();

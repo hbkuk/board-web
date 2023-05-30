@@ -26,8 +26,7 @@ public class ShowBoardController implements Controller {
     /**
      * 게시글 번호에 해당하는 게시글 정보를 응답합니다
      *
-     * @return
-     * @catch 게시글 번호에 해당하는 게시물이 없는 경우 (NoSuchElementException) 에러페이지를 응답합니다
+     * @throws NoSuchElementException 게시글 번호에 해당하는 게시물이 없는 경우 예외를 던집니다
      */
     public View process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, NoSuchElementException {
         BoardDTO boardDTO = boardService.findBoardWithDetails((Long.parseLong(req.getParameter("board_idx"))));

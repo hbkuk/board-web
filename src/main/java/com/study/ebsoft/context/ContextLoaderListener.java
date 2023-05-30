@@ -10,10 +10,20 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
+/**
+ * 서블릿 컨텍스트 초기화 및 소멸 시에 호출되는 리스너 클래스입니다
+ * 데이터베이스 연결 및 초기화 작업을 수행합니다
+ */
 @Slf4j
 @WebListener
 public class ContextLoaderListener implements ServletContextListener {
 
+    /**
+     * 서블릿 컨텍스트 초기화 시 호출되는 메서드입니다
+     * 데이터베이스 연결 및 초기화 작업을 수행합니다
+     *
+     * @param sce 서블릿 컨텍스트 이벤트 객체
+     */
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();

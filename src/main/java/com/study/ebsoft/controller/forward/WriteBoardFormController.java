@@ -23,9 +23,7 @@ public class WriteBoardFormController implements Controller {
 
 
     /**
-     * 게시글 작성에 필요한 정보와 View를 응답합니다.
-     *
-     * @return
+     * 게시글 작성에 필요한 정보와 View를 응답합니다
      */
     public View process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setAttribute("searchConditionQueryString", SearchConditionUtils.buildQueryString(req.getParameterMap()));

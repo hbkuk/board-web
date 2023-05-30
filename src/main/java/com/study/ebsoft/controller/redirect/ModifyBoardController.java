@@ -19,6 +19,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 게시물 번호에 해당하는 게시물 수정 담당
+ */
 @Slf4j
 public class ModifyBoardController implements Controller {
 
@@ -28,6 +31,9 @@ public class ModifyBoardController implements Controller {
         this.boardService = boardService;
     }
 
+    /**
+     * 게시물 번호에 해당하는 게시물을 수정합니다
+     */
     public View process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         String searchConditionQueryString = SearchConditionUtils.buildQueryString(req.getParameterMap());
 

@@ -12,6 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * 댓글 번호에 해당하는 댓글 삭제 담당
+ */
 @Slf4j
 public class CommentDeleteController implements Controller {
 
@@ -21,6 +24,9 @@ public class CommentDeleteController implements Controller {
         this.boardService = boardService;
     }
 
+    /**
+     * 댓글 번호에 해당하는 댓글을 삭제합니다
+     */
     public View process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         String searchConditionQueryString = SearchConditionUtils.buildQueryString(req.getParameterMap());
 

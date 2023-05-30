@@ -12,6 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * 게시물 번호에 해당하는 게시물 삭제 담당
+ */
 @Slf4j
 public class DeleteBoardController implements Controller {
 
@@ -21,6 +24,9 @@ public class DeleteBoardController implements Controller {
         this.boardService = boardService;
     }
 
+    /**
+     * 게시물 번호에 해당하는 게시물 삭제을 삭제합니다
+     */
     public View process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         String searchConditionQueryString = SearchConditionUtils.buildQueryString(req.getParameterMap());
 
