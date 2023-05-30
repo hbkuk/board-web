@@ -94,7 +94,7 @@ public class ServiceTest {
                 long expectedBoardIdx = 1L;
 
                 Board board = new Board.Builder()
-                        .category(1)
+                        .categoryIdx(1)
                         .title(new Title("Title 1"))
                         .writer(new BoardWriter("테스터"))
                         .content(new BoardContent("Content 1"))
@@ -128,7 +128,7 @@ public class ServiceTest {
                 long expectedBoardIdx = 1L;
 
                 Board board = new Board.Builder()
-                        .category(1)
+                        .categoryIdx(1)
                         .title(new Title("Title 1"))
                         .writer(new BoardWriter("테스터"))
                         .content(new BoardContent("Content 1"))
@@ -209,7 +209,7 @@ public class ServiceTest {
 
                     Board updateBoard = new Board.Builder()
                             .boardIdx(new BoardIdx(boardIdx))
-                            .category(1)
+                            .categoryIdx(1)
                             .title(new Title("Title 1"))
                             .writer(new BoardWriter("테스터"))
                             .content(new BoardContent("Content 1"))
@@ -243,7 +243,7 @@ public class ServiceTest {
 
                     Board updateBoard = new Board.Builder()
                             .boardIdx(new BoardIdx(boardIdx))
-                            .category(1)
+                            .categoryIdx(1)
                             .title(new Title("Title 1"))
                             .writer(new BoardWriter("테스터"))
                             .content(new BoardContent("Content 1"))
@@ -281,7 +281,7 @@ public class ServiceTest {
 
                     Board updateBoard = new Board.Builder()
                             .boardIdx(new BoardIdx(boardIdx))
-                            .category(1)
+                            .categoryIdx(1)
                             .title(new Title("Title 1"))
                             .writer(new BoardWriter("테스터"))
                             .content(new BoardContent("Content 1"))
@@ -333,7 +333,7 @@ public class ServiceTest {
 
                     Board updateBoard = new Board.Builder()
                             .boardIdx(new BoardIdx(boardIdx))
-                            .category(1)
+                            .categoryIdx(1)
                             .title(new Title("Title 1"))
                             .writer(new BoardWriter("테스터"))
                             .content(new BoardContent("Content 1"))
