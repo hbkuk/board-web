@@ -66,6 +66,9 @@
                     </tr>
                 </table>
             </div>
+            <c:if test="${not empty error}">
+                <p>Error Message: ${error}</p>
+            </c:if>
 
             <div class="btn_area">
                 <div class="align_left">

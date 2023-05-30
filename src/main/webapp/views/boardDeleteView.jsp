@@ -36,6 +36,10 @@
                     </tr>
                 </table>
             </div>
+            <c:if test="${not empty error}">
+                <p>Error Message: ${error}</p>
+            </c:if>
+
             <div class="btn_area">
                 <div class="align_left">
                     <input type="button" value="목록" class="btn_list btn_txt02" style="cursor: pointer;"
