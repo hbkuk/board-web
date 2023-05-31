@@ -4,13 +4,16 @@ import com.study.ebsoft.utils.SearchConditionUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
+import static org.assertj.core.api.Assertions.*;
 
 public class QueryUtilsTest {
 
@@ -120,6 +123,39 @@ public class QueryUtilsTest {
                     .isThrownBy(() -> {
                         SearchConditionUtils.buildQueryCondition(parameters);
                     }).withMessageMatching("시작 날짜보다 종료 날짜가 클 수 없습니다.");
+        }
+
+        @ParameterizedTest
+        @CsvSource(value = {
+                "'Hello World!', 'Hello World '",
+                "'12345', '12345'",
+                "'안녕하세요!', '안녕하세요 '",
+                "'!@#$%^&*()', '          '",
+                "'abc123!@#', 'abc123   '"
+        }, delimiter = ',')
+        @DisplayName("한글, 알파벳, 숫자를 제외한 모든 문자열은 공백으로 치환된다")
+        void replaceAll(String actual, String expected) {
+            assertThat(SearchConditionUtils.cleanInput(actual)).isEqualTo(expected);
+        }
+
+        @ParameterizedTest
+        @CsvSource(value = {
+                "'SELECT * FROM users WHERE username = '' OR ''='' --','SELECT   FROM users WHERE username     OR       '",
+                "'SELECT * FROM users; DROP TABLE users;', 'SELECT   FROM users  DROP TABLE users '",
+        }, delimiter = ',')
+        @DisplayName("한글, 알파벳, 숫자를 제외한 모든 문자열은 공백으로 치환된다")
+        void sqlInjection_replaceAll(String actual, String expected) {
+            assertThat(SearchConditionUtils.cleanInput(actual)).isEqualTo(expected);
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = {"' OR '1'='1", "'; DROP TABLE users;--", "1'; SELECT * FROM users;--"})
+        @DisplayName("날짜 형식으로 변환할때 인젝션에 해당하는 문자열이 전달된다면 예외가 발생한다.")
+        void throw_exception_when_not_date_format(String value) {
+            assertThatExceptionOfType(URISyntaxException.class)
+                    .isThrownBy(() -> {
+                        SearchConditionUtils.formatDate(value);})
+                    .withMessageMatching("날짜 형식이 아닙니다");
         }
     }
 
