@@ -7,16 +7,16 @@ import java.util.Objects;
 @Getter
 public class CategoryIdx {
     private static final int MIN_CATEGORY_IDX_VALUE = 0;
-    private long categoryIdx = 0;
+    private int categoryIdx = 0;
 
-    public CategoryIdx(long value) {
+    public CategoryIdx(int value) {
         if(value < MIN_CATEGORY_IDX_VALUE) {
             throw new IllegalArgumentException("카테고리 번호는 음수일 수 없습니다.");
         }
         this.categoryIdx = value;
     }
 
-    public long getCategoryIdx() {
+    public int getCategoryIdx() {
         return categoryIdx;
     }
 

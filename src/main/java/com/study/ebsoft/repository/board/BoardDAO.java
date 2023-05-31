@@ -156,7 +156,7 @@ public class BoardDAO {
             driverFind();
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3316/ebsoft", "ebsoft", "123456");
             statement = connection.prepareStatement(SAVE,Statement.RETURN_GENERATED_KEYS );
-            statement.setString(1, String.valueOf(board.getCategoryIdx()));
+            statement.setInt(1, board.getCategoryIdx().getCategoryIdx());
             statement.setString(2, board.getTitle().getTitle());
             statement.setString(3, board.getWriter().getWriter());
             statement.setString(4, board.getContent().getContent());
