@@ -28,6 +28,6 @@ public class ShowBoardsController implements Controller {
         req.setAttribute("boards", boardService.findAllBoardsWithFileCheck(SearchConditionUtils.buildQueryCondition(req.getParameterMap())));
         req.setAttribute("categories", boardService.findAllCategorys());
 
-        return new View("/views/boardLists.jsp");
+        return new View("/views/boards.jsp");
     }
 }
