@@ -4,7 +4,6 @@ import com.study.core.mvc.Controller;
 import com.study.core.mvc.View;
 import com.study.ebsoft.dto.BoardDTO;
 import com.study.ebsoft.service.BoardService;
-import com.study.ebsoft.utils.SearchConditionUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.ServletException;
@@ -32,8 +31,6 @@ public class ModifyBoardFormController implements Controller {
      */
     public View process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, NoSuchElementException {
         BoardDTO boardDTO = boardService.findBoardWithImages(Long.parseLong(req.getParameter("board_idx")));
-
-        req.setAttribute("searchConditionQueryString", SearchConditionUtils.buildQueryString(req.getParameterMap()));
         req.setAttribute("board", boardDTO);
 
         return new View("/views/boardModifyView.jsp");

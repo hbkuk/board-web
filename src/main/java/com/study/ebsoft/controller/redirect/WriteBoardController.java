@@ -34,9 +34,6 @@ public class WriteBoardController implements Controller {
      * 게시물을 작성합니다
      */
     public View process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        String searchConditionQueryString = SearchConditionUtils.buildQueryString(req.getParameterMap());
-
-        // 파일 업로드
         MultipartRequest multi = FileUtils.fileUpload(req);
 
         Board board = null;
@@ -53,10 +50,6 @@ public class WriteBoardController implements Controller {
 
         BoardDTO boardDTO = boardService.saveBoardWithImages(board,files);
 
-        if (searchConditionQueryString.isEmpty()) {
-            return new View("redirect:" + String.format("/board?board_idx=%d", boardDTO.getBoardIdx()));
-        } else {
-            return new View("redirect:" + String.format("/board?board_idx=%d&%s", boardDTO.getBoardIdx(), searchConditionQueryString));
-        }
+        return new View("redirect:" + String.format("/board?board_idx=%d", boardDTO.getBoardIdx()));
     }
 }

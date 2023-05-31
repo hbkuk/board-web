@@ -9,7 +9,6 @@ import com.study.ebsoft.model.file.File;
 import com.study.ebsoft.service.BoardService;
 import com.study.ebsoft.utils.BuildUtils;
 import com.study.ebsoft.utils.FileUtils;
-import com.study.ebsoft.utils.SearchConditionUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.ServletException;
@@ -35,9 +34,6 @@ public class ModifyBoardController implements Controller {
      * 게시물 번호에 해당하는 게시물을 수정합니다
      */
     public View process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        String searchConditionQueryString = SearchConditionUtils.buildQueryString(req.getParameterMap());
-
-        // 파일 업로드
         MultipartRequest multi = FileUtils.fileUpload(req);
 
         Board updateBoard = null;
@@ -69,10 +65,6 @@ public class ModifyBoardController implements Controller {
             return new View(String.format("/boards/modify/form?board_idx=%d", Long.parseLong(multi.getParameter("board_idx"))));
         }
 
-        if (searchConditionQueryString.isEmpty()) {
-            return new View("redirect:" + String.format("/board?board_idx=%d", updateReturnBoardDTO.getBoardIdx()));
-        } else {
-            return new View("redirect:" + String.format("/board?board_idx=%d&%s", updateReturnBoardDTO.getBoardIdx(), searchConditionQueryString));
-        }
+        return new View("redirect:" + String.format("/board?board_idx=%d", updateReturnBoardDTO.getBoardIdx()));
     }
 }

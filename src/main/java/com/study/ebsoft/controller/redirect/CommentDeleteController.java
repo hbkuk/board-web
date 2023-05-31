@@ -28,8 +28,6 @@ public class CommentDeleteController implements Controller {
      * 댓글 번호에 해당하는 댓글을 삭제합니다
      */
     public View process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        String searchConditionQueryString = SearchConditionUtils.buildQueryString(req.getParameterMap());
-
         CommentDTO deleteComment = new CommentDTO();
         deleteComment.setCommentIdx(Long.parseLong(req.getParameter("comment_idx")));
         deleteComment.setBoardIdx(Long.parseLong(req.getParameter("board_idx")));
@@ -44,10 +42,6 @@ public class CommentDeleteController implements Controller {
             return new View(String.format("/board?board_idx=%d", deleteComment.getBoardIdx()));
         }
 
-        if (searchConditionQueryString.isEmpty()) {
-            return new View("redirect:" + String.format("/board?board_idx=%d", deleteComment.getBoardIdx()));
-        } else {
-            return new View("redirect:" + String.format("/board?board_idx=%d&%s", deleteComment.getBoardIdx(), searchConditionQueryString));
-        }
+        return new View("redirect:" + String.format("/board?board_idx=%d", deleteComment.getBoardIdx()));
     }
 }

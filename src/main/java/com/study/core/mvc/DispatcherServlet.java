@@ -2,17 +2,20 @@ package com.study.core.mvc;
 
 import com.study.ebsoft.controller.forward.*;
 import com.study.ebsoft.controller.redirect.*;
+import com.study.ebsoft.exception.SearchConditionException;
 import com.study.ebsoft.repository.board.BoardDAO;
 import com.study.ebsoft.repository.category.CategoryDAO;
 import com.study.ebsoft.repository.comment.CommentDAO;
 import com.study.ebsoft.repository.file.FileDAO;
 import com.study.ebsoft.service.BoardService;
+import com.study.ebsoft.utils.SearchConditionUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -65,6 +68,8 @@ public class DispatcherServlet extends HttpServlet {
         try {
             try {
                 if (controller != null) {
+                    req.setAttribute("searchConditionQueryString", SearchConditionUtils.buildQueryString(req.getParameterMap()));
+
                     View view = controller.process(req, resp);
                     view.render(req, resp);
 
@@ -73,6 +78,11 @@ public class DispatcherServlet extends HttpServlet {
                     log.error("Not found Page...");
                     resp.sendRedirect("/views/error/error404.jsp");
                 }
+            } catch (SearchConditionException e) {
+                log.error("error : {}", e.getMessage());
+
+                String encodedErrorMessage = URLEncoder.encode(e.getMessage(), "UTF-8");
+                resp.sendRedirect("/boards?error=" + encodedErrorMessage);
             } catch (NoSuchElementException e) {
                 log.error("NoSuchElementException --> Not found...");
                 resp.sendRedirect("/views/error/error404.jsp");

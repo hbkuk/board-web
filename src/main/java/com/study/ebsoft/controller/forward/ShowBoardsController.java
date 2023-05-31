@@ -25,7 +25,6 @@ public class ShowBoardsController implements Controller {
      * 검색조건(searchConditionQueryString)에 맞는 전체 게시물 리스트와 View를 응답합니다.
      */
     public View process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setAttribute("searchConditionQueryString", SearchConditionUtils.buildQueryString(req.getParameterMap()));
         req.setAttribute("boards", boardService.findAllBoardsWithFileCheck(SearchConditionUtils.buildQueryCondition(req.getParameterMap())));
         req.setAttribute("categories", boardService.findAllCategorys());
 

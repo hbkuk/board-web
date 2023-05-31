@@ -28,8 +28,6 @@ public class DeleteBoardController implements Controller {
      * 게시물 번호에 해당하는 게시물 삭제을 삭제합니다
      */
     public View process(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        String searchConditionQueryString = SearchConditionUtils.buildQueryString(req.getParameterMap());
-
         BoardDTO deleteBoardDTO = new BoardDTO();
         deleteBoardDTO.setBoardIdx(Long.parseLong(req.getParameter("board_idx")));
         deleteBoardDTO.setPassword(req.getParameter("password"));
@@ -43,10 +41,6 @@ public class DeleteBoardController implements Controller {
             return new View(String.format("/board/delete/form?board_idx=%d", deleteBoardDTO.getBoardIdx()));
         }
 
-        if (searchConditionQueryString.isEmpty()) {
-            return new View("redirect:/boards");
-        } else {
-            return new View("redirect:" + String.format("/boards?%s", searchConditionQueryString));
-        }
+        return new View("redirect:/boards");
     }
 }

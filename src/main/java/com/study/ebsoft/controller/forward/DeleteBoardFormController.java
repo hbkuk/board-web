@@ -4,7 +4,6 @@ import com.study.core.mvc.Controller;
 import com.study.core.mvc.View;
 import com.study.ebsoft.dto.BoardDTO;
 import com.study.ebsoft.service.BoardService;
-import com.study.ebsoft.utils.SearchConditionUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -31,9 +30,7 @@ public class DeleteBoardFormController implements Controller {
     public View process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, NoSuchElementException {
         BoardDTO boardDTO = boardService.findBoardWithDetails(Long.parseLong(req.getParameter("board_idx")));
 
-        req.setAttribute("searchConditionQueryString", SearchConditionUtils.buildQueryString(req.getParameterMap()));
         req.setAttribute("board", boardDTO);
-
         return new View("/views/boardDeleteView.jsp");
     }
 }
