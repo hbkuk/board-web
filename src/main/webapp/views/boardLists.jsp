@@ -28,6 +28,9 @@
         <form id="search" action="/boards" method='get'>
             <table style="border: 1px solid #ccc; padding: 10px;">
                 <tr style="text-align: center;">
+                    <c:if test="${not empty param.error}">
+                        <p>Error Message: ${param.error}</p>
+                    </c:if>
                     <c:set var="paramStartDate" value="<%=SearchConditionUtils.getParamStartDate((HttpServletRequest) request)%>"/>
                     <c:set var="paramEndDate" value="<%=SearchConditionUtils.getParamEndDate((HttpServletRequest) request)%>"/>
                     <td width="30%">등록일 | <input class="currentDate" type="date" name="start_date"
