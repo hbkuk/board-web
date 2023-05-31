@@ -1,10 +1,14 @@
 package com.study.ebsoft.utils;
 
+import com.study.ebsoft.exception.SearchConditionException;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.URISyntaxException;
+import java.sql.SQLSyntaxErrorException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Map;
 
 /**
@@ -58,10 +62,17 @@ public class SearchConditionUtils {
             log.debug("Build Query String Key : {} ", key);
             for (String searchCondition : SEARCH_CONDITIONS) {
                 if (key.equals(searchCondition)) {
-                    queryBuilder.append(key).append("=").append(parameterMap.get(key)[0]);
-                    log.debug("Build Query String append : {} ", queryBuilder);
-                    queryBuilder.append("&");
-                    break;
+                    if(key.equals(START_DATE_PARAMETER_KEY) || key.equals(END_DATE_PARAMETER_KEY) ) {
+                        queryBuilder.append(key).append("=").append(formatDate(parameterMap.get(key)[0]));
+                        log.debug("Build Query String append : {} ", queryBuilder);
+                        queryBuilder.append("&");
+                        break;
+                    } else {
+                        queryBuilder.append(key).append("=").append(cleanInput(parameterMap.get(key)[0]));
+                        log.debug("Build Query String append : {} ", queryBuilder);
+                        queryBuilder.append("&");
+                        break;
+                    }
                 }
             }
         }
@@ -89,25 +100,28 @@ public class SearchConditionUtils {
         queryBuilder.append(" WHERE ");
         for (String paramName : parameterMap.keySet()) {
             if (isKeyWord(paramName)) {
+                String value = cleanInput(parameterMap.get(paramName)[0]);
                 queryBuilder.append(
-                        String.format(KEYWORD_CONDITION_QUERY,
-                                parameterMap.get(paramName)[0], parameterMap.get(paramName)[0], parameterMap.get(paramName)[0]));
+                        String.format(KEYWORD_CONDITION_QUERY, value, value, value));
                 queryBuilder.append(" AND ");
             }
 
             if (isCategory(paramName)) {
+                String value = cleanInput(parameterMap.get(paramName)[0]);
                 queryBuilder.append(
-                        String.format(CATEGORY_CONDITION_QUERY, Integer.parseInt(parameterMap.get(paramName)[0])));
+                        String.format(CATEGORY_CONDITION_QUERY, Integer.parseInt(value)));
                 queryBuilder.append(" AND ");
             }
 
             if (isStartDate(paramName)) {
-                queryBuilder.append(String.format(START_DATE_CONDITION_QUERY, parameterMap.get(paramName)[0]));
+                String value = formatDate(parameterMap.get(paramName)[0]);
+                queryBuilder.append(String.format(START_DATE_CONDITION_QUERY, value));
                 queryBuilder.append(" AND ");
             }
 
             if (isEndDate(paramName)) {
-                queryBuilder.append(String.format(END_DATE_CONDITION_QUERY, parameterMap.get(paramName)[0]));
+                String value = formatDate(parameterMap.get(paramName)[0]);
+                queryBuilder.append(String.format(END_DATE_CONDITION_QUERY, value));
                 queryBuilder.append(" AND ");
             }
             log.debug("Query Builder Append" + queryBuilder);
@@ -115,6 +129,38 @@ public class SearchConditionUtils {
         queryBuilder.delete(queryBuilder.length() - REMOVE_LENGTH_WHEN_COMPLETE_QUERY, queryBuilder.length());
         log.debug("Result Query Builder" + queryBuilder);
         return queryBuilder.toString();
+    }
+
+    /**
+     * 전달된 문자열에서 알파벳, 숫자, 한글 이외의 모든 문자를 공백으로 치환하여 리턴합니다
+     *
+     * Examples:
+     *      1. {Hello World!} -> {Hello World }
+     *      2. {!@#$%^&*()} -> {          }
+     *      3. {SELECT * FROM users WHERE username = '' OR ''='' --}
+     *                              -> {SELECT   FROM users WHERE username     OR       }
+     *
+     * @param input 입력 문자열
+     * @return 공백으로 치환된 문자열
+     */
+    public static String cleanInput(String input) {
+        return input.replaceAll("[^a-zA-Z0-9가-힣]", " ");
+    }
+
+    /**
+     * 전달된 날짜 형식의 문자열을 {yyyy-MM-dd} 형식으로 포맷팅하고 리턴합니다
+     *
+     * @param dateStr 포맷팅할 날짜 문자열
+     * @return 포맷팅된 날짜 문자열
+     * @throws IllegalArgumentException 만약 날짜 형식이 아닌 경우 발생합니다
+     */
+    public static String formatDate(String dateStr) {
+        try {
+            LocalDate date = LocalDate.parse(dateStr, DateTimeFormatter.ISO_LOCAL_DATE);
+            return date.format(DateTimeFormatter.ISO_LOCAL_DATE);
+        } catch (DateTimeParseException e) {
+            throw new SearchConditionException("올바른 날짜 형식이 아닙니다");
+        }
     }
 
     /**
@@ -135,30 +181,30 @@ public class SearchConditionUtils {
     }
 
     /**
-     * 주어진 키가 키워드를 나타내는 문자열인 경우 true를 반환하고, 그렇지 않은 경우 false를 반환합니다.
+     * 매개변수 이름이 키워드를 나타내는 문자열인 경우 true를 반환하고, 그렇지 않은 경우 false를 반환합니다.
      *
      * @param paramName 매개변수의 이름
-     * @return 키가 키워드 문자열인 경우 true, 그렇지 않은 경우 false를 반환합니다.
+     * @return 매개변수 이름이 키워드 문자열인 경우 true, 그렇지 않은 경우 false를 반환합니다.
      */
     private static boolean isKeyWord(String paramName) {
         return paramName.equals(KEYWORD_PARAMETER_KEY);
     }
 
     /**
-     * 주어진 키가 카테고리를 나타내는 문자열인 경우 true를 반환하고, 그렇지 않은 경우 false를 반환합니다.
+     * 매개변수 이름이 카테고리를 나타내는 문자열인 경우 true를 반환하고, 그렇지 않은 경우 false를 반환합니다.
      *
      * @param paramName 매개변수의 이름
-     * @return 키가 검색 문자열인 경우 true, 그렇지 않은 경우 false를 반환합니다.
+     * @return 매개변수 이름이 검색 문자열인 경우 true, 그렇지 않은 경우 false를 반환합니다.
      */
     private static boolean isCategory(String paramName) {
         return paramName.equals(CATEGORY_IDX_PARAMETER_KEY);
     }
 
     /**
-     * 주어진 키가 시작 날짜 나타내는 문자열인 경우 true를 반환하고, 그렇지 않은 경우 false를 반환합니다.
+     * 매개변수 이름이 시작 날짜 나타내는 문자열인 경우 true를 반환하고, 그렇지 않은 경우 false를 반환합니다.
      *
      * @param paramName 매개변수의 이름
-     * @return 키가 시작 날짜 문자열인 경우 true, 그렇지 않은 경우 false를 반환합니다.
+     * @return 매개변수 이름이 시작 날짜 문자열인 경우 true, 그렇지 않은 경우 false를 반환합니다.
      */
     private static boolean isStartDate(String paramName) {
         return paramName.equals(START_DATE_PARAMETER_KEY);
@@ -168,7 +214,7 @@ public class SearchConditionUtils {
      * 매개변수의 이름이 종료 날짜 나타내는 문자열인 경우 true를 반환하고, 그렇지 않은 경우 false를 반환합니다.
      *
      * @param paramName 매개변수의 이름
-     * @return 키가 종료 날짜 문자열인 경우 true, 그렇지 않은 경우 false를 반환합니다.
+     * @return 매개변수 이름이 종료 날짜 문자열인 경우 true, 그렇지 않은 경우 false를 반환합니다.
      */
     private static boolean isEndDate(String paramName) {
         return paramName.equals(END_DATE_PARAMETER_KEY);
@@ -190,10 +236,16 @@ public class SearchConditionUtils {
      * @param parameterMap 쿼리 생성에 사용되는 파라미터 맵입니다.
      */
     private static void isDateRange(Map<String, String[]> parameterMap) {
-        LocalDate startDate = LocalDate.parse(parameterMap.get(START_DATE_PARAMETER_KEY)[0]);
-        LocalDate endDate = LocalDate.parse(parameterMap.get(END_DATE_PARAMETER_KEY)[0]);
+        LocalDate startDate = null;
+        LocalDate endDate = null;
+        try {
+            startDate = LocalDate.parse(parameterMap.get(START_DATE_PARAMETER_KEY)[0]);
+            endDate = LocalDate.parse(parameterMap.get(END_DATE_PARAMETER_KEY)[0]);
+        } catch (DateTimeParseException e) {
+            throw new SearchConditionException("날짜 형식이 아닙니다.");
+        }
         if (startDate.isAfter(endDate)) {
-            throw new IllegalArgumentException("시작 날짜보다 종료 날짜가 클 수 없습니다.");
+            throw new SearchConditionException("시작 날짜보다 종료 날짜가 클 수 없습니다.");
         }
     }
 
